@@ -1,0 +1,310 @@
+/* ==========================================================================
+   Kinect — HATCH custom UI ("The HATCH Hotline")
+   Theme-level styling for the Kinect entry points and the PDP question block.
+   Kinect's own scripts keep all behaviour (eligibility, chat, analytics);
+   this file only changes how those pieces look and where they sit.
+
+   Design tokens come from the HATCH mockups (29 Oct 2026):
+     cream panel #faefe9, hairline #e6ddd6, chip border #e3ddd7,
+     headings Canela, body Circular Std.
+   ========================================================================== */
+
+:root {
+  --hatch-hotline-cream: #faefe9;
+  --hatch-hotline-hairline: #e6ddd6;
+  --hatch-hotline-chip-border: #e3ddd7;
+  --hatch-hotline-text: #1c1c1c;
+  --hatch-hotline-muted: #6b6560;
+  --hatch-hotline-body-font: "Circular Std", var(--text-font-family, sans-serif);
+}
+
+/* --------------------------------------------------------------------------
+   1. Desktop navigation pill — beside the search icon (placement #2)
+   Kinect removes the `hidden` attribute once the assistant is eligible on
+   this page load; until then the whole <li> stays out of the flow.
+   -------------------------------------------------------------------------- */
+.header__kinect-link:has(> [hidden]) {
+  display: none;
+}
+
+.header__secondary-nav .header__kinect-link {
+  display: none;
+  width: auto;
+  flex: 0 0 auto;
+}
+
+/* Hatch's desktop header already wraps onto two rows below 1280px; adding the
+   pill there pushes the cart icon to a third row, so the pill starts at 1280px.
+   Narrower desktops keep the floating launcher; phones use the menu row. */
+@media screen and (min-width: 1280px) {
+  .header__secondary-nav .header__kinect-link {
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* Cream filled pill, "ASK HATCH" + chat icon (30 Oct mock). Font longhands on
+   purpose: var() inside the `font:` shorthand is dropped at computed-value time. */
+.header__secondary-nav .header__kinect-link .kinect-hotline-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--hatch-hotline-cream);
+  color: rgb(var(--text-color, 0 0 0));
+  font-family: var(--hatch-hotline-body-font);
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.header__secondary-nav .header__kinect-link .kinect-hotline-nav:hover,
+.header__secondary-nav .header__kinect-link .kinect-hotline-nav:focus-visible {
+  background: rgb(var(--text-color, 0 0 0));
+  color: rgb(var(--background, 255 255 255));
+}
+
+.header__secondary-nav .header__kinect-link .kinect-hotline-nav span {
+  display: inline;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+.header__secondary-nav .header__kinect-link .kinect-hotline-nav svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+/* Measured on hatchcollection.com (30 Oct 2026): the header is two rows below
+   1380px and the "ASK HATCH" label (108px) pushes the cart icon onto a third
+   row until 1400px. Icon-only pill in that band; the label is still read out
+   by screen readers. */
+@media screen and (min-width: 1280px) and (max-width: 1399px) {
+  .header__secondary-nav .header__kinect-link .kinect-hotline-nav {
+    gap: 0;
+    padding: 8px 10px;
+  }
+
+  .header__secondary-nav .header__kinect-link .kinect-hotline-nav span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Mobile menu row — below the last category (SALE), above SIGN IN
+   -------------------------------------------------------------------------- */
+.header-sidebar__kinect:has(> [hidden]) {
+  display: none;
+}
+
+.header-sidebar__kinect-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.header-sidebar__kinect-row svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+/* --------------------------------------------------------------------------
+   3. PDP block — cream panel below Add to Cart
+   Restyles Kinect's "pdp-chat" app block in its list layout:
+     eyebrow  -> header row (chat icon + "The HATCH Hotline" + arrows)
+     sub      -> "Your direct line to a little HATCH expertise."
+     rows     -> one horizontally sliding row of pill chips
+   Class names are Kinect's public chip-override contract and are stable.
+   -------------------------------------------------------------------------- */
+.product-info .kinect-pdp-widget.kinect-pdp-widget--list {
+  display: block;
+  margin: 0;
+  padding: 16px 16px 14px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--hatch-hotline-cream);
+  color: var(--hatch-hotline-text);
+  font-family: var(--hatch-hotline-body-font);
+}
+
+/* Kinect toggles the inline display when the shopper is eligible; the block
+   starts hidden. Keep that behaviour — only the shown state is restyled. */
+.product-info .kinect-pdp-widget.kinect-pdp-widget--list[style*="display: none"] {
+  display: none;
+}
+
+.product-info .kinect-pdp-widget--list .kinect-pdp-header {
+  display: none;
+}
+
+.product-info .kinect-pdp-widget--list .kinect-pdp-list-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 10px;
+  margin: 0;
+}
+
+.product-info .kinect-pdp-widget--list .kinect-pdp-list-eyebrow {
+  order: 1;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--hatch-hotline-body-font);
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--hatch-hotline-text);
+}
+
+/* The "+" glyph Kinect renders before the heading */
+.product-info .kinect-pdp-widget--list .kinect-pdp-list-eyebrow > span {
+  display: none;
+}
+
+.product-info .kinect-pdp-widget--list .kinect-pdp-list-eyebrow::before {
+  content: "";
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231c1c1c' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><path d='M21 15a3 3 0 0 1-3 3H8l-5 3V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z'/></svg>")
+    no-repeat center / contain;
+}
+
+.product-info .kinect-pdp-widget--list .kinect-pdp-list-sub {
+  order: 3;
+  flex-basis: 100%;
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--hatch-hotline-text);
+}
+
+/* Arrows (added by kinect-hatch.js) */
+.kinect-hatch-arrows {
+  order: 2;
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.kinect-hatch-arrows[hidden] {
+  display: none;
+}
+
+.kinect-hatch-arrow {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--hatch-hotline-muted);
+  cursor: pointer;
+  transition:
+    color 150ms ease,
+    opacity 150ms ease;
+}
+
+.kinect-hatch-arrow:hover:not(:disabled) {
+  color: var(--hatch-hotline-text);
+}
+
+.kinect-hatch-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.kinect-hatch-arrow svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* One row, horizontal slide */
+.product-info .kinect-pdp-widget--list .kinect-pdp-chips--list {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0 0 2px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.product-info .kinect-pdp-widget--list .kinect-pdp-chips--list::-webkit-scrollbar {
+  display: none;
+}
+
+.product-info .kinect-pdp-widget--list .kinect-pdp-chips--list .kinect-pdp-chip {
+  flex: 0 0 auto;
+  width: auto;
+  justify-content: center;
+  gap: 0;
+  padding: 9px 14px;
+  border: 1px solid var(--hatch-hotline-chip-border);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--hatch-hotline-text);
+  font-family: var(--hatch-hotline-body-font);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  scroll-snap-align: start;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+
+.product-info .kinect-pdp-widget--list .kinect-pdp-chips--list .kinect-pdp-chip::after {
+  content: none;
+}
+
+.product-info .kinect-pdp-widget--list .kinect-pdp-chips--list .kinect-pdp-chip:hover,
+.product-info .kinect-pdp-widget--list .kinect-pdp-chips--list .kinect-pdp-chip.is-sending {
+  border-color: var(--hatch-hotline-text);
+  background: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-info .kinect-pdp-widget--list .kinect-pdp-chips--list {
+    scroll-behavior: auto;
+  }
+}

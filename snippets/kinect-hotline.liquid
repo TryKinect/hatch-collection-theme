@@ -1,0 +1,34 @@
+{% doc %}
+  Kinect — "The HATCH Hotline" entry points for the Kinect shopping assistant.
+
+  Everything Kinect-specific lives in this snippet plus assets/kinect-hatch.css and
+  assets/kinect-hatch.js; the theme only calls {% render 'kinect-hotline', placement: ... %}.
+
+  The links render with the `hidden` attribute. The Kinect widget removes it once the
+  shopper is eligible on this page load (Audience / traffic split), so nothing shows
+  for shoppers who would not see the assistant anyway.
+
+  @param {string} placement - 'desktop' (header pill beside search) or 'mobile_nav' (menu row).
+  @param {string} [sidebar_text_font] - header section's sidebar_text_font, so the menu row matches the other rows.
+{% enddoc %}
+
+{%- liquid
+  assign kinect_desktop_label = 'Ask Hatch'
+  assign kinect_menu_label = 'The HATCH Hotline'
+-%}
+
+{%- if placement == 'desktop' -%}
+  <li class="header__kinect-link">
+    <a href="#" class="kinect-hotline-nav" data-kinect-open="top_nav" aria-haspopup="dialog" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a3 3 0 0 1-3 3H8l-5 3V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z"/></svg>
+      <span>{{ kinect_desktop_label | escape }}</span>
+    </a>
+  </li>
+{%- elsif placement == 'mobile_nav' -%}
+  <li class="header-sidebar__kinect">
+    <a href="#" class="header-sidebar__linklist-button header-sidebar__kinect-row {% if sidebar_text_font == 'heading' %}h6{% endif %}" data-kinect-open="mobile_nav" aria-haspopup="dialog" hidden>
+      <span>{{ kinect_menu_label | escape }}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a3 3 0 0 1-3 3H8l-5 3V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z"/></svg>
+    </a>
+  </li>
+{%- endif -%}
