@@ -59,6 +59,23 @@ html:not([data-kinect-ready]) .hatch-hotline-desktop {
   }
 }
 
+@media screen and (min-width: 1150px) {
+  html[data-kinect-ready] body.kinect-page-shift .header:has(.hatch-hotline-desktop) {
+    grid-template-columns: 150px minmax(0, 1fr) max-content !important;
+    column-gap: 24px;
+    min-block-size: 98px;
+  }
+
+  html[data-kinect-ready] body.kinect-page-shift .header:has(.hatch-hotline-desktop) .header__primary-nav {
+    column-gap: 12px !important;
+    row-gap: 0;
+  }
+
+  html[data-kinect-ready] body.kinect-page-shift .header .header__primary-nav--center > ul > li {
+    padding-block: 12px;
+  }
+}
+
 .hatch-hotline {
   --hotline-ink: #302e2b;
   --hotline-muted: #77716c;
