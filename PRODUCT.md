@@ -10,6 +10,7 @@ Help shoppers ask product questions through the existing Kinect shopping assista
 - Show a single horizontally scrolling row of suggested questions, with previous/next controls.
 - Clicking a question opens the existing sidebar and sends that question immediately.
 - Clicking the Hotline title opens the sidebar without sending a question.
+- Place a blush "ASK HATCH" button before the desktop header's search icon. It opens the same sidebar without sending a question.
 - Place the mobile navigation entry after Sale and before Sign In. Close navigation before opening the assistant.
 - Preserve Kinect's existing consent, eligibility, product context, and conversation handling.
 
