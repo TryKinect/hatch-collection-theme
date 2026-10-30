@@ -1,1 +1,907 @@
-{"current":{"badge_nursing_friendly_link":"shopify:\/\/collections\/nursing-friendly","badge_360_stretch_link":"shopify:\/\/collections\/360-stretch","badge_postpartum_link":"shopify:\/\/collections\/sale-postpartum","badge_c_section_friendly_link":"shopify:\/\/collections\/c-section-friendly","badge_pregnancy_essential_link":"shopify:\/\/collections\/the-essentials-edit","us_mobile_popup_id":"X3Vh9r","us_desktop_popup_id":"TAZhw4","uk_mobile_popup_id":"SHbeLv","uk_desktop_popup_id":"SKDK9Y","section_vertical_spacing":"md","creative_id":"57400","creative_id_mobile":"57382","product_rating_color":"#1c1c1c","product_on_sale_accent":"#e32c2b","product_sold_out_badge_background":"#efefef","product_custom_badge_background":"#1c1c1c","success_color":"#307a07","warning_color":"#ed8a00","error_color":"#cb2b2b","font_family_h1":"Canela","font_family_h2":"Canela","font_family_h3":"Canela","font_family_h4":"Circular Std","font_family_h5":"Circular Std","font_family_h6":"Circular Std","button_text_transform":"uppercase","heading_text_transform":"normal","heading_letter_spacing":18,"text_font_size_desktop":14,"button_text_font":"body","button_letter_spacing":18,"show_button_transition":false,"show_image_zoom_on_hover":false,"stagger_products_apparition":false,"stagger_menu_apparition":false,"product_image_aspect_ratio":"portrait_crop","show_product_rating":false,"gift_wrap_pro":"gift-box","favicon":"shopify:\/\/shop_images\/favicon-hatch.png","mobile_popup_id":"X3Vh9r","desktop_popup_id":"TAZhw4","heading_font":"jost_n4","text_font":"poppins_n4","sections":{"wishlist_header":{"type":"wishlist_header","settings":{"title":"Heart your HATCH Obsessions!","subtitle":"<p>Save your most coveted items in one place, then share them with<br\/>friends so they’re in-the-know (hint, hint!)<\/p><p><br\/><br\/><\/p>"}},"community_header":{"type":"community_header","settings":{"video_image":"image","image":"shopify:\/\/shop_images\/community_desktop.png","image_mobile":"shopify:\/\/shop_images\/community_mobile.png","video":"https:\/\/vimeo.com\/8981490","text_enable":true,"headline":"<p>OUR STORES<\/p>","textPosition":"center","color":"#ffffff"}},"community_text":{"type":"community_text","settings":{"text_enable":true,"description":"","textPosition":"center","color":"#000000","fontSize":16}},"community_stores":{"type":"community_stores","blocks":{"1584545737720":{"type":"add_store","settings":{"title":"BLEECKER, NYC","image":"shopify:\/\/shop_images\/bleeker.png","description":"<p><strong>17 Bleecker St <\/strong><br\/>Monday-Saturday 11am-6pm EST<br\/>Sunday 12pm-5pm EST<br\/><a href=\"tel:2125297063\" target=\"_blank\">646-368-1946<\/a><br\/><a href=\"mailto:bleecker@hatchcollection.com\" title=\"mailto:bleecker@hatchcollection.com\">Bleecker@hatchcollection.com<br\/><\/a><\/p><p>SAME DAY DELIVERY IN MANHATTAN & BROOKLYN<\/p><p><a href=\"\/pages\/store-services\" title=\"Store Services\">Shop@Home<\/a> <\/p>","show-book":false,"show-events":false}},"1538087495137":{"type":"add_store","settings":{"title":"UPPER EAST SIDE, NYC","image":"shopify:\/\/shop_images\/ues.jpg","description":"<p><strong>1027 LEXINGTON AVE<\/strong><br\/>Monday-Saturday 11am - 6pm<br\/>Sunday 12pm - 5pm EST<br\/><a href=\"tel:%20646-707-3929\" title=\"tel:%20646-707-3929\">646-368-1225<\/a><br\/><a href=\"mailto:uppereastside@hatchcollection.com\" target=\"_blank\" title=\"mailto:uppereastside@hatchcollection.com\">uppereastside@hatchcollection.com<\/a><a href=\"mailto:bleecker@hatchcollection.com\" title=\"mailto:bleecker@hatchcollection.com\"><br\/><\/a><\/p><p>SAME DAY DELIVERY IN MANHATTAN & BROOKLYN<\/p><p><a href=\"\/pages\/store-services\" title=\"Store Services\">Shop@Home<\/a> <\/p>","show-book":false,"show-events":false}},"1594310960103":{"type":"add_store","settings":{"title":"Shop@Home","image":"shopify:\/\/shop_images\/shop_at_homw.jpg","description":"<p>Not sure of your size? Confused as to what you actually need? Just love a little VIP treatment? Our Shop@Home program pairs you with one of our fit experts and together you’ll curate a box filled with everything you need. <a href=\"\/pages\/store-services\" title=\"Shop at Home\"><strong>Set up a box here.<\/strong><\/a><\/p>","show-book":false,"show-events":false}},"19d64d5a-4348-4b35-8974-d87ebb5f7cd8":{"type":"add_store","settings":{"title":"Same-Day Delivery","image":"shopify:\/\/shop_images\/bleeker_9a297507-e3d4-497a-8505-708b124711c3.png","description":"<p>In NYC area? Shoot your nearest store a message & our teams can get your selections to you via messenger in the same day, easy peasy.  <\/p>","show-book":false,"show-events":false}},"add_store_gyfgUi":{"type":"add_store","disabled":true,"settings":{"title":"","description":"","show-book":true,"show-events":true}},"853dd1a1-3fbe-4eeb-b3d7-5206cf72925d":{"type":"add_store","disabled":true,"settings":{"title":"HATCH CITY TOUR","image":"shopify:\/\/shop_images\/IMG_6552.jpg","description":"<p>We are embarking on a city tour and we can't wait to meet you in person! <\/p><p><a href=\"https:\/\/events.hatchcollection.com\/hatchcitytour2022\" target=\"_blank\" title=\"https:\/\/events.hatchcollection.com\/hatchcitytour2022\">See our stops here<\/a><\/p><p>Don't see your city email <a href=\"mailto:events@hatchcollection.com\" title=\"mailto:events@hatchcollection.com\">events@hatchcollection.com<\/a>. <\/p>","show-book":false,"show-events":false}},"2a4e2e0c-2629-434a-b53f-6ff8752d144d":{"type":"add_store","disabled":true,"settings":{"title":"MON COEUR TRUNKSHOW","image":"shopify:\/\/shop_images\/MC_Final_Logo_with_100_percent_earth_lovin-removebg-preview_1.png","description":"<p>In celebration of Earth Day, our friends at <a href=\"https:\/\/moncoeur.com\/\" target=\"_blank\" title=\"https:\/\/moncoeur.com\/\">Mon Coeur<\/a>—a sustainable children's clothing brand making kinder clothing for earth-loving kids—will be popping in at our UES store. Come say hi!<br\/><br\/>4\/12—4\/22 11:00 am—6:00 pmHATCH Upper East Side1027 Lexington Ave<\/p>","show-book":false,"show-events":false}}},"block_order":["1584545737720","1538087495137","1594310960103","19d64d5a-4348-4b35-8974-d87ebb5f7cd8","add_store_gyfgUi","853dd1a1-3fbe-4eeb-b3d7-5206cf72925d","2a4e2e0c-2629-434a-b53f-6ff8752d144d"],"settings":{}},"community_form":{"type":"community_form","settings":{"hours":"10:00 am,11:00 am,12:00 pm,1:00 pm,2:00 pm,3:00 pm,4:00 pm,5:00 pm,6:00 pm,7:00 pm","years":"2018,2019,2020,"}},"community_events":{"type":"community_events","blocks":{"32b5e4b1-d0f4-456f-864d-938b6ed93f0f":{"type":"add_event","disabled":true,"settings":{"location":"DIGITAL COMMUNITY","title":"Building a Healthy Milk Supply","description":"<p>Join Jada Shapiro, founder of <a href=\"https:\/\/getboober.com\/\" target=\"_blank\" title=\"https:\/\/getboober.com\/\">Boober<\/a>, as she outlines methods to help build your milk supply. Bring your questions! <br\/><br\/>Register <a href=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_Tdttj7-nTTKf5BWMVamY4A\" target=\"_blank\" title=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_Tdttj7-nTTKf5BWMVamY4A\">here<\/a>.<\/p>","month":"July","day":26,"date_details":"<p>Monday<br\/>7:30 p.m. EST<br\/>Zoom<\/p>","show-rsvp":true}},"d764cb23-092a-46df-9328-34206ac729a1":{"type":"add_event","disabled":true,"settings":{"location":"DIGITAL COMMUNITY","title":"Partner Dynamic Before and After Baby","description":"<p>Join Jennie Monness, co-founder of Union Square Play, alongside a panel of experts as they discuss how to navigate the changes that happen in a relationship, before and after baby.<\/p><p>Please register <a href=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_34l2Mc_oSlu0wtfVo1WqvA\" target=\"_blank\" title=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_34l2Mc_oSlu0wtfVo1WqvA\">here<\/a><\/p>","month":"July","day":28,"date_details":"<p>Wednesday<br\/>8:15 p.m. EST <br\/>Zoom<\/p>","show-rsvp":true}},"e7aca5eb-81ef-4a74-9816-ad9ea3d213a9":{"type":"add_event","disabled":true,"settings":{"location":"DIGITAL COMMUNITY","title":"Troubleshooting Nursing Challenges","description":"<p>Join Jada Shapiro, founder of Boober as she helps you navigate any nursing hurdles you may be experiencing, bring your questions.<\/p>","month":"August","day":2,"date_details":"<p>Monday<br\/>8:15 p.m. EST<br\/>IG Live<\/p>","show-rsvp":true}},"06cf186c-cce8-432a-9b26-d153fa60f79c":{"type":"add_event","disabled":true,"settings":{"location":"DIGITAL COMMUNITY","title":"Baby Registry 101: Fewer, Better Things","description":"<p>Join Abby Kalter founder of Prepping for Peanut as she helps expectant parents cut down the time in research that goes into creating a registry! Learn how to tackle your baby registry without spending hours upon hours reading reviews, mom blogs, and hearing countless opinions. Strategically evaluate your lifestyle and needs to acquire just what you need and nothing you don’t. <br\/><br\/>Please register <a href=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_aVHXbGkhS_e1Xcm7756_Zg\" target=\"_blank\" title=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_aVHXbGkhS_e1Xcm7756_Zg\">here<\/a>.<\/p>","month":"August","day":5,"date_details":"<p>Thursday<br\/>7:30 p.m. EST<br\/>Zoom<\/p>","show-rsvp":true}},"2d2fecdf-dc70-4e30-b8d1-ff2b18344142":{"type":"add_event","disabled":true,"settings":{"location":"DIGITAL COMMUNITY","title":"But why? Debunking the origins of various maternal and post-natal practices","description":"<p>Join Union Square Play, along with a panel of experts as they bring fact or fiction to all the conversations you hear around becoming a parent from eating your placenta to is breast really best? They will cover it all and help you navigate all the various maternal and post-natal practices.<br\/><br\/>Please register <a href=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_WJNs-_z0TVaZ0gQwmr3y2A\" target=\"_blank\" title=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_WJNs-_z0TVaZ0gQwmr3y2A\">here<\/a>.<\/p>","month":"August","day":9,"date_details":"<p>Monday<br\/>8:15 p.m. EST<br\/>Zoom<\/p>","show-rsvp":true}},"17103a9f-dcff-42e6-8ee6-354e768a47e0":{"type":"add_event","disabled":true,"settings":{"location":"DIGITAL COMMUNITY","title":"Nourishing YOU","description":"<p>Join Mahri Relin, owner of Body Conceptions by Mahri, with experts Jennifer Khalaf and Jennie Monness, as they talk about the important roles that nutrition, exercise, and parenting play in the emotional and physical health of new moms.  Moderated by Amanda Warsavsky.<br\/><br\/>Please register <a href=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_cmLMWf67Tq-FP8LsijNB7g\" target=\"_blank\" title=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_cmLMWf67Tq-FP8LsijNB7g\">here<\/a>.<\/p>","month":"August","day":10,"date_details":"<p>Tuesday<br\/>12:00 p.m. EST<br\/>Zoom<\/p>","show-rsvp":true}},"cf8edb1a-9b5d-44dd-b67b-c1f7a06d119c":{"type":"add_event","disabled":true,"settings":{"location":"DIGITAL COMMUNITY","title":"INFANT CPR + SAFETY","description":"<p>Join Boober’s expert CPR instructor in a tutorial on infant CPR and safety protocols. You’ll learn how to recognize choking hazards, breathing and emergency techniques, as well as basic first aid.<br\/><br\/>Purchase a ticket <a href=\"https:\/\/bookeo.com\/birthdaypresence?devent=41554AAAFAN1793E0BA757_2021-08-11_n59g9hNK1Z0&promotion=HATCHWEBINAR\" target=\"_blank\" title=\"https:\/\/bookeo.com\/birthdaypresence?devent=41554AAAFAN1793E0BA757_2021-08-11_n59g9hNK1Z0&promotion=HATCHWEBINAR\">here<\/a>.<\/p>","month":"August","day":11,"date_details":"<p>Wednesday<br\/>7:30 p.m. EST<br\/>Zoom<\/p>","show-rsvp":true}},"a7a76603-ed19-47ea-b77c-24c77100586d":{"type":"add_event","disabled":true,"settings":{"location":"DIGITAL COMMUNITY","title":"Lactation 101","description":"<p>Join Jada Shapiro, founder of <a href=\"https:\/\/getboober.com\/\" target=\"_blank\"><span style=\"text-decoration:underline\">Boober<\/span><\/a>, as she walks you through the basics of breastfeeding and how to avoid common pitfalls. If you have questions there’s a very good chance she has the answer (like, a 99.9% chance). <br\/><br\/>Please register <a href=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_DcUiM_VZQYOmBqV3Xw_--Q\" target=\"_blank\" title=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_DcUiM_VZQYOmBqV3Xw_--Q\">here<\/a>.<\/p>","month":"August","day":16,"date_details":"<p>Monday<br\/>7:30 p.m. EST<br\/>Zoom<\/p>","show-rsvp":true}},"2440f3b9-da74-43d4-a2ad-10d9f2998a55":{"type":"add_event","disabled":true,"settings":{"location":"DIGITAL COMMUNITY","title":"Stress + Motherhood","description":"<p>Join Brianna Towne, MS, ​​as she teaches you how to use your mind, body, and the food you eat to release unconscious blocks.<br\/><br\/>Please register <a href=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_1MKYawDkR7SJAh_fd3TyCw\" target=\"_blank\" title=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_1MKYawDkR7SJAh_fd3TyCw\">here.<\/a><\/p>","month":"August","day":17,"date_details":"<p>Tuesday<br\/>7:30 p.m. EST<br\/>Zoom<\/p>","show-rsvp":true}},"d3aa40ff-00b0-4228-b8e4-673ea51c554a":{"type":"add_event","disabled":true,"settings":{"location":"DIGITAL COMMUNITY","title":"From Birth to Postpartum","description":"<p>Join Jada Shapiro, founder of Boober, as she moderates a group of doulas as they discuss top tips for birth, lactation, and the early postpartum period.<br\/><br\/>Please register <a href=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_lHOOSReWSHOoXF245DCVfQ\" target=\"_blank\" title=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_lHOOSReWSHOoXF245DCVfQ\">here<\/a>.<\/p>","month":"August","day":23,"date_details":"<p>Monday<br\/>7:30 p.m. EST<br\/>Zoom<\/p>","show-rsvp":true}},"66e5565e-b754-45c8-aead-3be6036cda0d":{"type":"add_event","disabled":true,"settings":{"location":"DIGITAL COMMUNITY","title":"Body Image","description":"<p>Join Union Square Play and a panel of experts as they discuss, changing attitudes towards body image and how we can help create a healthy relationship to it--both for ourselves and our children.<br\/><br\/>Please register <a href=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_10Me4_XCRJmRjRwWl645BQ\" target=\"_blank\" title=\"https:\/\/us02web.zoom.us\/webinar\/register\/WN_10Me4_XCRJmRjRwWl645BQ\">here<\/a>.<\/p>","month":"August","day":25,"date_details":"<p>Wednesday<br\/>8:15 p.m. EST<br\/>Zoom<\/p>","show-rsvp":true}}},"block_order":["32b5e4b1-d0f4-456f-864d-938b6ed93f0f","d764cb23-092a-46df-9328-34206ac729a1","e7aca5eb-81ef-4a74-9816-ad9ea3d213a9","06cf186c-cce8-432a-9b26-d153fa60f79c","2d2fecdf-dc70-4e30-b8d1-ff2b18344142","17103a9f-dcff-42e6-8ee6-354e768a47e0","cf8edb1a-9b5d-44dd-b67b-c1f7a06d119c","a7a76603-ed19-47ea-b77c-24c77100586d","2440f3b9-da74-43d4-a2ad-10d9f2998a55","d3aa40ff-00b0-4228-b8e4-673ea51c554a","66e5565e-b754-45c8-aead-3be6036cda0d"],"settings":{}}},"content_for_index":[],"blocks":{"4139971114690857691":{"type":"shopify:\/\/apps\/swish-formerly-wishlist-king\/blocks\/wishlist-button-collection\/194f5011-a43c-4b22-b12e-eaf20dc4506a","disabled":false,"settings":{"button_style":"plain_accent_1","button_placement":"top-end","button_offset_horizontal":0,"button_offset_vertical":0,"button_background_opacity":85,"button_background_size":34,"button_background_border_radius":24,"button_border_width":1,"show_shadow":false,"icon_size":18,"icon_stroke_width":1,"app_integration_preset":"none","product_link_selector":"","floating_reference_js":""}},"13655089695959051254":{"type":"shopify:\/\/apps\/swish-formerly-wishlist-king\/blocks\/code-access\/194f5011-a43c-4b22-b12e-eaf20dc4506a","disabled":false,"settings":{"version":"main"}},"10993583111719876496":{"type":"shopify:\/\/apps\/linkedoption-combined-listings\/blocks\/app-embed\/564f3d71-fe5e-48d7-a0de-284b76666f1e","disabled":false,"settings":{}},"3915993389370480168":{"type":"shopify:\/\/apps\/swish-formerly-wishlist-king\/blocks\/wishlist-link-floating\/194f5011-a43c-4b22-b12e-eaf20dc4506a","disabled":true,"settings":{"button_style":"solid_accent_1","button_mode":"always_show","button_position":"bottom-end","button_offset_horizontal":10,"button_offset_vertical":20,"button_size":56,"button_border_width":2,"button_border_radius":40,"show_shadow":true,"icon_size":24,"icon_stroke_width":2,"counter_style":"outline_accent_1","counter_mode":"always_show","counter_position":"bottom-end","counter_offset_vertical":-5,"counter_offset_horizontal":0,"counter_size":16,"counter_border_width":1}},"14197025361042770389":{"type":"shopify:\/\/apps\/swish-formerly-wishlist-king\/blocks\/app-settings-main\/194f5011-a43c-4b22-b12e-eaf20dc4506a","disabled":false,"settings":{"theme_preset":"prestige","color_accent_1":"#000000","color_accent_2":"#000000","color_solid_button_label":"#ffffff","color_outline_button_label":"#000000","color_background_1":"#ffffff","color_background_2":"#ffffff","color_text":"#000000","button_min_height":45,"button_border_width":1,"button_border_radius":0,"input_min_height":45,"input_border_width":1,"input_border_radius":0,"shadow_opacity":15,"shadow_horizontal_offset":0,"shadow_vertical_offset":2,"shadow_blur":4,"font_text_scale":100,"access_mode":"REQUIRE_LOGIN_BEFORE_USE","wishlist_mode":"PRODUCT","wishlist_path":"\/pages\/wishlist","money_show_currency_code":true}},"6680288666557934739":{"type":"shopify:\/\/apps\/swish-formerly-wishlist-king\/blocks\/wishlist-page\/194f5011-a43c-4b22-b12e-eaf20dc4506a","disabled":false,"settings":{"column_width":"md","wishlist_empty_link":"shopify:\/\/collections\/all","page_max_width":1200,"page_padding_top":30,"page_padding_bottom":80,"show_share_button":true,"show_buy_all_button":false,"show_clear_wishlist_button":true,"add_to_cart_remove_from_wishlist":false,"remove_button_style":"icon","product_options":"dropdowns","cta_button":"add_to_cart","cta_button_style":"solid_accent_1","alignment":"center","image_aspect_ratio":"1\/1","image_object_fit":"cover","show_vendor":false,"show_product_title":true,"show_price":true,"show_variant_input_label":false}},"855628211100114053":{"type":"shopify:\/\/apps\/klaviyo-email-marketing-sms\/blocks\/klaviyo-onsite-embed\/2632fe16-c075-4321-a88b-50b567f42507","disabled":false,"settings":{}},"15685250022964305326":{"type":"shopify:\/\/apps\/elevar-conversion-tracking\/blocks\/dataLayerEmbed\/bc30ab68-b15c-4311-811f-8ef485877ad6","disabled":false,"settings":{}},"10605408327587305396":{"type":"shopify:\/\/apps\/eg-auto-add-to-cart\/blocks\/app-embed\/0f7d4f74-1e89-4820-aec4-6564d7e535d2","disabled":false,"settings":{"version":"v3"}},"9776720720251544092":{"type":"shopify:\/\/apps\/helium-customer-fields\/blocks\/app-embed\/bab58598-3e6a-4377-aaaa-97189b15f131","disabled":false,"settings":{"registration_form_id":"","edit_account_form_id":"","edit_account_link_text":"Edit account","edit_account_heading":"Edit account","edit_account_back_link_text":"Back to account","enable_js_api":false}},"13309252322759772734":{"type":"shopify:\/\/apps\/sortd-merchandiser\/blocks\/app-embed\/5176d6ef-993f-4869-ba24-87a0a6bedcf9","disabled":false,"settings":{}},"4804304946286255945":{"type":"shopify:\/\/apps\/avada-cookie-consent\/blocks\/app-embed\/deacc407-65bc-4a4e-84d9-f90e9e492cf3","disabled":false,"settings":{}},"10812935154079970445":{"type":"shopify:\/\/apps\/nosto\/blocks\/nosto-script-embed-block\/a67c43f0-0fc3-4649-a7dc-65ac499cae31","disabled":false,"settings":{}},"2046743146925785077":{"type":"shopify:\/\/apps\/nosto\/blocks\/nosto-mc-embed-block\/a67c43f0-0fc3-4649-a7dc-65ac499cae31","disabled":false,"settings":{}},"6990797075511561578":{"type":"shopify:\/\/apps\/nosto\/blocks\/nosto-tagging-embed-block\/a67c43f0-0fc3-4649-a7dc-65ac499cae31","disabled":false,"settings":{}},"343699950125301042":{"type":"shopify:\/\/apps\/tote-fitting-room-booking\/blocks\/app-embed\/e0cd5fec-c187-4d97-bd6e-9dafdbd04b61","disabled":false,"settings":{"position":"bottom-left","buttonText":"Personalize Your Visit!","buttonTextAfterCart":"Your Fitting Room","buttonColor":"#fdf5e9","buttonTextColor":"#281a1a","themeColor":"#fdf5e9","themeTextColor":"#281a1a","fontSize":16,"fontFamily":"'Uncut Sans', sans-serif","fontSecondary":"None","showCustomButtonTextForMobile":false,"customTextMobileButton":"Book Now","rootVMargin":30,"rootHMargin":30,"showDynamicAddToToteCart":false,"dynamicAddToToteCartButton":"#AddToCart"}},"6237893613548423713":{"type":"shopify:\/\/apps\/amplify-bundles-upsell\/blocks\/main-widget-loader-script\/f54ff67e-3f69-4df2-845e-7476ce633252","disabled":false,"settings":{}},"5483944384444890901":{"type":"shopify:\/\/apps\/amplify-power-slide-cart\/blocks\/main-widget-loader-script\/a3eaaec3-9bb6-4ba2-bb38-1f33eed7351b","disabled":false,"settings":{}},"9928572688182724177":{"type":"shopify:\/\/apps\/accentuate\/blocks\/recently-viewed-embed\/428a4822-57b4-4291-92b3-3f34bc7a240e","disabled":false,"settings":{}},"7570552984445421165":{"type":"shopify:\/\/apps\/yotpo-product-reviews\/blocks\/settings\/eb7dfd7d-db44-4334-bc49-c893b51b36cf","disabled":false,"settings":{}},"14339172867238703359":{"type":"shopify:\/\/apps\/yotpo-product-reviews\/blocks\/reviews_tab\/eb7dfd7d-db44-4334-bc49-c893b51b36cf","disabled":true,"settings":{"product":""}},"5017882195547572635":{"type":"shopify:\/\/apps\/sc-easy-redirects\/blocks\/app\/be3f8dbd-5d43-46b4-ba43-2d65046054c2","disabled":false,"settings":{}},"735721325670868888":{"type":"shopify:\/\/apps\/checkmate\/blocks\/checked_network\/697a3444-1374-4f13-ba8c-ec03db25ebf0","disabled":false,"settings":{}},"17676059084223943535":{"type":"shopify:\/\/apps\/triplewhale\/blocks\/triple_pixel_snippet\/483d496b-3f1a-4609-aea7-8eee3b6b7a2a","disabled":false,"settings":{}},"12412247409707363845":{"type":"shopify:\/\/apps\/contentsquare-analytics\/blocks\/csq_tag_snippet_script\/019a7cb2-3ace-7c1e-bb5d-112ee54f5310","disabled":true,"settings":{}},"15847936858134706495":{"type":"shopify:\/\/apps\/malachyte-hatch-collection\/blocks\/malachyte-config\/01a0e8e1-136d-701f-b845-8a07377450e1","disabled":false,"settings":{"endpoint":"https:\/\/api-hatchcollection.malachyte.com","token":"OlpwLMEjL8MXFOpbk7awiqGMRDGJZwJwQ9ccLzYJ"}},"1877152918344802950":{"type":"shopify:\/\/apps\/intelligems-a-b-testing\/blocks\/intelligems-script\/fa83b64c-0c77-4c0c-b4b2-b94b42f5ef19","disabled":false,"settings":{}},"15135077829686852319":{"type":"shopify:\/\/apps\/kinect-hatch-collection\/blocks\/chat-widget\/01a17523-84c8-7dfb-a0ec-5f18d09f6e32","disabled":false,"settings":{"assistant_enabled":true,"display_mode":"page-shift","panel_side":"left","default_open":false,"mobile_chat_size":"three-quarter","compare_enabled":true,"selection_ask_ai_enabled":false,"selection_ask_ai_label":"Ask Kinect","product_view_mode":"carousel","product_card_size":140,"mobile_overrides":false,"product_view_mode_mobile":"carousel","product_card_size_mobile":140,"primary_color":"#000000","accent_color":"#4f46e5","panel_bg_color":"","capability_accent_color":"","launcher_type":"fab","pill_anchor":"bottom","launcher_size":100,"launcher_icon_size":100,"launcher_bg_color":"","launcher_text_color":"","launcher_animation":"none","phone_number":"","ai_label":"Ask AI","call_label":"Call now","launcher_label":"Ask us anything","welcome_message":"Hi! What are you looking for today?","conversation_starters":"New Arrivals, Best Sellers, Gift Ideas","starter_chip_color":"","sneak_peek_enabled":false,"sneak_peek_style":"fab-animation","sneak_peek_countdown":5,"sneak_peek_page":"all","sneak_peek_animation_time":5,"sneak_peek_animation_style":"bounce","sneak_peek_panel_reveal":"welcome-message","sneak_peek_custom_text":"","custom_panel_placement":false,"global_css_overrides":"","shadow_css_overrides":"","hide_when_visible":""}}},"color_schemes":{"scheme-1":{"settings":{"background":"#ffffff","background_gradient":"","text_color":"#000000","primary_button_background":"#000000","primary_button_text_color":"#ffffff","circle_button_background":"#ffffff","circle_button_icon":"#000000"}},"scheme-2":{"settings":{"background":"#ffffff","background_gradient":"","text_color":"#000000","primary_button_background":"#000000","primary_button_text_color":"#ffffff","circle_button_background":"#ffffff","circle_button_icon":"#000000"}},"scheme-3":{"settings":{"background":"#2d2d2d","background_gradient":"","text_color":"#ffffff","primary_button_background":"#ffffff","primary_button_text_color":"#1c1c1c","circle_button_background":"#ffffff","circle_button_icon":"#1c1c1c"}},"scheme-4":{"settings":{"background":"rgba(0,0,0,0)","background_gradient":"","text_color":"#ffffff","primary_button_background":"#ffffff","primary_button_text_color":"#1c1c1c","circle_button_background":"#ffffff","circle_button_icon":"#1c1c1c"}},"scheme-f190e7e7-7edb-4e48-b9db-cf621def6fa9":{"settings":{"background":"#faefe9","background_gradient":"","text_color":"#000000","primary_button_background":"#000000","primary_button_text_color":"#ffffff","circle_button_background":"#ffffff","circle_button_icon":"#000000"}},"scheme-699222c9-09df-4502-9e19-58fe5bb24125":{"settings":{"background":"rgba(0,0,0,0)","background_gradient":"","text_color":"#000000","primary_button_background":"#000000","primary_button_text_color":"#ffffff","circle_button_background":"#ffffff","circle_button_icon":"#000000"}},"scheme-d0a75b4e-3b41-4e4b-8dfc-db12cbb72d69":{"settings":{"background":"#000000","background_gradient":"","text_color":"#ffffff","primary_button_background":"#ffffff","primary_button_text_color":"#000000","circle_button_background":"#ffffff","circle_button_icon":"#000000"}},"scheme-0561a53d-3ddd-4cfd-a899-d915c1114890":{"settings":{"background":"#ffffff","background_gradient":"","text_color":"#535353","primary_button_background":"#535353","primary_button_text_color":"#ffffff","circle_button_background":"#ffffff","circle_button_icon":"#535353"}}}},"presets":{"Allure":{"section_vertical_spacing":"md","heading_font":"instrument_sans_n4","heading_letter_spacing":18,"text_font":"nunito_n4","text_font_size_desktop":14,"button_letter_spacing":18,"color_schemes":{"scheme-1":{"settings":{"background":"#efefef","text_color":"#1c1c1c","primary_button_background":"#1c1c1c","primary_button_text_color":"#ffffff","circle_button_background":"#ffffff","circle_button_icon":"#1c1c1c"}},"scheme-2":{"settings":{"background":"#ffffff","text_color":"#1c1c1c","primary_button_background":"#1c1c1c","primary_button_text_color":"#ffffff","circle_button_background":"#ffffff","circle_button_icon":"#1c1c1c"}},"scheme-3":{"settings":{"background":"#1c1c1c","text_color":"#ffffff","primary_button_background":"#ffffff","primary_button_text_color":"#1c1c1c","circle_button_background":"#ffffff","circle_button_icon":"#1c1c1c"}},"scheme-4":{"settings":{"background":"rgba(0,0,0,0)","text_color":"#ffffff","primary_button_background":"#ffffff","primary_button_text_color":"#1c1c1c","circle_button_background":"#ffffff","circle_button_icon":"#1c1c1c"}}},"success_color":"#307a07","warning_color":"#ed8a00","error_color":"#cb2b2b","product_rating_color":"#1c1c1c","product_on_sale_accent":"#e32c2b","product_sold_out_badge_background":"#efefef","product_custom_badge_background":"#1c1c1c"},"Couture":{"section_vertical_spacing":"md","heading_font":"jost_n4","heading_letter_spacing":18,"text_font":"poppins_n4","text_font_size_desktop":14,"button_letter_spacing":18,"color_schemes":{"scheme-1":{"settings":{"background":"#ffffff","text_color":"#5c5c5c","primary_button_background":"#5c5c5c","primary_button_text_color":"#ffffff","circle_button_background":"#ffffff","circle_button_icon":"#1c1c1c"}},"scheme-2":{"settings":{"background":"#f3f3f3","text_color":"#5c5c5c","primary_button_background":"#5c5c5c","primary_button_text_color":"#ffffff","circle_button_background":"#ffffff","circle_button_icon":"#5c5c5c"}},"scheme-3":{"settings":{"background":"#1c1c1c","text_color":"#ffffff","primary_button_background":"#ffffff","primary_button_text_color":"#1c1c1c","circle_button_background":"#ffffff","circle_button_icon":"#1c1c1c"}},"scheme-4":{"settings":{"background":"rgba(0,0,0,0)","text_color":"#ffffff","primary_button_background":"#ffffff","primary_button_text_color":"#1c1c1c","circle_button_background":"#ffffff","circle_button_icon":"#1c1c1c"}}},"success_color":"#307a07","warning_color":"#ed8a00","error_color":"#cb2b2b","product_rating_color":"#1c1c1c","product_on_sale_accent":"#e32c2b","product_sold_out_badge_background":"#efefef","product_custom_badge_background":"#1c1c1c"},"Vogue":{"section_vertical_spacing":"xs","heading_font":"jost_n4","heading_letter_spacing":18,"text_font":"jost_n4","text_font_size_desktop":14,"button_letter_spacing":18,"color_schemes":{"scheme-1":{"settings":{"background":"#ffffff","text_color":"#303030","primary_button_background":"#f5db8b","primary_button_text_color":"#303030","circle_button_background":"#1c1c1c","circle_button_icon":"#f5db8b"}},"scheme-2":{"settings":{"background":"#ffffff","text_color":"#303030","primary_button_background":"#f5db8b","primary_button_text_color":"#303030","circle_button_background":"#1c1c1c","circle_button_icon":"#f5db8b"}},"scheme-3":{"settings":{"background":"#1c1c1c","text_color":"#ffffff","primary_button_background":"#ffffff","primary_button_text_color":"#1c1c1c","circle_button_background":"#ffffff","circle_button_icon":"#1c1c1c"}},"scheme-4":{"settings":{"background":"rgba(0,0,0,0)","text_color":"#ffffff","primary_button_background":"#ffffff","primary_button_text_color":"#1c1c1c","circle_button_background":"#ffffff","circle_button_icon":"#1c1c1c"}}},"success_color":"#307a07","warning_color":"#ed8a00","error_color":"#cb2b2b","product_rating_color":"#1c1c1c","product_on_sale_accent":"#e32c2b","product_sold_out_badge_background":"#efefef","product_custom_badge_background":"#1c1c1c"}}}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "badge_nursing_friendly_link": "shopify://collections/nursing-friendly",
+    "badge_360_stretch_link": "shopify://collections/360-stretch",
+    "badge_postpartum_link": "shopify://collections/sale-postpartum",
+    "badge_c_section_friendly_link": "shopify://collections/c-section-friendly",
+    "badge_pregnancy_essential_link": "shopify://collections/the-essentials-edit",
+    "us_mobile_popup_id": "X3Vh9r",
+    "us_desktop_popup_id": "TAZhw4",
+    "uk_mobile_popup_id": "SHbeLv",
+    "uk_desktop_popup_id": "SKDK9Y",
+    "section_vertical_spacing": "md",
+    "creative_id": "57400",
+    "creative_id_mobile": "57382",
+    "product_rating_color": "#1c1c1c",
+    "product_on_sale_accent": "#e32c2b",
+    "product_sold_out_badge_background": "#efefef",
+    "product_custom_badge_background": "#1c1c1c",
+    "success_color": "#307a07",
+    "warning_color": "#ed8a00",
+    "error_color": "#cb2b2b",
+    "font_family_h1": "Canela",
+    "font_family_h2": "Canela",
+    "font_family_h3": "Canela",
+    "font_family_h4": "Circular Std",
+    "font_family_h5": "Circular Std",
+    "font_family_h6": "Circular Std",
+    "button_text_transform": "uppercase",
+    "heading_text_transform": "normal",
+    "heading_letter_spacing": 18,
+    "text_font_size_desktop": 14,
+    "button_text_font": "body",
+    "button_letter_spacing": 18,
+    "show_button_transition": false,
+    "show_image_zoom_on_hover": false,
+    "stagger_products_apparition": false,
+    "stagger_menu_apparition": false,
+    "product_image_aspect_ratio": "portrait_crop",
+    "show_product_rating": false,
+    "gift_wrap_pro": "gift-box",
+    "favicon": "shopify://shop_images/favicon-hatch.png",
+    "mobile_popup_id": "X3Vh9r",
+    "desktop_popup_id": "TAZhw4",
+    "heading_font": "jost_n4",
+    "text_font": "poppins_n4",
+    "sections": {
+      "wishlist_header": {
+        "type": "wishlist_header",
+        "settings": {
+          "title": "Heart your HATCH Obsessions!",
+          "subtitle": "<p>Save your most coveted items in one place, then share them with<br/>friends so they’re in-the-know (hint, hint!)</p><p><br/><br/></p>"
+        }
+      },
+      "community_header": {
+        "type": "community_header",
+        "settings": {
+          "video_image": "image",
+          "image": "shopify://shop_images/community_desktop.png",
+          "image_mobile": "shopify://shop_images/community_mobile.png",
+          "video": "https://vimeo.com/8981490",
+          "text_enable": true,
+          "headline": "<p>OUR STORES</p>",
+          "textPosition": "center",
+          "color": "#ffffff"
+        }
+      },
+      "community_text": {
+        "type": "community_text",
+        "settings": {
+          "text_enable": true,
+          "description": "",
+          "textPosition": "center",
+          "color": "#000000",
+          "fontSize": 16
+        }
+      },
+      "community_stores": {
+        "type": "community_stores",
+        "blocks": {
+          "1584545737720": {
+            "type": "add_store",
+            "settings": {
+              "title": "BLEECKER, NYC",
+              "image": "shopify://shop_images/bleeker.png",
+              "description": "<p><strong>17 Bleecker St </strong><br/>Monday-Saturday 11am-6pm EST<br/>Sunday 12pm-5pm EST<br/><a href=\"tel:2125297063\" target=\"_blank\">646-368-1946</a><br/><a href=\"mailto:bleecker@hatchcollection.com\" title=\"mailto:bleecker@hatchcollection.com\">Bleecker@hatchcollection.com<br/></a></p><p>SAME DAY DELIVERY IN MANHATTAN & BROOKLYN</p><p><a href=\"/pages/store-services\" title=\"Store Services\">Shop@Home</a> </p>",
+              "show-book": false,
+              "show-events": false
+            }
+          },
+          "1538087495137": {
+            "type": "add_store",
+            "settings": {
+              "title": "UPPER EAST SIDE, NYC",
+              "image": "shopify://shop_images/ues.jpg",
+              "description": "<p><strong>1027 LEXINGTON AVE</strong><br/>Monday-Saturday 11am - 6pm<br/>Sunday 12pm - 5pm EST<br/><a href=\"tel:%20646-707-3929\" title=\"tel:%20646-707-3929\">646-368-1225</a><br/><a href=\"mailto:uppereastside@hatchcollection.com\" target=\"_blank\" title=\"mailto:uppereastside@hatchcollection.com\">uppereastside@hatchcollection.com</a><a href=\"mailto:bleecker@hatchcollection.com\" title=\"mailto:bleecker@hatchcollection.com\"><br/></a></p><p>SAME DAY DELIVERY IN MANHATTAN & BROOKLYN</p><p><a href=\"/pages/store-services\" title=\"Store Services\">Shop@Home</a> </p>",
+              "show-book": false,
+              "show-events": false
+            }
+          },
+          "1594310960103": {
+            "type": "add_store",
+            "settings": {
+              "title": "Shop@Home",
+              "image": "shopify://shop_images/shop_at_homw.jpg",
+              "description": "<p>Not sure of your size? Confused as to what you actually need? Just love a little VIP treatment? Our Shop@Home program pairs you with one of our fit experts and together you’ll curate a box filled with everything you need. <a href=\"/pages/store-services\" title=\"Shop at Home\"><strong>Set up a box here.</strong></a></p>",
+              "show-book": false,
+              "show-events": false
+            }
+          },
+          "19d64d5a-4348-4b35-8974-d87ebb5f7cd8": {
+            "type": "add_store",
+            "settings": {
+              "title": "Same-Day Delivery",
+              "image": "shopify://shop_images/bleeker_9a297507-e3d4-497a-8505-708b124711c3.png",
+              "description": "<p>In NYC area? Shoot your nearest store a message & our teams can get your selections to you via messenger in the same day, easy peasy.  </p>",
+              "show-book": false,
+              "show-events": false
+            }
+          },
+          "add_store_gyfgUi": {
+            "type": "add_store",
+            "disabled": true,
+            "settings": {
+              "title": "",
+              "description": "",
+              "show-book": true,
+              "show-events": true
+            }
+          },
+          "853dd1a1-3fbe-4eeb-b3d7-5206cf72925d": {
+            "type": "add_store",
+            "disabled": true,
+            "settings": {
+              "title": "HATCH CITY TOUR",
+              "image": "shopify://shop_images/IMG_6552.jpg",
+              "description": "<p>We are embarking on a city tour and we can't wait to meet you in person! </p><p><a href=\"https://events.hatchcollection.com/hatchcitytour2022\" target=\"_blank\" title=\"https://events.hatchcollection.com/hatchcitytour2022\">See our stops here</a></p><p>Don't see your city email <a href=\"mailto:events@hatchcollection.com\" title=\"mailto:events@hatchcollection.com\">events@hatchcollection.com</a>. </p>",
+              "show-book": false,
+              "show-events": false
+            }
+          },
+          "2a4e2e0c-2629-434a-b53f-6ff8752d144d": {
+            "type": "add_store",
+            "disabled": true,
+            "settings": {
+              "title": "MON COEUR TRUNKSHOW",
+              "image": "shopify://shop_images/MC_Final_Logo_with_100_percent_earth_lovin-removebg-preview_1.png",
+              "description": "<p>In celebration of Earth Day, our friends at <a href=\"https://moncoeur.com/\" target=\"_blank\" title=\"https://moncoeur.com/\">Mon Coeur</a>—a sustainable children's clothing brand making kinder clothing for earth-loving kids—will be popping in at our UES store. Come say hi!<br/><br/>4/12—4/22 11:00 am—6:00 pmHATCH Upper East Side1027 Lexington Ave</p>",
+              "show-book": false,
+              "show-events": false
+            }
+          }
+        },
+        "block_order": [
+          "1584545737720",
+          "1538087495137",
+          "1594310960103",
+          "19d64d5a-4348-4b35-8974-d87ebb5f7cd8",
+          "add_store_gyfgUi",
+          "853dd1a1-3fbe-4eeb-b3d7-5206cf72925d",
+          "2a4e2e0c-2629-434a-b53f-6ff8752d144d"
+        ],
+        "settings": {}
+      },
+      "community_form": {
+        "type": "community_form",
+        "settings": {
+          "hours": "10:00 am,11:00 am,12:00 pm,1:00 pm,2:00 pm,3:00 pm,4:00 pm,5:00 pm,6:00 pm,7:00 pm",
+          "years": "2018,2019,2020,"
+        }
+      },
+      "community_events": {
+        "type": "community_events",
+        "blocks": {
+          "32b5e4b1-d0f4-456f-864d-938b6ed93f0f": {
+            "type": "add_event",
+            "disabled": true,
+            "settings": {
+              "location": "DIGITAL COMMUNITY",
+              "title": "Building a Healthy Milk Supply",
+              "description": "<p>Join Jada Shapiro, founder of <a href=\"https://getboober.com/\" target=\"_blank\" title=\"https://getboober.com/\">Boober</a>, as she outlines methods to help build your milk supply. Bring your questions! <br/><br/>Register <a href=\"https://us02web.zoom.us/webinar/register/WN_Tdttj7-nTTKf5BWMVamY4A\" target=\"_blank\" title=\"https://us02web.zoom.us/webinar/register/WN_Tdttj7-nTTKf5BWMVamY4A\">here</a>.</p>",
+              "month": "July",
+              "day": 26,
+              "date_details": "<p>Monday<br/>7:30 p.m. EST<br/>Zoom</p>",
+              "show-rsvp": true
+            }
+          },
+          "d764cb23-092a-46df-9328-34206ac729a1": {
+            "type": "add_event",
+            "disabled": true,
+            "settings": {
+              "location": "DIGITAL COMMUNITY",
+              "title": "Partner Dynamic Before and After Baby",
+              "description": "<p>Join Jennie Monness, co-founder of Union Square Play, alongside a panel of experts as they discuss how to navigate the changes that happen in a relationship, before and after baby.</p><p>Please register <a href=\"https://us02web.zoom.us/webinar/register/WN_34l2Mc_oSlu0wtfVo1WqvA\" target=\"_blank\" title=\"https://us02web.zoom.us/webinar/register/WN_34l2Mc_oSlu0wtfVo1WqvA\">here</a></p>",
+              "month": "July",
+              "day": 28,
+              "date_details": "<p>Wednesday<br/>8:15 p.m. EST <br/>Zoom</p>",
+              "show-rsvp": true
+            }
+          },
+          "e7aca5eb-81ef-4a74-9816-ad9ea3d213a9": {
+            "type": "add_event",
+            "disabled": true,
+            "settings": {
+              "location": "DIGITAL COMMUNITY",
+              "title": "Troubleshooting Nursing Challenges",
+              "description": "<p>Join Jada Shapiro, founder of Boober as she helps you navigate any nursing hurdles you may be experiencing, bring your questions.</p>",
+              "month": "August",
+              "day": 2,
+              "date_details": "<p>Monday<br/>8:15 p.m. EST<br/>IG Live</p>",
+              "show-rsvp": true
+            }
+          },
+          "06cf186c-cce8-432a-9b26-d153fa60f79c": {
+            "type": "add_event",
+            "disabled": true,
+            "settings": {
+              "location": "DIGITAL COMMUNITY",
+              "title": "Baby Registry 101: Fewer, Better Things",
+              "description": "<p>Join Abby Kalter founder of Prepping for Peanut as she helps expectant parents cut down the time in research that goes into creating a registry! Learn how to tackle your baby registry without spending hours upon hours reading reviews, mom blogs, and hearing countless opinions. Strategically evaluate your lifestyle and needs to acquire just what you need and nothing you don’t. <br/><br/>Please register <a href=\"https://us02web.zoom.us/webinar/register/WN_aVHXbGkhS_e1Xcm7756_Zg\" target=\"_blank\" title=\"https://us02web.zoom.us/webinar/register/WN_aVHXbGkhS_e1Xcm7756_Zg\">here</a>.</p>",
+              "month": "August",
+              "day": 5,
+              "date_details": "<p>Thursday<br/>7:30 p.m. EST<br/>Zoom</p>",
+              "show-rsvp": true
+            }
+          },
+          "2d2fecdf-dc70-4e30-b8d1-ff2b18344142": {
+            "type": "add_event",
+            "disabled": true,
+            "settings": {
+              "location": "DIGITAL COMMUNITY",
+              "title": "But why? Debunking the origins of various maternal and post-natal practices",
+              "description": "<p>Join Union Square Play, along with a panel of experts as they bring fact or fiction to all the conversations you hear around becoming a parent from eating your placenta to is breast really best? They will cover it all and help you navigate all the various maternal and post-natal practices.<br/><br/>Please register <a href=\"https://us02web.zoom.us/webinar/register/WN_WJNs-_z0TVaZ0gQwmr3y2A\" target=\"_blank\" title=\"https://us02web.zoom.us/webinar/register/WN_WJNs-_z0TVaZ0gQwmr3y2A\">here</a>.</p>",
+              "month": "August",
+              "day": 9,
+              "date_details": "<p>Monday<br/>8:15 p.m. EST<br/>Zoom</p>",
+              "show-rsvp": true
+            }
+          },
+          "17103a9f-dcff-42e6-8ee6-354e768a47e0": {
+            "type": "add_event",
+            "disabled": true,
+            "settings": {
+              "location": "DIGITAL COMMUNITY",
+              "title": "Nourishing YOU",
+              "description": "<p>Join Mahri Relin, owner of Body Conceptions by Mahri, with experts Jennifer Khalaf and Jennie Monness, as they talk about the important roles that nutrition, exercise, and parenting play in the emotional and physical health of new moms.  Moderated by Amanda Warsavsky.<br/><br/>Please register <a href=\"https://us02web.zoom.us/webinar/register/WN_cmLMWf67Tq-FP8LsijNB7g\" target=\"_blank\" title=\"https://us02web.zoom.us/webinar/register/WN_cmLMWf67Tq-FP8LsijNB7g\">here</a>.</p>",
+              "month": "August",
+              "day": 10,
+              "date_details": "<p>Tuesday<br/>12:00 p.m. EST<br/>Zoom</p>",
+              "show-rsvp": true
+            }
+          },
+          "cf8edb1a-9b5d-44dd-b67b-c1f7a06d119c": {
+            "type": "add_event",
+            "disabled": true,
+            "settings": {
+              "location": "DIGITAL COMMUNITY",
+              "title": "INFANT CPR + SAFETY",
+              "description": "<p>Join Boober’s expert CPR instructor in a tutorial on infant CPR and safety protocols. You’ll learn how to recognize choking hazards, breathing and emergency techniques, as well as basic first aid.<br/><br/>Purchase a ticket <a href=\"https://bookeo.com/birthdaypresence?devent=41554AAAFAN1793E0BA757_2021-08-11_n59g9hNK1Z0&promotion=HATCHWEBINAR\" target=\"_blank\" title=\"https://bookeo.com/birthdaypresence?devent=41554AAAFAN1793E0BA757_2021-08-11_n59g9hNK1Z0&promotion=HATCHWEBINAR\">here</a>.</p>",
+              "month": "August",
+              "day": 11,
+              "date_details": "<p>Wednesday<br/>7:30 p.m. EST<br/>Zoom</p>",
+              "show-rsvp": true
+            }
+          },
+          "a7a76603-ed19-47ea-b77c-24c77100586d": {
+            "type": "add_event",
+            "disabled": true,
+            "settings": {
+              "location": "DIGITAL COMMUNITY",
+              "title": "Lactation 101",
+              "description": "<p>Join Jada Shapiro, founder of <a href=\"https://getboober.com/\" target=\"_blank\"><span style=\"text-decoration:underline\">Boober</span></a>, as she walks you through the basics of breastfeeding and how to avoid common pitfalls. If you have questions there’s a very good chance she has the answer (like, a 99.9% chance). <br/><br/>Please register <a href=\"https://us02web.zoom.us/webinar/register/WN_DcUiM_VZQYOmBqV3Xw_--Q\" target=\"_blank\" title=\"https://us02web.zoom.us/webinar/register/WN_DcUiM_VZQYOmBqV3Xw_--Q\">here</a>.</p>",
+              "month": "August",
+              "day": 16,
+              "date_details": "<p>Monday<br/>7:30 p.m. EST<br/>Zoom</p>",
+              "show-rsvp": true
+            }
+          },
+          "2440f3b9-da74-43d4-a2ad-10d9f2998a55": {
+            "type": "add_event",
+            "disabled": true,
+            "settings": {
+              "location": "DIGITAL COMMUNITY",
+              "title": "Stress + Motherhood",
+              "description": "<p>Join Brianna Towne, MS, ​​as she teaches you how to use your mind, body, and the food you eat to release unconscious blocks.<br/><br/>Please register <a href=\"https://us02web.zoom.us/webinar/register/WN_1MKYawDkR7SJAh_fd3TyCw\" target=\"_blank\" title=\"https://us02web.zoom.us/webinar/register/WN_1MKYawDkR7SJAh_fd3TyCw\">here.</a></p>",
+              "month": "August",
+              "day": 17,
+              "date_details": "<p>Tuesday<br/>7:30 p.m. EST<br/>Zoom</p>",
+              "show-rsvp": true
+            }
+          },
+          "d3aa40ff-00b0-4228-b8e4-673ea51c554a": {
+            "type": "add_event",
+            "disabled": true,
+            "settings": {
+              "location": "DIGITAL COMMUNITY",
+              "title": "From Birth to Postpartum",
+              "description": "<p>Join Jada Shapiro, founder of Boober, as she moderates a group of doulas as they discuss top tips for birth, lactation, and the early postpartum period.<br/><br/>Please register <a href=\"https://us02web.zoom.us/webinar/register/WN_lHOOSReWSHOoXF245DCVfQ\" target=\"_blank\" title=\"https://us02web.zoom.us/webinar/register/WN_lHOOSReWSHOoXF245DCVfQ\">here</a>.</p>",
+              "month": "August",
+              "day": 23,
+              "date_details": "<p>Monday<br/>7:30 p.m. EST<br/>Zoom</p>",
+              "show-rsvp": true
+            }
+          },
+          "66e5565e-b754-45c8-aead-3be6036cda0d": {
+            "type": "add_event",
+            "disabled": true,
+            "settings": {
+              "location": "DIGITAL COMMUNITY",
+              "title": "Body Image",
+              "description": "<p>Join Union Square Play and a panel of experts as they discuss, changing attitudes towards body image and how we can help create a healthy relationship to it--both for ourselves and our children.<br/><br/>Please register <a href=\"https://us02web.zoom.us/webinar/register/WN_10Me4_XCRJmRjRwWl645BQ\" target=\"_blank\" title=\"https://us02web.zoom.us/webinar/register/WN_10Me4_XCRJmRjRwWl645BQ\">here</a>.</p>",
+              "month": "August",
+              "day": 25,
+              "date_details": "<p>Wednesday<br/>8:15 p.m. EST<br/>Zoom</p>",
+              "show-rsvp": true
+            }
+          }
+        },
+        "block_order": [
+          "32b5e4b1-d0f4-456f-864d-938b6ed93f0f",
+          "d764cb23-092a-46df-9328-34206ac729a1",
+          "e7aca5eb-81ef-4a74-9816-ad9ea3d213a9",
+          "06cf186c-cce8-432a-9b26-d153fa60f79c",
+          "2d2fecdf-dc70-4e30-b8d1-ff2b18344142",
+          "17103a9f-dcff-42e6-8ee6-354e768a47e0",
+          "cf8edb1a-9b5d-44dd-b67b-c1f7a06d119c",
+          "a7a76603-ed19-47ea-b77c-24c77100586d",
+          "2440f3b9-da74-43d4-a2ad-10d9f2998a55",
+          "d3aa40ff-00b0-4228-b8e4-673ea51c554a",
+          "66e5565e-b754-45c8-aead-3be6036cda0d"
+        ],
+        "settings": {}
+      }
+    },
+    "content_for_index": [],
+    "blocks": {
+      "4139971114690857691": {
+        "type": "shopify://apps/swish-formerly-wishlist-king/blocks/wishlist-button-collection/194f5011-a43c-4b22-b12e-eaf20dc4506a",
+        "disabled": false,
+        "settings": {
+          "button_style": "plain_accent_1",
+          "button_placement": "top-end",
+          "button_offset_horizontal": 0,
+          "button_offset_vertical": 0,
+          "button_background_opacity": 85,
+          "button_background_size": 34,
+          "button_background_border_radius": 24,
+          "button_border_width": 1,
+          "show_shadow": false,
+          "icon_size": 18,
+          "icon_stroke_width": 1,
+          "app_integration_preset": "none",
+          "product_link_selector": "",
+          "floating_reference_js": ""
+        }
+      },
+      "13655089695959051254": {
+        "type": "shopify://apps/swish-formerly-wishlist-king/blocks/code-access/194f5011-a43c-4b22-b12e-eaf20dc4506a",
+        "disabled": false,
+        "settings": {
+          "version": "main"
+        }
+      },
+      "10993583111719876496": {
+        "type": "shopify://apps/linkedoption-combined-listings/blocks/app-embed/564f3d71-fe5e-48d7-a0de-284b76666f1e",
+        "disabled": false,
+        "settings": {}
+      },
+      "3915993389370480168": {
+        "type": "shopify://apps/swish-formerly-wishlist-king/blocks/wishlist-link-floating/194f5011-a43c-4b22-b12e-eaf20dc4506a",
+        "disabled": true,
+        "settings": {
+          "button_style": "solid_accent_1",
+          "button_mode": "always_show",
+          "button_position": "bottom-end",
+          "button_offset_horizontal": 10,
+          "button_offset_vertical": 20,
+          "button_size": 56,
+          "button_border_width": 2,
+          "button_border_radius": 40,
+          "show_shadow": true,
+          "icon_size": 24,
+          "icon_stroke_width": 2,
+          "counter_style": "outline_accent_1",
+          "counter_mode": "always_show",
+          "counter_position": "bottom-end",
+          "counter_offset_vertical": -5,
+          "counter_offset_horizontal": 0,
+          "counter_size": 16,
+          "counter_border_width": 1
+        }
+      },
+      "14197025361042770389": {
+        "type": "shopify://apps/swish-formerly-wishlist-king/blocks/app-settings-main/194f5011-a43c-4b22-b12e-eaf20dc4506a",
+        "disabled": false,
+        "settings": {
+          "theme_preset": "prestige",
+          "color_accent_1": "#000000",
+          "color_accent_2": "#000000",
+          "color_solid_button_label": "#ffffff",
+          "color_outline_button_label": "#000000",
+          "color_background_1": "#ffffff",
+          "color_background_2": "#ffffff",
+          "color_text": "#000000",
+          "button_min_height": 45,
+          "button_border_width": 1,
+          "button_border_radius": 0,
+          "input_min_height": 45,
+          "input_border_width": 1,
+          "input_border_radius": 0,
+          "shadow_opacity": 15,
+          "shadow_horizontal_offset": 0,
+          "shadow_vertical_offset": 2,
+          "shadow_blur": 4,
+          "font_text_scale": 100,
+          "access_mode": "REQUIRE_LOGIN_BEFORE_USE",
+          "wishlist_mode": "PRODUCT",
+          "wishlist_path": "/pages/wishlist",
+          "money_show_currency_code": true
+        }
+      },
+      "6680288666557934739": {
+        "type": "shopify://apps/swish-formerly-wishlist-king/blocks/wishlist-page/194f5011-a43c-4b22-b12e-eaf20dc4506a",
+        "disabled": false,
+        "settings": {
+          "column_width": "md",
+          "wishlist_empty_link": "shopify://collections/all",
+          "page_max_width": 1200,
+          "page_padding_top": 30,
+          "page_padding_bottom": 80,
+          "show_share_button": true,
+          "show_buy_all_button": false,
+          "show_clear_wishlist_button": true,
+          "add_to_cart_remove_from_wishlist": false,
+          "remove_button_style": "icon",
+          "product_options": "dropdowns",
+          "cta_button": "add_to_cart",
+          "cta_button_style": "solid_accent_1",
+          "alignment": "center",
+          "image_aspect_ratio": "1/1",
+          "image_object_fit": "cover",
+          "show_vendor": false,
+          "show_product_title": true,
+          "show_price": true,
+          "show_variant_input_label": false
+        }
+      },
+      "855628211100114053": {
+        "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/klaviyo-onsite-embed/2632fe16-c075-4321-a88b-50b567f42507",
+        "disabled": false,
+        "settings": {}
+      },
+      "15685250022964305326": {
+        "type": "shopify://apps/elevar-conversion-tracking/blocks/dataLayerEmbed/bc30ab68-b15c-4311-811f-8ef485877ad6",
+        "disabled": false,
+        "settings": {}
+      },
+      "10605408327587305396": {
+        "type": "shopify://apps/eg-auto-add-to-cart/blocks/app-embed/0f7d4f74-1e89-4820-aec4-6564d7e535d2",
+        "disabled": false,
+        "settings": {
+          "version": "v3"
+        }
+      },
+      "9776720720251544092": {
+        "type": "shopify://apps/helium-customer-fields/blocks/app-embed/bab58598-3e6a-4377-aaaa-97189b15f131",
+        "disabled": false,
+        "settings": {
+          "registration_form_id": "",
+          "edit_account_form_id": "",
+          "edit_account_link_text": "Edit account",
+          "edit_account_heading": "Edit account",
+          "edit_account_back_link_text": "Back to account",
+          "enable_js_api": false
+        }
+      },
+      "13309252322759772734": {
+        "type": "shopify://apps/sortd-merchandiser/blocks/app-embed/5176d6ef-993f-4869-ba24-87a0a6bedcf9",
+        "disabled": false,
+        "settings": {}
+      },
+      "4804304946286255945": {
+        "type": "shopify://apps/avada-cookie-consent/blocks/app-embed/deacc407-65bc-4a4e-84d9-f90e9e492cf3",
+        "disabled": false,
+        "settings": {}
+      },
+      "10812935154079970445": {
+        "type": "shopify://apps/nosto/blocks/nosto-script-embed-block/a67c43f0-0fc3-4649-a7dc-65ac499cae31",
+        "disabled": false,
+        "settings": {}
+      },
+      "2046743146925785077": {
+        "type": "shopify://apps/nosto/blocks/nosto-mc-embed-block/a67c43f0-0fc3-4649-a7dc-65ac499cae31",
+        "disabled": false,
+        "settings": {}
+      },
+      "6990797075511561578": {
+        "type": "shopify://apps/nosto/blocks/nosto-tagging-embed-block/a67c43f0-0fc3-4649-a7dc-65ac499cae31",
+        "disabled": false,
+        "settings": {}
+      },
+      "343699950125301042": {
+        "type": "shopify://apps/tote-fitting-room-booking/blocks/app-embed/e0cd5fec-c187-4d97-bd6e-9dafdbd04b61",
+        "disabled": false,
+        "settings": {
+          "position": "bottom-left",
+          "buttonText": "Personalize Your Visit!",
+          "buttonTextAfterCart": "Your Fitting Room",
+          "buttonColor": "#fdf5e9",
+          "buttonTextColor": "#281a1a",
+          "themeColor": "#fdf5e9",
+          "themeTextColor": "#281a1a",
+          "fontSize": 16,
+          "fontFamily": "'Uncut Sans', sans-serif",
+          "fontSecondary": "None",
+          "showCustomButtonTextForMobile": false,
+          "customTextMobileButton": "Book Now",
+          "rootVMargin": 30,
+          "rootHMargin": 30,
+          "showDynamicAddToToteCart": false,
+          "dynamicAddToToteCartButton": "#AddToCart"
+        }
+      },
+      "6237893613548423713": {
+        "type": "shopify://apps/amplify-bundles-upsell/blocks/main-widget-loader-script/f54ff67e-3f69-4df2-845e-7476ce633252",
+        "disabled": false,
+        "settings": {}
+      },
+      "5483944384444890901": {
+        "type": "shopify://apps/amplify-power-slide-cart/blocks/main-widget-loader-script/a3eaaec3-9bb6-4ba2-bb38-1f33eed7351b",
+        "disabled": false,
+        "settings": {}
+      },
+      "9928572688182724177": {
+        "type": "shopify://apps/accentuate/blocks/recently-viewed-embed/428a4822-57b4-4291-92b3-3f34bc7a240e",
+        "disabled": false,
+        "settings": {}
+      },
+      "7570552984445421165": {
+        "type": "shopify://apps/yotpo-product-reviews/blocks/settings/eb7dfd7d-db44-4334-bc49-c893b51b36cf",
+        "disabled": false,
+        "settings": {}
+      },
+      "14339172867238703359": {
+        "type": "shopify://apps/yotpo-product-reviews/blocks/reviews_tab/eb7dfd7d-db44-4334-bc49-c893b51b36cf",
+        "disabled": true,
+        "settings": {
+          "product": ""
+        }
+      },
+      "5017882195547572635": {
+        "type": "shopify://apps/sc-easy-redirects/blocks/app/be3f8dbd-5d43-46b4-ba43-2d65046054c2",
+        "disabled": false,
+        "settings": {}
+      },
+      "735721325670868888": {
+        "type": "shopify://apps/checkmate/blocks/checked_network/697a3444-1374-4f13-ba8c-ec03db25ebf0",
+        "disabled": false,
+        "settings": {}
+      },
+      "17676059084223943535": {
+        "type": "shopify://apps/triplewhale/blocks/triple_pixel_snippet/483d496b-3f1a-4609-aea7-8eee3b6b7a2a",
+        "disabled": false,
+        "settings": {}
+      },
+      "12412247409707363845": {
+        "type": "shopify://apps/contentsquare-analytics/blocks/csq_tag_snippet_script/019a7cb2-3ace-7c1e-bb5d-112ee54f5310",
+        "disabled": true,
+        "settings": {}
+      },
+      "15847936858134706495": {
+        "type": "shopify://apps/malachyte-hatch-collection/blocks/malachyte-config/01a0e8e1-136d-701f-b845-8a07377450e1",
+        "disabled": false,
+        "settings": {
+          "endpoint": "https://api-hatchcollection.malachyte.com",
+          "token": "OlpwLMEjL8MXFOpbk7awiqGMRDGJZwJwQ9ccLzYJ"
+        }
+      },
+      "1877152918344802950": {
+        "type": "shopify://apps/intelligems-a-b-testing/blocks/intelligems-script/fa83b64c-0c77-4c0c-b4b2-b94b42f5ef19",
+        "disabled": false,
+        "settings": {}
+      },
+      "15135077829686852319": {
+        "type": "shopify://apps/kinect-hatch-collection/blocks/chat-widget/01a17523-84c8-7dfb-a0ec-5f18d09f6e32",
+        "disabled": false,
+        "settings": {
+          "assistant_enabled": true,
+          "display_mode": "page-shift",
+          "panel_side": "left",
+          "default_open": false,
+          "mobile_chat_size": "three-quarter",
+          "compare_enabled": true,
+          "selection_ask_ai_enabled": false,
+          "selection_ask_ai_label": "Ask Kinect",
+          "product_view_mode": "carousel",
+          "product_card_size": 140,
+          "mobile_overrides": false,
+          "product_view_mode_mobile": "carousel",
+          "product_card_size_mobile": 140,
+          "primary_color": "#000000",
+          "accent_color": "#000000",
+          "panel_bg_color": "",
+          "capability_accent_color": "",
+          "launcher_type": "fab",
+          "pill_anchor": "bottom",
+          "launcher_size": 100,
+          "launcher_icon_size": 100,
+          "launcher_bg_color": "#F8EFE8",
+          "launcher_text_color": "#000000",
+          "launcher_animation": "none",
+          "phone_number": "",
+          "ai_label": "Ask AI",
+          "call_label": "Call now",
+          "launcher_label": "Hatch AI",
+          "logo": "shopify://shop_images/Minimalist_HATCH_AI_Wordmark_ee09b168-0018-4e94-aac5-3ea8a49d08a9.png",
+          "welcome_message": "Hi! What are you looking for today?",
+          "conversation_starters": "New Arrivals, Best Sellers, Gift Ideas",
+          "starter_chip_color": "",
+          "sneak_peek_enabled": false,
+          "sneak_peek_style": "fab-animation",
+          "sneak_peek_countdown": 5,
+          "sneak_peek_page": "all",
+          "sneak_peek_animation_time": 5,
+          "sneak_peek_animation_style": "bounce",
+          "sneak_peek_panel_reveal": "welcome-message",
+          "sneak_peek_custom_text": "",
+          "custom_panel_placement": false,
+          "global_css_overrides": "",
+          "shadow_css_overrides": "",
+          "hide_when_visible": ""
+        }
+      }
+    },
+    "color_schemes": {
+      "scheme-1": {
+        "settings": {
+          "background": "#ffffff",
+          "background_gradient": "",
+          "text_color": "#000000",
+          "primary_button_background": "#000000",
+          "primary_button_text_color": "#ffffff",
+          "circle_button_background": "#ffffff",
+          "circle_button_icon": "#000000"
+        }
+      },
+      "scheme-2": {
+        "settings": {
+          "background": "#ffffff",
+          "background_gradient": "",
+          "text_color": "#000000",
+          "primary_button_background": "#000000",
+          "primary_button_text_color": "#ffffff",
+          "circle_button_background": "#ffffff",
+          "circle_button_icon": "#000000"
+        }
+      },
+      "scheme-3": {
+        "settings": {
+          "background": "#2d2d2d",
+          "background_gradient": "",
+          "text_color": "#ffffff",
+          "primary_button_background": "#ffffff",
+          "primary_button_text_color": "#1c1c1c",
+          "circle_button_background": "#ffffff",
+          "circle_button_icon": "#1c1c1c"
+        }
+      },
+      "scheme-4": {
+        "settings": {
+          "background": "rgba(0,0,0,0)",
+          "background_gradient": "",
+          "text_color": "#ffffff",
+          "primary_button_background": "#ffffff",
+          "primary_button_text_color": "#1c1c1c",
+          "circle_button_background": "#ffffff",
+          "circle_button_icon": "#1c1c1c"
+        }
+      },
+      "scheme-f190e7e7-7edb-4e48-b9db-cf621def6fa9": {
+        "settings": {
+          "background": "#faefe9",
+          "background_gradient": "",
+          "text_color": "#000000",
+          "primary_button_background": "#000000",
+          "primary_button_text_color": "#ffffff",
+          "circle_button_background": "#ffffff",
+          "circle_button_icon": "#000000"
+        }
+      },
+      "scheme-699222c9-09df-4502-9e19-58fe5bb24125": {
+        "settings": {
+          "background": "rgba(0,0,0,0)",
+          "background_gradient": "",
+          "text_color": "#000000",
+          "primary_button_background": "#000000",
+          "primary_button_text_color": "#ffffff",
+          "circle_button_background": "#ffffff",
+          "circle_button_icon": "#000000"
+        }
+      },
+      "scheme-d0a75b4e-3b41-4e4b-8dfc-db12cbb72d69": {
+        "settings": {
+          "background": "#000000",
+          "background_gradient": "",
+          "text_color": "#ffffff",
+          "primary_button_background": "#ffffff",
+          "primary_button_text_color": "#000000",
+          "circle_button_background": "#ffffff",
+          "circle_button_icon": "#000000"
+        }
+      },
+      "scheme-0561a53d-3ddd-4cfd-a899-d915c1114890": {
+        "settings": {
+          "background": "#ffffff",
+          "background_gradient": "",
+          "text_color": "#535353",
+          "primary_button_background": "#535353",
+          "primary_button_text_color": "#ffffff",
+          "circle_button_background": "#ffffff",
+          "circle_button_icon": "#535353"
+        }
+      }
+    }
+  },
+  "presets": {
+    "Allure": {
+      "section_vertical_spacing": "md",
+      "heading_font": "instrument_sans_n4",
+      "heading_letter_spacing": 18,
+      "text_font": "nunito_n4",
+      "text_font_size_desktop": 14,
+      "button_letter_spacing": 18,
+      "color_schemes": {
+        "scheme-1": {
+          "settings": {
+            "background": "#efefef",
+            "text_color": "#1c1c1c",
+            "primary_button_background": "#1c1c1c",
+            "primary_button_text_color": "#ffffff",
+            "circle_button_background": "#ffffff",
+            "circle_button_icon": "#1c1c1c"
+          }
+        },
+        "scheme-2": {
+          "settings": {
+            "background": "#ffffff",
+            "text_color": "#1c1c1c",
+            "primary_button_background": "#1c1c1c",
+            "primary_button_text_color": "#ffffff",
+            "circle_button_background": "#ffffff",
+            "circle_button_icon": "#1c1c1c"
+          }
+        },
+        "scheme-3": {
+          "settings": {
+            "background": "#1c1c1c",
+            "text_color": "#ffffff",
+            "primary_button_background": "#ffffff",
+            "primary_button_text_color": "#1c1c1c",
+            "circle_button_background": "#ffffff",
+            "circle_button_icon": "#1c1c1c"
+          }
+        },
+        "scheme-4": {
+          "settings": {
+            "background": "rgba(0,0,0,0)",
+            "text_color": "#ffffff",
+            "primary_button_background": "#ffffff",
+            "primary_button_text_color": "#1c1c1c",
+            "circle_button_background": "#ffffff",
+            "circle_button_icon": "#1c1c1c"
+          }
+        }
+      },
+      "success_color": "#307a07",
+      "warning_color": "#ed8a00",
+      "error_color": "#cb2b2b",
+      "product_rating_color": "#1c1c1c",
+      "product_on_sale_accent": "#e32c2b",
+      "product_sold_out_badge_background": "#efefef",
+      "product_custom_badge_background": "#1c1c1c"
+    },
+    "Couture": {
+      "section_vertical_spacing": "md",
+      "heading_font": "jost_n4",
+      "heading_letter_spacing": 18,
+      "text_font": "poppins_n4",
+      "text_font_size_desktop": 14,
+      "button_letter_spacing": 18,
+      "color_schemes": {
+        "scheme-1": {
+          "settings": {
+            "background": "#ffffff",
+            "text_color": "#5c5c5c",
+            "primary_button_background": "#5c5c5c",
+            "primary_button_text_color": "#ffffff",
+            "circle_button_background": "#ffffff",
+            "circle_button_icon": "#1c1c1c"
+          }
+        },
+        "scheme-2": {
+          "settings": {
+            "background": "#f3f3f3",
+            "text_color": "#5c5c5c",
+            "primary_button_background": "#5c5c5c",
+            "primary_button_text_color": "#ffffff",
+            "circle_button_background": "#ffffff",
+            "circle_button_icon": "#5c5c5c"
+          }
+        },
+        "scheme-3": {
+          "settings": {
+            "background": "#1c1c1c",
+            "text_color": "#ffffff",
+            "primary_button_background": "#ffffff",
+            "primary_button_text_color": "#1c1c1c",
+            "circle_button_background": "#ffffff",
+            "circle_button_icon": "#1c1c1c"
+          }
+        },
+        "scheme-4": {
+          "settings": {
+            "background": "rgba(0,0,0,0)",
+            "text_color": "#ffffff",
+            "primary_button_background": "#ffffff",
+            "primary_button_text_color": "#1c1c1c",
+            "circle_button_background": "#ffffff",
+            "circle_button_icon": "#1c1c1c"
+          }
+        }
+      },
+      "success_color": "#307a07",
+      "warning_color": "#ed8a00",
+      "error_color": "#cb2b2b",
+      "product_rating_color": "#1c1c1c",
+      "product_on_sale_accent": "#e32c2b",
+      "product_sold_out_badge_background": "#efefef",
+      "product_custom_badge_background": "#1c1c1c"
+    },
+    "Vogue": {
+      "section_vertical_spacing": "xs",
+      "heading_font": "jost_n4",
+      "heading_letter_spacing": 18,
+      "text_font": "jost_n4",
+      "text_font_size_desktop": 14,
+      "button_letter_spacing": 18,
+      "color_schemes": {
+        "scheme-1": {
+          "settings": {
+            "background": "#ffffff",
+            "text_color": "#303030",
+            "primary_button_background": "#f5db8b",
+            "primary_button_text_color": "#303030",
+            "circle_button_background": "#1c1c1c",
+            "circle_button_icon": "#f5db8b"
+          }
+        },
+        "scheme-2": {
+          "settings": {
+            "background": "#ffffff",
+            "text_color": "#303030",
+            "primary_button_background": "#f5db8b",
+            "primary_button_text_color": "#303030",
+            "circle_button_background": "#1c1c1c",
+            "circle_button_icon": "#f5db8b"
+          }
+        },
+        "scheme-3": {
+          "settings": {
+            "background": "#1c1c1c",
+            "text_color": "#ffffff",
+            "primary_button_background": "#ffffff",
+            "primary_button_text_color": "#1c1c1c",
+            "circle_button_background": "#ffffff",
+            "circle_button_icon": "#1c1c1c"
+          }
+        },
+        "scheme-4": {
+          "settings": {
+            "background": "rgba(0,0,0,0)",
+            "text_color": "#ffffff",
+            "primary_button_background": "#ffffff",
+            "primary_button_text_color": "#1c1c1c",
+            "circle_button_background": "#ffffff",
+            "circle_button_icon": "#1c1c1c"
+          }
+        }
+      },
+      "success_color": "#307a07",
+      "warning_color": "#ed8a00",
+      "error_color": "#cb2b2b",
+      "product_rating_color": "#1c1c1c",
+      "product_on_sale_accent": "#e32c2b",
+      "product_sold_out_badge_background": "#efefef",
+      "product_custom_badge_background": "#1c1c1c"
+    }
+  }
+}
