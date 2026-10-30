@@ -11,7 +11,7 @@
       if (!this.questions || !this.previous || !this.next) return;
 
       this.addEventListener('click', (event) => {
-        const button = event.target.closest('button');
+        const button = event.target instanceof Element ? event.target.closest('button') : null;
         if (!button || button.disabled) return;
 
         if (button.hasAttribute('data-hotline-direction')) {
