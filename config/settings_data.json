@@ -615,7 +615,7 @@
           "launcher_size": 100,
           "launcher_icon_size": 100,
           "launcher_bg_color": "#000000",
-          "launcher_text_color": "#FFFFFF",
+          "launcher_text_color": "#ffffff",
           "launcher_animation": "none",
           "phone_number": "",
           "ai_label": "Ask AI",
@@ -635,7 +635,7 @@
           "sneak_peek_custom_text": "",
           "custom_panel_placement": false,
           "global_css_overrides": "",
-          "shadow_css_overrides": "",
+          "shadow_css_overrides": "@media(min-width:767px) {\n.kinect-launcher { top: calc(50% + 104px); bottom: auto;!important }\n}",
           "hide_when_visible": ""
         }
       }
