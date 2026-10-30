@@ -34,7 +34,7 @@ Data (JSON, additive):
 | Desktop nav | Cream filled pill "ASK HATCH" with chat icon, beside the search icon (placement #2) | Label from 1400px; icon-only 1280–1399px (Hatch's header is two rows there and the label would push the cart icon to a third row); hidden below 1280px, where the floating launcher remains |
 | Mobile menu | Row "The HATCH Hotline" with chat icon, below the last category, above SIGN IN | Tapping closes the drawer and opens the assistant |
 | PDP | Cream panel below Add to Cart, above Add to Wishlist: icon · "The HATCH Hotline" · ‹ ›, subline, one sliding row of product-aware chips, no input | Kinect app block, restyled by CSS; arrows added by JS |
-| First open (panel) | "The HATCH Hotline" header, cream card "Good questions deserve good answers.", rows "Help me find my size / Help me style an outfit / Ask a product question", square input, round black launcher bottom-right | App embed settings + shadow CSS |
+| Shopping Assistant (launcher + panel) | **Unchanged from `main`** — Hatch's existing Kinect embed (`15135077829686852319`): launcher on the left edge at mid-height, panel opens from the left, "Hatch AI" wordmark. The Hotline work only adds the three entry points above; assistant look and position are managed in the Kinect app / dashboard, not in this theme branch | `config/settings_data.json` (no diff vs `main`) |
 
 Kinect's behaviour is untouched: eligibility (Audience / traffic split / kill switch) still
 decides whether the links and block appear (the links render `hidden` and Kinect reveals them),
