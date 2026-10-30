@@ -142,12 +142,18 @@ html:not([data-kinect-ready]) .hatch-hotline-nav {
 }
 
 html[data-kinect-ready] #sidebar-menu .header-sidebar__main-panel {
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  min-inline-size: 0;
+  max-inline-size: 100%;
   overflow-y: auto;
   overscroll-behavior-y: contain;
 }
 
 html[data-kinect-ready] #sidebar-menu .header-sidebar__main-panel > .header-sidebar__scroller {
+  min-inline-size: 0;
+  max-inline-size: 100%;
   height: auto;
   overflow: visible;
 }
@@ -162,6 +168,12 @@ html[data-kinect-ready] #sidebar-menu .header-sidebar__footer {
 
 html[data-kinect-ready] #sidebar-menu .header-sidebar__footer::before {
   display: none;
+}
+
+@media screen and (max-width: 699px) {
+  .hatch-hotline__question {
+    padding-inline: 10px;
+  }
 }
 
 @media (hover: hover) {
