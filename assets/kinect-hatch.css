@@ -23,8 +23,9 @@
    Kinect removes the `hidden` attribute once the assistant is eligible on
    this page load; until then the whole <li> stays out of the flow.
    -------------------------------------------------------------------------- */
-.header__kinect-link:has(> [hidden]) {
-  display: none;
+.header__kinect-link:has(> [hidden]),
+.header__secondary-nav .header__kinect-link:has(> [hidden]) {
+  display: none !important;
 }
 
 .header__secondary-nav .header__kinect-link {
@@ -33,13 +34,80 @@
   flex: 0 0 auto;
 }
 
-/* Hatch's desktop header already wraps onto two rows below 1280px; adding the
-   pill there pushes the cart icon to a third row, so the pill starts at 1280px.
-   Narrower desktops keep the floating launcher; phones use the menu row. */
-@media screen and (min-width: 1280px) {
+/* Hatch's header (Oct 2026 "Navigation Updates" in common.css) is a fixed
+   grid — logo column | categories | 120px icon column — so the icon column
+   only has room for search, account and cart. While the pill is visible
+   (Kinect removes `hidden` for eligible shoppers), the icon column becomes
+   max-content and the categories column absorbs the difference. Below 1050px
+   the pill does not fit beside the categories; the floating launcher remains
+   there, and phones use the menu row. Measured on the [Kinect] Draft Theme. */
+@media screen and (min-width: 1050px) {
   .header__secondary-nav .header__kinect-link {
     display: flex;
     align-items: center;
+  }
+
+  .header:has(.header__kinect-link > a:not([hidden])) {
+    grid-template-columns: 150px minmax(0, 1fr) max-content !important;
+    column-gap: 24px !important;
+  }
+
+  .header:has(.header__kinect-link > a:not([hidden])) .header__primary-nav {
+    column-gap: 16px !important;
+  }
+
+  .header:has(.header__kinect-link > a:not([hidden])) .header__secondary-nav {
+    flex-wrap: nowrap;
+  }
+}
+
+@media screen and (min-width: 1150px) {
+  .header:has(.header__kinect-link > a:not([hidden])) {
+    grid-template-columns: 196px minmax(0, 1fr) max-content !important;
+    column-gap: 32px !important;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .header:has(.header__kinect-link > a:not([hidden])) {
+    column-gap: 64px !important;
+  }
+}
+
+/* Assistant open in page-shift mode: the page is ~380px narrower but media
+   queries still see the full viewport. Tighten the header so the categories
+   stay on one row at 1440px and never take more rows than the theme already
+   does without the pill. min-height keeps the header from jumping on open. */
+@media screen and (min-width: 1150px) {
+  body.kinect-page-shift .header:has(.header__kinect-link > a:not([hidden])) {
+    grid-template-columns: 150px minmax(0, 1fr) max-content !important;
+    column-gap: 24px !important;
+    min-height: 98px;
+  }
+
+  body.kinect-page-shift .header:has(.header__kinect-link > a:not([hidden])) .header__primary-nav {
+    column-gap: 12px !important;
+    row-gap: 0;
+  }
+
+  body.kinect-page-shift .header:has(.header__kinect-link > a:not([hidden])) .header__primary-nav--center > ul > li {
+    padding: 28px 0 !important;
+  }
+}
+
+@media screen and (min-width: 1050px) and (max-width: 1149px) {
+  body.kinect-page-shift .header__secondary-nav .header__kinect-link .kinect-hotline-nav {
+    gap: 0;
+    padding: 8px 10px;
+  }
+
+  body.kinect-page-shift .header__secondary-nav .header__kinect-link .kinect-hotline-nav span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 }
 
@@ -84,26 +152,6 @@
   width: 13px;
   height: 13px;
   flex-shrink: 0;
-}
-
-/* Measured on hatchcollection.com (30 Oct 2026): the header is two rows below
-   1380px and the "ASK HATCH" label (108px) pushes the cart icon onto a third
-   row until 1400px. Icon-only pill in that band; the label is still read out
-   by screen readers. */
-@media screen and (min-width: 1280px) and (max-width: 1399px) {
-  .header__secondary-nav .header__kinect-link .kinect-hotline-nav {
-    gap: 0;
-    padding: 8px 10px;
-  }
-
-  .header__secondary-nav .header__kinect-link .kinect-hotline-nav span {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
 }
 
 /* --------------------------------------------------------------------------
