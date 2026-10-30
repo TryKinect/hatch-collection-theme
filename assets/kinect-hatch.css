@@ -356,3 +356,31 @@
     scroll-behavior: auto;
   }
 }
+
+/* --------------------------------------------------------------------------
+   4. Klaviyo "Get 15% Off" teaser — right edge on desktop
+   Hatch asked for the Klaviyo side tab to sit on the right so the left edge
+   is free for the Kinect launcher. Klaviyo writes its position as inline
+   styles (left: 0; top: 50%; rotate(-90deg) translate(-50%, 0); origin
+   left top), so these overrides must use !important and mirror the
+   transform. The tab keeps its width, colours, copy and click behaviour.
+   Desktop only — the mobile teaser (a separate Klaviyo form) is untouched.
+   -------------------------------------------------------------------------- */
+@media screen and (min-width: 768px) {
+  [class*="kl-teaser-"] {
+    left: auto !important;
+    right: 0 !important;
+    top: 50% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform-origin: right top !important;
+    transform: rotate(90deg) translate(50%, 0) !important;
+  }
+
+  /* Close (×) stays toward the page interior at the top of the tab. */
+  [class*="kl-teaser-"] .klaviyo-close-form {
+    right: auto !important;
+    left: -16px !important;
+    bottom: -16px !important;
+  }
+}
