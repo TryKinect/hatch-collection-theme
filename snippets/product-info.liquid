@@ -844,6 +844,10 @@ Supported variables
                 payment_button_text_color: block.settings.payment_button_text_color
             -%}
 
+            {%- if context == 'main_product' and product != blank -%}
+              {%- render 'hatch-hotline', product: product, section_id: section.id -%}
+            {%- endif -%}
+
           {%- when 'pickup_availability' -%}
             {%- if product != blank -%}
               {%- render 'pickup-availability', product_variant: product.selected_or_first_available_variant -%}

@@ -524,5 +524,25 @@
       },
       "product_subtotal": "Product subtotal"
     }
+  },
+  "hatch_hotline": {
+    "title": "The HATCH Hotline",
+    "description": "Your direct line to a little HATCH expertise.",
+    "open_assistant": "Ask HATCH: open the shopping assistant",
+    "suggested_questions": "Questions to ask HATCH",
+    "previous_questions": "Previous questions",
+    "next_questions": "More questions",
+    "questions": {
+      "size": "Which size should I choose?",
+      "fit": "How does it fit?",
+      "style": "How can I style it?",
+      "postpartum": "Can I wear it after pregnancy?",
+      "fabric": "What is the fabric like?",
+      "care": "How do I care for it?",
+      "beauty_use": "How do I use it?",
+      "beauty_ingredients": "What are the ingredients?",
+      "beauty_routine": "How does it fit my routine?",
+      "beauty_scent": "What does it smell like?"
+    }
   }
 }

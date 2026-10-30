@@ -1,0 +1,94 @@
+{% doc %}
+  Renders a HATCH Hotline entry point for the existing Kinect assistant.
+
+  @param {string} [placement] - Use 'navigation' for the mobile menu entry.
+  @param {product} [product] - The product shown beside the suggested questions.
+  @param {string} [section_id] - A unique section identifier for the question row.
+{% enddoc %}
+
+{%- capture hotline_icon -%}
+  <svg class="hatch-hotline__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+    <path d="M20 11.5a8 8 0 0 1-8 8 8.4 8.4 0 0 1-3.4-.7L4 20l1.2-4.6A8.4 8.4 0 0 1 4.5 12a8 8 0 1 1 15.5-.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8.5 9.5h7M8.5 13h4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+{%- endcapture -%}
+
+{%- if placement == 'navigation' -%}
+  <li class="hatch-hotline-nav">
+    <button
+      type="button"
+      class="hatch-hotline-nav__button"
+      data-kinect-open="mobile_nav"
+      data-hatch-hotline-nav
+      aria-label="{{ 'hatch_hotline.open_assistant' | t | escape }}"
+    >
+      <span>{{ 'hatch_hotline.title' | t }}</span>
+      {{ hotline_icon }}
+    </button>
+  </li>
+{%- else -%}
+  {%- liquid
+    assign question_keys = 'size,fit,style,postpartum,fabric,care' | split: ','
+    if product.template_suffix contains 'beauty'
+      assign question_keys = 'beauty_use,beauty_ingredients,beauty_routine,beauty_scent' | split: ','
+    endif
+    assign questions_id = 'HatchHotlineQuestions-' | append: section_id | append: '-' | append: product.id
+  -%}
+
+  <hatch-hotline class="hatch-hotline" role="region" aria-label="{{ 'hatch_hotline.title' | t | escape }}">
+    <div class="hatch-hotline__header">
+      <button
+        type="button"
+        class="hatch-hotline__title"
+        data-kinect-open="pdp_hotline"
+        aria-label="{{ 'hatch_hotline.open_assistant' | t | escape }}"
+      >
+        {{ hotline_icon }}
+        <span>{{ 'hatch_hotline.title' | t }}</span>
+      </button>
+
+      <div class="hatch-hotline__controls">
+        <button
+          type="button"
+          class="hatch-hotline__arrow hatch-hotline__arrow--previous"
+          data-hotline-direction="previous"
+          aria-label="{{ 'hatch_hotline.previous_questions' | t | escape }}"
+          aria-controls="{{ questions_id | escape }}"
+          disabled
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+            <path d="m14 7-5 5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="hatch-hotline__arrow"
+          data-hotline-direction="next"
+          aria-label="{{ 'hatch_hotline.next_questions' | t | escape }}"
+          aria-controls="{{ questions_id | escape }}"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+            <path d="m10 7 5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <p class="hatch-hotline__description">{{ 'hatch_hotline.description' | t }}</p>
+
+    <div
+      id="{{ questions_id | escape }}"
+      class="hatch-hotline__questions"
+      role="group"
+      aria-label="{{ 'hatch_hotline.suggested_questions' | t | escape }}"
+    >
+      {%- for question_key in question_keys -%}
+        {%- assign translation_key = 'hatch_hotline.questions.' | append: question_key -%}
+        {%- assign question = translation_key | t -%}
+        <button type="button" class="hatch-hotline__question" data-hatch-question="{{ question | escape }}">
+          {{- question -}}
+        </button>
+      {%- endfor -%}
+    </div>
+  </hatch-hotline>
+{%- endif -%}

@@ -195,6 +195,7 @@
       </div>
     </div>
       <ul class="header-sidebar__linklist {% if show_dividers %}divide-y{% endif %} unstyled-list" role="list">
+        {%- assign hotline_inserted = false -%}
         {%- for link in menu.links -%}
           <li class="{{- link.title -}}">
             {%- if link.links.size > 0 -%}
@@ -216,7 +217,15 @@
               </a>
             {%- endif -%}
           </li>
+          {%- assign link_title = link.title | handleize -%}
+          {%- if link_title == 'sale' and hotline_inserted == false -%}
+            {%- render 'hatch-hotline', placement: 'navigation' -%}
+            {%- assign hotline_inserted = true -%}
+          {%- endif -%}
         {%- endfor -%}
+        {%- unless hotline_inserted -%}
+          {%- render 'hatch-hotline', placement: 'navigation' -%}
+        {%- endunless -%}
       </ul>
     </div>
 
