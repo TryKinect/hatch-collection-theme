@@ -462,8 +462,6 @@
           {%- endif -%}
         {%- endfor -%}
 
-        {%- render 'hatch-hotline', placement: 'desktop' -%}
-
         {%- if section.settings.enable_search -%}
           <li class="header__search-link header-icon">
             <a href="{{ routes.search_url }}" aria-controls="header-search-{{ section.id }}">
