@@ -1,0 +1,174 @@
+class NawaDataLayer{
+	constructor(){
+		this.currencyCode	=	'USD';
+		this.customer		=	null;
+	}//function
+
+//	-------------------
+//	Utility Function(s)
+//	-------------------
+	formatPrice(p){
+	//	From 14800 to 148.00
+		return (p / 100).toFixed(2);
+	}//function
+
+	prepareCartItem(item){
+		if (item) {
+			return {
+				id: item.variant_id,
+				product_id: item.product_id,
+				name: item.product_title,
+				price: this.formatPrice(item.price),
+				brand: item.vendor,
+				variant: item.variant_title,
+				quantity: item.quantity
+			};
+		}
+	}//function
+
+	prepareVariant(product, variant, quantity = 1){
+		return {
+			id:				variant.id
+			,name:			product.title
+			,price:			this.formatPrice(variant.price)
+			,brand:			product.vendor
+			,variant:		variant.title
+			,quantity:		quantity
+			,product_id:	product.id
+			,category:		product.category
+			,product_line:	this.getProductLine(product)
+		};
+	}///function
+
+	prepareProduct(product){
+		return	{
+			id:				product.id
+			,name:			product.title
+			,price:			this.formatPrice(product.price)
+			,brand:			product.vendor
+			,category:		product.category
+			,product_line:	this.getProductLine(product)
+		};
+	}//function
+	getProductLine(product){
+		var product_line	=	'';
+		if( product.tags.find(function(_element){return _element.toLowerCase()=='beauty';}) ){
+		//	Products tagged with Beauty
+			product_line	=	'beauty';
+		}else{
+		//	All Other Products are Fashion
+			product_line	=	'fashion';
+		}//if
+		return	product_line;
+	}//function
+
+//	--------------------
+//	Tracking Function(s)
+//	--------------------
+
+// Track PDP page views, not sending events when the users changes the variant.
+	productPageView(product){
+		dataLayer.push({
+			event: 'productDetailsImpression',
+			customer:	this.customer,
+			ecommerce: {
+				detail: { products: [this.prepareProduct(product)] }
+			}
+		});
+	}//function
+
+	initiateCheckout(cartItems, form){
+		dataLayer.push({
+			event: 'checkout'
+			,customer:	this.customer
+			,ecommerce: {
+				checkout: {
+					product_flat_data:{
+						product_ids:		cartItems.map(i => i.product_id)
+						,product_prices:	cartItems.map(i => i.price)
+						,product_quantities:cartItems.map(i => i.quantity)
+					}
+					,products: [
+					{% for line_item in line_items %}
+						{
+							id: {{ line_item.product_id }}
+							,price: {{ line_item.price | times: 0.01 }}
+							,quantity: {{ line_item.quantity }}
+						}{% if forloop.last == false %},{% endif %}
+					{% endfor %}
+					]
+					,products:	cartItems.map(i => ({
+							id: i.product_id
+							,price: this.formatPrice(i.price)
+							,quantity: i.quantity
+						}))
+					,items:		cartItems.map(i => ({
+							id: i.product_id
+							,price: this.formatPrice(i.price)
+							,quantity: i.quantity
+					}))
+				}
+			}
+		//	eventCallback: () => form.submit()
+		})
+	}//function
+
+	addToCart(product, variant, quantity){
+		dataLayer.push({
+			event: 'addToCart',
+			customer:	this.customer,
+			ecommerce: {
+				currencyCode:	this.currencyCode,
+				add: { products: [this.prepareVariant(product, variant, quantity)] }
+			}
+		});
+	}//function
+
+	removeFromCart(cartItem){
+		if (cartItem) {
+			dataLayer.push({
+				event: 'removeFromCart'
+				,customer:	this.customer
+				,ecommerce: {
+					currencyCode:	this.currencyCode
+					,remove: { products: [this.prepareCartItem(cartItem)] }
+				}
+			});
+		}
+	}//function
+
+}//class
+//	-----------
+//	Instantiate
+//	-----------
+window.NDL	=	new NawaDataLayer;
+//	------------
+//	Atach Events
+//	------------
+//	Add To Cart
+NAC.events.addToCart.before.push(function(form){
+	var product	=	NDL.product;
+	var variant	=	NDL.product.variants.find(function(_element){return _element.id == form['id'].value});
+	var quantity=	form['quantity'].value;
+	NDL.addToCart(product, variant, quantity);
+	return true;
+});
+//	Remove From Cart
+NAC.events.removeFromCart.before.push(function(line_item_index){
+	line_item_index--;	// The Shopify Index starts at 1 but the array index starts at 0;
+	var cartItem=	NAC.cart_data.items[line_item_index];
+//	console.log('cart item',line_item_index,cartItem,NAC.cart_data );	//	Debugging Only
+	NDL.removeFromCart(cartItem);
+	return true;
+});
+//	Checkout
+var _cart_form	=	document.querySelector('form[action="/cart"]')
+if( _cart_form ){
+	_cart_form.onsubmit	=	function(){
+		var cartItems	=	NAC.cart_data.items;
+		var form		=	this;
+		window.NDL.initiateCheckout(cartItems,form)
+	};
+}//if
+//	Product View Page View
+//defined in Layout: theme.liquid

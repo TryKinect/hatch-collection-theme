@@ -1,0 +1,141 @@
+
+{{ 'community.css' | asset_url | stylesheet_tag }}
+
+<div class="community-section">
+  {% section 'community_header' %}
+  {% section 'community_text' %}
+  <div class="cm-stores-events-wrapper">
+  	{% section 'community_stores' %}
+    {% section 'community_events' %}
+  </div>
+
+
+
+  <div class="pt-2 pb-2 tBg--pinkLight" id="appointments">
+      <div class="row justify-content-center no-gutters">
+        <div class="col-md-12 text-center">
+          <h5 class="text-center mb-3">In store services</h5>
+          <h1 class="text-center mb-3"><p>HATCH <em>By Appointment</em></p></h1>
+          <div class="cSvg-wrapper">
+            <div class="cSvg cSvg--xl">
+              <img src="{{ 'icon1.png' | asset_url }}" importance="low"/>
+            </div>
+            <h3 class="mt-1">One on One Styling</h3>
+          </div>
+          <div class="cSvg-wrapper">
+            <div class="cSvg cSvg--xl">
+              <img src="{{ 'icon2.png' | asset_url }}" importance="low"/>
+            </div>
+			<h3 class="mt-1">Cravings bar</h3>
+          </div>
+          <div class="cSvg-wrapper icon-pregnancy">
+            <div class="cSvg cSvg--xl">
+              <img src="{{ 'icon3.png' | asset_url }}" importance="low"/>
+             </div>
+             <h3 class="mt-1">Pregnancy Wardrobe</h3>
+          </div>
+          <div class="cSvg-wrapper icon-shower">
+          	<div class="cSvg cSvg--md">
+              <img src="{{ 'icon4.png' | asset_url }}" importance="low"/>
+            </div>
+          	<h3 class="mt-1">Shopping showers</h3>
+          </div>
+		</div>
+      </div>
+
+
+      <div class="py-2 submit-appointment">
+        <div class="row align-items-center">
+          <div class="col-lg-12">
+            <div class="text-center mt-1">
+              <h2>Excited? Book Now</h2>
+              <button type="button" class="cCta--arrow" data-toggle="modal" data-target="#appointmentForm">Book your Appointment!</a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+
+  <div class="container py-3 community-form">
+    <h1 class="tC--pink title text-center">HATCH IN YOUR CITY!</h1>
+    <p class="mb-1 mt-2">Want us to come to your city? Let us know and we might just stop by...</p>
+    <div class="col-md-8 center">
+      		<div class="aaa_formbuilder_container loaded_aaa_formbuilder">
+                <form method="post" action="" enctype="multipart/form-data" class="aaaformbuilder_form">
+                  <input type="hidden" name="url" class="get_current_page_url" value="">
+                  <input type="hidden" name="container_id" value="">
+                  <input type="hidden" name="form_id" value="4294">
+                  <input type="hidden" name="form_domain" value="hatchcollection.myshopify.com">
+                  <input type="hidden" name="" value="Thanks for the suggestion, hopefully we'll see you soon!" class="success_msg">
+                  <input type="hidden" name="" value="" class="aaa_thankyoupageurl">
+                  <input type="hidden" name="uploadeLimit" class="formUploadLimit" value="20">
+                  <input type="hidden" name="allowefiletype" class="allowedfiletype" value="">
+                  <input type="hidden" name="conditionallogic" class="conditionallogic" value="">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <input type="text" class="form-control" name="first-name" placeholder="YOUR FIRST NAME">
+                    </div>
+                    <div class="col-md-6">
+                      <input type="text" class="form-control" name="last-name" placeholder="YOUR LAST NAME">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12"><input type="text" class="form-control" name="city" placeholder="YOUR CITY *" required></div>
+
+                    <div class="col-12"><input type="email" class="form-control" name="replyemail" placeholder="YOUR EMAIL *" required></div>
+                  </div>
+                  <div class="cForm-submit-wrapper mt-3">
+                    <button type="submit" class="cForm-submit cCta--arrow">SUBMIT</button>
+                  </div>
+                </form>
+              </div>
+    </div>
+   </div>
+
+  {% section 'community_form' %}
+
+  <script type="text/javascript">
+  $(".cta-event").click(function() {
+    $('html, body').animate({
+        scrollTop: $(".cm-stores-events-wrapper").offset().top - 100
+    }, 500);
+  });
+    $(function() {
+      if(location.hash) {
+        $('a[href="'+location.hash+'"]').click();
+      }
+      var search = decodeURI(location.search);
+      if(search.indexOf('contact_posted') > 0) {
+      	$("#successForm").modal("show");
+      }
+
+    });
+    $(".rsvp-btn").click(function() {
+      var eventDate = $(this).attr('event-date');
+      var eventTitle = $(this).attr('event-title');
+
+      $('#rsvp-event-date').val(eventDate);
+      $('#rsvp-event-name').val(eventTitle);
+    });
+</script>
+</div>
+
+<div class="modal fade hide" id="successForm" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog--sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close cModal-close" data-dismiss="modal" aria-label="Close">
+          <div class="cSvg cSvg--sm cSvg--pink">
+            <svg class="cSvg-el">
+              <use xlink:href="#icon-icon-x-close"></use>
+            </svg></div>
+        </button>
+        <div class="text-center">
+          Thanks you, hopefully we'll see you soon!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

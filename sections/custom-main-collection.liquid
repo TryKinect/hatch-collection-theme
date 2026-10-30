@@ -1,0 +1,4015 @@
+{%- liquid
+  assign active_values_count = 0
+
+  for filter in collection.filters
+    if filter.type == 'price_range'
+      if filter.max_value.value != blank or filter.min_value.value != blank
+        assign active_values_count = active_values_count | plus: 1
+      endif
+    else
+      assign active_values_count = active_values_count | plus: filter.active_values.size
+    endif
+  endfor
+
+  if section.settings.quick_links_menu.links.size > 0 or section.settings.show_filters and collection.filters.size > 0
+    assign show_filters = true
+  else
+    assign show_filters = false
+  endif
+
+  # First, we retrieve, based on the merchant settings, the user preferences and the available space the most appropriate size
+  assign products_mobile_grid_mode = cart.attributes.products_mobile_grid_mode
+
+  if request.design_mode
+    # In the theme editor we do not use the choice selected manually, to reduce confusion when changing the theme editor values
+    assign products_desktop_grid_mode = section.settings.products_size_desktop
+  elsif section.settings.show_grid_mode_selector
+    assign products_desktop_grid_mode = cart.attributes.products_desktop_grid_mode | default: section.settings.products_size_desktop
+  else
+    assign products_desktop_grid_mode = section.settings.products_size_desktop
+  endif
+
+  if products_mobile_grid_mode == blank or request.design_mode
+    if section.settings.products_per_row_mobile == '1'
+      assign products_mobile_grid_mode = 'large'
+    else
+      assign products_mobile_grid_mode = 'medium'
+    endif
+  endif
+-%}
+
+{%- comment -%}
+  ------------------------------------------------------------------------------------------------------------------------
+  CSS
+  ------------------------------------------------------------------------------------------------------------------------
+{%- endcomment -%}
+
+<style>
+    #shopify-section-{{ section.id }} {
+      --product-list-horizontal-spacing-factor: {{ section.settings.horizontal_spacing_factor }};
+      --product-list-vertical-spacing-factor: {{ section.settings.vertical_spacing_factor }};
+
+      {% comment %}On mobile, it's simple! No sidebar or whatever{% endcomment %}
+      --collection-items-per-row-medium: 2;
+      --collection-items-per-row-large: 1;
+    }
+
+    #shopify-section-{{ section.id }} .product-list {
+      --product-list-max-items-per-row-allowed: 99 !important; {% comment %}On collection page, we explicitly set a number of items so we don't want this{% endcomment %}
+    }
+
+    @media screen and (min-width: 700px) {
+      #shopify-section-{{ section.id }} {
+        {% comment %}On tablet, we do not have any sidebar, so we can fix it{% endcomment %}
+        --collection-items-per-row-compact: 4;
+        --collection-items-per-row-medium: 3;
+        --collection-items-per-row-large: 2;
+      }
+    }
+
+    @media screen and (min-width: 1000px) {
+      #shopify-section-{{ section.id }} {
+        {%- comment -%}Starting from 1000px it starts to get funky, as we can have or not the sidebar{%- endcomment -%}
+
+        {%- if section.settings.filter_layout == 'sidebar' and show_filters -%}
+          --collection-items-per-row-compact: 4;
+          --collection-items-per-row-medium: 3;
+          --collection-items-per-row-large: 2;
+        {%- else -%}
+          --collection-items-per-row-compact: 6;
+          --collection-items-per-row-medium: 4;
+          --collection-items-per-row-large: 3;
+        {%- endif -%}
+      }
+
+      #shopify-section-{{ section.id }} .collection {
+        {%- if section.settings.filter_layout == 'sidebar' and show_filters -%}
+          --collection-grid-template: 100% minmax(0,1fr);
+        {%- endif -%}
+      }
+    }
+
+    @media screen and (min-width: 1400px) {
+      #shopify-section-{{ section.id }} {
+        {%- comment -%}Starting from 1400px we can afford having more content even in sidebar mode{%- endcomment -%}
+
+        {%- if section.settings.filter_layout == 'sidebar' and show_filters -%}
+          --collection-items-per-row-compact: 6;
+          --collection-items-per-row-medium: 4;
+          --collection-items-per-row-large: 3;
+        {%- endif -%}
+      }
+    }
+
+    .main-plp-nav video { width: 100%; }
+  .ad-container { position: relative;    /* Adjust size as needed */ }
+  .ad-image { width: 100%; display: block; }
+  .ad-text { position: absolute; bottom: 22px; left: 22px; color: #000; }
+  .ad-text h2 { margin: 0 0 10px; font-weight: 100; font-size: 30px; line-height: 100%; letter-spacing: 0; }
+  .shop-link { color: #000; font-family: CircularXX; font-weight: 400; font-style: Regular; font-size: 14px; line-height: 113.99999999999999%; letter-spacing: 0.14px; text-decoration: underline; text-decoration-style: solid; text-underline-offset: 1px; text-transform: uppercase; }
+  .inline-banner .ad-container:before { content: ""; top: 0; left: 0; width: 100%; height: 100%; position: absolute; background-color: var(--background_color); opacity: var(--opacity); }
+  .ad-text { z-index: 2; }
+  @media(max-width:760px) {
+    .ad-text h2 { font-size: 16px; line-height: 100%; margin-bottom: 10px; }
+    .shop-link { font-size: 10px; line-height: 113.99999999999999%; letter-spacing: 0.06px; display: block; }
+    .ad-text { bottom: 12px; left: 12px; }
+  }
+  @media(max-width:760px) {
+     .desktop-inline-banner { display: none; }
+  }
+  @media(min-width:761px) {
+     .mobile-inline-banner { display: none; }
+  }
+
+
+
+
+  .product-list .promo-section {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+  .promo-section {
+    padding: 2rem 2rem;
+    display: flex;
+    justify-content: center;
+  }
+  .promo-content {
+    display: flex;
+    gap: 37px;
+    align-items: center;
+    max-width: 1200px;
+    width: 100%;
+    justify-content: center;
+  }
+  .promo-section.reverse .promo-content { direction: rtl; }
+  .promo-section.reverse .promo-text { direction: ltr; }
+
+  .promo-image img,.promo-image video {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  .promo-image { max-width: 540px; }
+
+  .promo-text {
+    text-align: center;
+    max-width: 300px;
+  }
+  .promo-text h3 {
+    margin-bottom: 30px;
+    font-family: Canela;
+    font-weight: 100;
+    font-size: 36px;
+    line-height: 100%;
+    letter-spacing: 0;
+    text-align: center;
+  }
+  .promo-text p {
+    color: #000000;
+    font-family: CircularXX;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 114%;
+    letter-spacing: 0.14px;
+    text-align: center;
+    max-width: 260px;
+    margin: 0 auto 30px;
+  }
+  .shop-btn {
+    display: inline-block;
+    font-size: 14px;
+    line-height: 114%;
+    letter-spacing: 0.14px;
+    text-align: center;
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-transform: uppercase;
+  }
+
+  .product-list .desktop-promo,
+  .product-list .mobile-promo {
+    width: 100%;
+    grid-column: 1 / -1;
+  }
+
+  @media(max-width:900px){
+    .promo-image { width: 100%; }
+    .promo-text { width: 100%; }
+    .promo-content { gap: 15px; }
+    .product-list .promo-section { padding: 20px 15px; }
+  }
+  @media(max-width:767px){
+    .product-list .promo-section { padding: 20px 0px; }
+    .promo-content { flex-flow: column-reverse wrap; gap: 24px; }
+    .promo-text p { width: 100%; max-width: 280px; margin: 0 auto 12px; }
+    .promo-text { max-width: 360px; }
+    .promo-text h3 { margin-bottom: 12px; }
+  }
+  @media(max-width:760px){
+      .desktop-promo { display: none; }
+  }
+  @media(min-width:761px){
+      .mobile-promo { display: none; }
+  }
+
+
+
+
+  .feature-section { grid-column: 1 / -1; width: 100% }
+  .feature-section { padding: 3rem 0rem }
+  .feature-content { width: 100%; align-items: center }
+  .feature-left { display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem }
+  .feature-subimage img { width: 100%; max-width: 262px; object-fit: cover; margin: 0 auto }
+  .feature-right img { width: 100%; height: auto; object-fit: cover }
+  .feature-content { display: flex }
+  .feature-content .feature-left, .feature-content .feature-right { width: 50%; text-align: center }
+  .feature-inner { margin: 0 auto; max-width: 340px }
+  .feature-inner h3 { font-size: 36px; line-height: 100%; letter-spacing: 0; text-align: center; margin-bottom: 20px; font-weight: 100 }
+  .feature-subimage { margin-bottom: 15px }
+  .image-shop-btn { display: inline-block; font-size: 14px; line-height: 113.99999999999999%; letter-spacing: 0.14px; text-align: center; text-decoration: underline; text-decoration-style: solid; text-transform: uppercase }
+  .feature-section.reverse .feature-content { direction: rtl; }
+  .product-list .desktop-feature, .product-list .mobile-feature {
+    width: 100%;
+    grid-column: 1 / -1;
+  }
+  @media(max-width:900px){
+    .feature-content .feature-left { width: 30%; }
+    .feature-content .feature-right { width: 70%; }
+    .feature-content { gap: 10px; }
+    .feature-section { padding: 2rem 15px; }
+  }
+  @media(max-width:700px){
+    .feature-content .feature-right { display: none; }
+    .feature-content .feature-left { width: 100%; }
+  }
+  @media(max-width:760px){
+    .desktop-feature { display: none; }
+  }
+  @media(min-width:761px){
+    .mobile-feature { display: none; }
+  }
+  #shopify-section-{{ section.id }} .fm-plp-block { grid-column: 1 / -1; width:100%; min-width:0; display:block; }
+  #shopify-section-{{ section.id }} .fm-plp-block * { box-sizing:border-box; }
+</style>
+
+{%- comment -%}
+  ------------------------------------------------------------------------------------------------------------------------
+  LIQUID
+  ------------------------------------------------------------------------------------------------------------------------
+{%- endcomment -%}
+{%- capture collection_breadcrumb -%}
+    <nav class="breadcrumb" aria-label="{{ 'general.breadcrumb.label' | t | escape }}">
+      <ol class="breadcrumb__list unstyled-list">
+        <li class="breadcrumb__list-item">
+          <a href="{{ routes.root_url }}" class="smallcaps">{{ 'general.breadcrumb.home' | t }}</a>
+        </li>
+        {% comment %}
+        <li class="breadcrumb__list-item">
+          <a href="{{ routes.all_products_collection_url }}" class="smallcaps">{{ 'general.breadcrumb.shop' | t }}</a>
+        </li> {% endcomment %}
+
+        <li class="breadcrumb__list-item">
+          <a href="{{ collection.url }}" aria-current="page" class="smallcaps">{{ collection.title }}</a>
+        </li>
+      </ol>
+    </nav>
+{%- endcapture -%}
+{% unless section.settings.hide_product_cards %}
+  <div class="color-scheme color-scheme--{{ section.settings.color_scheme.id }}">
+    <div class="container">
+      {% comment %}{{- collection_breadcrumb -}}{% endcomment %}
+      <div class="header-module__content">
+        <div class="header-module__inner">
+          <h1 class="header-module__title">
+            {{- collection.title -}}
+          </h1>
+          {% if collection.metafields.custom.short_description %}
+            <div class="header-module__description">
+              {{ collection.metafields.custom.short_description }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      {% if collection.metafields.custom.sub_nav_block_image_1
+        or collection.metafields.custom.sub_nav_block_video_1
+        or collection.metafields.custom.sub_nav_block_image_2
+        or collection.metafields.custom.sub_nav_block_video_2
+        or collection.metafields.custom.sub_nav_block_image_3
+        or collection.metafields.custom.sub_nav_block_video_3
+        or collection.metafields.custom.sub_nav_block_image_4
+        or collection.metafields.custom.sub_nav_block_video_4
+        or collection.metafields.custom.sub_nav_block_image_5
+        or collection.metafields.custom.sub_nav_block_video_5
+        or collection.metafields.custom.sub_nav_block_image_6
+        or collection.metafields.custom.sub_nav_block_video_6
+      %}
+        <div class="wrap-plp-nav mobile-nav">
+          {% if collection.metafields.custom.sub_nav_block_image_1
+            or collection.metafields.custom.sub_nav_block_video_1
+          %}
+            <div class="main-plp-nav">
+              <a href="{{ collection.metafields.custom.sub_nav_block_url_1 }}">
+                {% if collection.metafields.custom.sub_nav_block_video_1 == blank %}
+                  <img src="{{ collection.metafields.custom.sub_nav_block_image_1 |image_url: master }}">
+                {% endif %}
+                {% if collection.metafields.custom.sub_nav_block_video_1 != blank %}
+                  <video
+                    autoplay
+                    muted
+                    playsinline
+                    loop
+                    preload="metadata"
+                    aria-label="The Celine Contour Cardigan"
+                    poster="{{ collection.metafields.custom.sub_nav_block_image_1 |image_url: master }}"
+                  >
+                    <source src="{{ collection.metafields.custom.sub_nav_block_video_1 | file_url }}" type="video/mp4">
+                  </video>
+                {% endif %}
+                <div class="main-title">{{ collection.metafields.custom.sub_nav_block_title_1 }}</div>
+              </a>
+            </div>
+          {% endif %}
+          {% if collection.metafields.custom.sub_nav_block_image_2
+            or collection.metafields.custom.sub_nav_block_video_2
+          %}
+            <div class="main-plp-nav">
+              <a href="{{ collection.metafields.custom.sub_nav_block_url_2 }}">
+                {% if collection.metafields.custom.sub_nav_block_video_2 == blank %}
+                  <img src="{{ collection.metafields.custom.sub_nav_block_image_2 |image_url: master }}">
+                {% endif %}
+                {% if collection.metafields.custom.sub_nav_block_video_2 != blank %}
+                  <video
+                    autoplay
+                    muted
+                    playsinline
+                    loop
+                    preload="metadata"
+                    aria-label="The Celine Contour Cardigan"
+                    poster="{{ collection.metafields.custom.sub_nav_block_image_2 |image_url: master }}"
+                  >
+                    <source src="{{ collection.metafields.custom.sub_nav_block_video_2 | file_url }}" type="video/mp4">
+                  </video>
+                {% endif %}
+                <div class="main-title">{{ collection.metafields.custom.sub_nav_block_title_2 }}</div>
+              </a>
+            </div>
+          {% endif %}
+          {% if collection.metafields.custom.sub_nav_block_image_3
+            or collection.metafields.custom.sub_nav_block_video_3
+          %}
+            <div class="main-plp-nav">
+              <a href="{{ collection.metafields.custom.sub_nav_block_url_3 }}">
+                {% if collection.metafields.custom.sub_nav_block_video_3 == blank %}
+                  <img src="{{ collection.metafields.custom.sub_nav_block_image_3 |image_url: master }}">
+                {% endif %}
+                {% if collection.metafields.custom.sub_nav_block_video_3 != blank %}
+                  <video
+                    autoplay
+                    muted
+                    playsinline
+                    loop
+                    preload="metadata"
+                    aria-label="The Celine Contour Cardigan"
+                    poster="{{ collection.metafields.custom.sub_nav_block_image_3 |image_url: master }}"
+                  >
+                    <source src="{{ collection.metafields.custom.sub_nav_block_video_3 | file_url }}" type="video/mp4">
+                  </video>
+                {% endif %}
+                <div class="main-title">{{ collection.metafields.custom.sub_nav_block_title_3 }}</div>
+              </a>
+            </div>
+          {% endif %}
+          {% if collection.metafields.custom.sub_nav_block_image_4
+            or collection.metafields.custom.sub_nav_block_video_4
+          %}
+            <div class="main-plp-nav">
+              <a href="{{ collection.metafields.custom.sub_nav_block_url_4 }}">
+                {% if collection.metafields.custom.sub_nav_block_video_4 == blank %}
+                  <img src="{{ collection.metafields.custom.sub_nav_block_image_4 |image_url: master }}">
+                {% endif %}
+                {% if collection.metafields.custom.sub_nav_block_video_4 != blank %}
+                  <video
+                    autoplay
+                    muted
+                    playsinline
+                    loop
+                    preload="metadata"
+                    aria-label="The Celine Contour Cardigan"
+                    poster="{{ collection.metafields.custom.sub_nav_block_image_4 |image_url: master }}"
+                  >
+                    <source src="{{ collection.metafields.custom.sub_nav_block_video_4 | file_url }}" type="video/mp4">
+                  </video>
+                {% endif %}
+                <div class="main-title">{{ collection.metafields.custom.sub_nav_block_title_4 }}</div>
+              </a>
+            </div>
+          {% endif %}
+          {% if collection.metafields.custom.sub_nav_block_image_5
+            or collection.metafields.custom.sub_nav_block_video_5
+          %}
+            <div class="main-plp-nav">
+              <a href="{{ collection.metafields.custom.sub_nav_block_url_5 }}">
+                {% if collection.metafields.custom.sub_nav_block_video_5 == blank %}
+                  <img src="{{ collection.metafields.custom.sub_nav_block_image_5 |image_url: master }}">
+                {% endif %}
+                {% if collection.metafields.custom.sub_nav_block_video_5 != blank %}
+                  <video
+                    autoplay
+                    muted
+                    playsinline
+                    loop
+                    preload="metadata"
+                    aria-label="The Celine Contour Cardigan"
+                    poster="{{ collection.metafields.custom.sub_nav_block_image_5 |image_url: master }}"
+                  >
+                    <source src="{{ collection.metafields.custom.sub_nav_block_video_5 | file_url }}" type="video/mp4">
+                  </video>
+                {% endif %}
+                <div class="main-title">{{ collection.metafields.custom.sub_nav_block_title_5 }}</div>
+              </a>
+            </div>
+          {% endif %}
+          {% if collection.metafields.custom.sub_nav_block_image_6
+            or collection.metafields.custom.sub_nav_block_video_6
+          %}
+            <div class="main-plp-nav">
+              <a href="{{ collection.metafields.custom.sub_nav_block_url_6 }}">
+                {% if collection.metafields.custom.sub_nav_block_video_6 == blank %}
+                  <img src="{{ collection.metafields.custom.sub_nav_block_image_6 |image_url: master }}">
+                {% endif %}
+                {% if collection.metafields.custom.sub_nav_block_video_6 != blank %}
+                  <video
+                    autoplay
+                    muted
+                    playsinline
+                    loop
+                    preload="metadata"
+                    aria-label="The Celine Contour Cardigan"
+                    poster="{{ collection.metafields.custom.sub_nav_block_image_6 |image_url: master }}"
+                  >
+                    <source src="{{ collection.metafields.custom.sub_nav_block_video_6 | file_url }}" type="video/mp4">
+                  </video>
+                {% endif %}
+                <div class="main-title">{{ collection.metafields.custom.sub_nav_block_title_6 }}</div>
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+      <div class="v-stack gap-6 sm:gap-12 product-grid filter-{{ section.settings.filter_layout }}">
+        {%- if collection.all_products_count == 0 -%}
+          <div class="empty-state">
+            <div class="prose">
+              <h1 class="h4">{{ collection.title }}</h1>
+              <p>{{ 'collection.general.empty_collection' | t }}</p>
+
+              {%- assign button_content = 'collection.general.continue_shopping' | t -%}
+              {%- render 'button', href: routes.all_products_collection_url, size: 'xl', content: button_content -%}
+            </div>
+          </div>
+        {%- else -%}
+          {%- if show_filters
+            or section.settings.show_sort_by
+            or section.settings.show_grid_mode_selector
+            or section.settings.show_results_count
+          -%}
+            <height-observer variable="collection-toolbar" class="collection-toolbar full-bleed">
+              <div class="collection-toolbar__button-list">
+                <div class="collection-toolbar__button-container-custom" onclick="openfn()">
+                  <button
+                    type="button"
+                    aria-controls="facets-drawer-custom"
+                    class="collection-toolbar__button-custom heading text-xxs w-full"
+                  >
+                    {{- 'collection.faceting.filter_button' | t }}
+                    <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g id="expand_more_FILL0_wght500_GRAD0_opsz48 1">
+                      <path id="Vector" d="M11.9999 16.0125L5.85645 9.86903L7.07492 8.65055L11.9999 13.6006L16.9249 8.67555L18.1434 9.89403L11.9999 16.0125Z" fill="black"/>
+                      </g>
+                    </svg>
+                  </button>
+                </div>
+                {%- if show_filters -%}
+                  <div class="collection-toolbar__button-container {% if section.settings.filter_layout == 'sidebar' %}md:hidden{% endif %}">
+                    <button
+                      type="button"
+                      aria-controls="facets-drawer"
+                      class="text-with-icon  collection-toolbar__button heading text-xxs w-full"
+                    >
+                      {{- 'collection.faceting.filter_button' | t }}
+                      {% if active_values_count > 0 %}({{ active_values_count }}){% endif -%}
+                      <svg
+                        aria-hidden="true"
+                        focusable="false"
+                        fill="none"
+                        width="10"
+                        class="icon icon-chevron-down"
+                        viewBox="0 0 10 10"
+                      >
+                        <path d="m1 3 4 4 4-4" stroke="currentColor" stroke-linecap="square"></path>
+                      </svg>
+                    </button>
+                  </div>
+                {%- endif -%}
+
+                {%- if section.settings.show_sort_by -%}
+                  {%- assign selected_sort_by_value = collection.sort_by | default: collection.default_sort_by -%}
+
+                  <div class="collection-toolbar__button-container">
+                    <button
+                      type="button"
+                      aria-controls="sort-by-popover"
+                      class="collection-toolbar__button heading text-xxs w-full"
+                      onclick="
+                        (function(){
+                          if (window.innerWidth <= 767) {
+                            const button = document.querySelector('.collection-toolbar__button[aria-controls=\'sort-by-popover\']');
+                            const observer = new MutationObserver(() => {
+                              const popover = document.querySelector('facets-sort-popover#sort-by-popover');
+                              if (popover && button.nextElementSibling !== popover) {
+                                button.parentNode.insertBefore(popover, button.nextSibling);
+                                observer.disconnect();
+                              }
+                            });
+                            observer.observe(document.body, { childList: true, subtree: true });
+                          }
+                        })();
+                      "
+                    >
+                      <span class="text-with-icon justify-center">
+                        {{- 'collection.faceting.sort_by' | t -}}
+                        {%- render 'icon' with 'chevron-down' -%}
+                      </span>
+                    </button>
+
+                    <facets-sort-popover
+                      id="sort-by-popover"
+                      section-id="{{ section.id }}"
+                      class="popover popover--bottom-end color-scheme color-scheme--dialog"
+                      close-on-listbox-select
+                    >
+                      <p class="h4 sort-popup" slot="header">
+                        {{ 'collection.faceting.sort_by' | t }}
+                        <svg
+                          aria-hidden="true"
+                          focusable="false"
+                          fill="none"
+                          width="10"
+                          class="icon icon-chevron-down"
+                          viewBox="0 0 10 10"
+                        >
+                          <path d="m1 3 4 4 4-4" stroke="currentColor" stroke-linecap="square"></path>
+                        </svg>
+                      </p>
+
+                      <x-listbox class="popover__value-list">
+                        {%- for sort_option in collection.sort_options -%}
+                          {%- if sort_option.name != blank -%}
+                            <button
+                              type="button"
+                              class="popover__value-option group"
+                              role="option"
+                              value="{{ sort_option.value }}"
+                              {% if sort_option.value == selected_sort_by_value %}
+                                aria-selected="true"
+                              {% endif %}
+                            >
+                              <span class="reversed-link">{{ sort_option.name }}</span>
+                            </button>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </x-listbox>
+                    </facets-sort-popover>
+                  </div>
+                {%- endif -%}
+              </div>
+
+              {%- if section.settings.show_results_count -%}
+                <p class="collection-toolbar__products-count h6 md-max:hidden">
+                  {{ 'collection.products_count' | t: count: collection.products_count }}
+                </p>
+              {%- endif -%}
+
+              {%- if section.settings.show_grid_mode_selector -%}
+                <collection-layout-switch
+                  device="mobile"
+                  class="collection-toolbar__layout-switch-list sm:hidden"
+                  aria-controls="product-list-{{ section.id }}"
+                >
+                  <button
+                    type="button"
+                    value="large"
+                    class="collection-toolbar__button {% if products_mobile_grid_mode == 'large' %}is-active{% endif %}"
+                    aria-label="Switch to larger product images"
+                  >
+                    {%- render 'icon' with 'collection-layout-1' -%}
+                  </button>
+                  <button
+                    type="button"
+                    value="medium"
+                    class="collection-toolbar__button {% if products_mobile_grid_mode == 'medium' %}is-active{% endif %}"
+                    aria-label="Switch to smaller product images"
+                  >
+                    {%- render 'icon' with 'collection-layout-2' -%}
+                  </button>
+                </collection-layout-switch>
+
+                <collection-layout-switch
+                  device="desktop"
+                  class="collection-toolbar__layout-switch-list sm-max:hidden"
+                  aria-controls="product-list-{{ section.id }}"
+                >
+                  <button
+                    type="button"
+                    value="large"
+                    class="collection-toolbar__button {% if products_desktop_grid_mode == 'large' %}is-active{% endif %}"
+                    aria-label="Switch to larger product images"
+                  >
+                    {%- render 'icon' with 'collection-layout-2' -%}
+                  </button>
+                  <button
+                    type="button"
+                    value="medium"
+                    class="collection-toolbar__button {% if products_desktop_grid_mode == 'medium' %}is-active{% endif %}"
+                    aria-label="Switch to smaller product images"
+                  >
+                    {%- render 'icon' with 'collection-layout-3' -%}
+                  </button>
+                  <button
+                    type="button"
+                    value="compact"
+                    class="collection-toolbar__button {% if products_desktop_grid_mode == 'compact' %}is-active{% endif %}"
+                    aria-label="Switch to compact product images"
+                  >
+                    {%- render 'icon' with 'collection-layout-4' -%}
+                  </button>
+                </collection-layout-switch>
+              {%- endif -%}
+            </height-observer>
+          {%- endif -%}
+          <div class="collection">
+            {%- paginate collection.products by section.settings.products_per_page -%}
+              {%- if show_filters -%}
+                <facets-drawer
+                  id="facets-drawer"
+                  class="facets-drawer drawer drawer--sm color-scheme color-scheme--dialog {% if section.settings.filter_layout == 'sidebar' %}md:hidden{% endif %}"
+                >
+                  <p class="h4 filter-head" slot="header"><span class="filter-header">FILTER BY</span></p>
+
+                  {%- render 'facets',
+                    results: collection,
+                    show_filters: section.settings.show_filters,
+                    open_filters_by_default: section.settings.open_filters_by_default,
+                    update_on_change: false,
+                    quick_links_menu: section.settings.quick_links_menu,
+                    context: 'drawer'
+                  -%}
+
+                  <div slot="footer">
+                    {%- assign button_content = 'APPLY FILTERS' -%}
+
+                    <dialog-close-button class="contents facets-{{ section.settings.filter_layout }}">
+                      {%- render 'button', type: 'button', content: button_content, stretch: true -%}
+                    </dialog-close-button>
+                  </div>
+                </facets-drawer>
+
+                {%- if section.settings.filter_layout == 'sidebar' -%}
+                  <safe-sticky class="facets-sidebar md-max:hidden {% if active_values_count > 0 %} active{% endif -%} ">
+                    {%- render 'facets',
+                      filtertype: section.settings.filter_layout,
+                      results: collection,
+                      show_filters: section.settings.show_filters,
+                      open_filters_by_default: true,
+                      update_on_change: true,
+                      quick_links_menu: section.settings.quick_links_menu,
+                      context: 'sidebar'
+                    -%}
+                  </safe-sticky>
+                  <div class="filter-overlay-custom" onclick="closefn()"></div>
+                {%- endif -%}
+              {%- endif -%}
+
+              {%- if collection.products_count == 0 -%}
+                <div class="empty-state">
+                  <div class="v-stack gap-4">
+                    <p>{{ 'collection.faceting.no_results' | t }}</p>
+
+                    {%- assign button_content = 'collection.faceting.clear_filters' | t -%}
+
+                    <facet-link>
+                      {%- render 'button', href: collection.url, content: button_content -%}
+                    </facet-link>
+                  </div>
+                </div>
+              {%- else -%}
+                {% if collection.metafields.custom.sub_nav_block_image_1
+                  or collection.metafields.custom.sub_nav_block_video_1
+                  or collection.metafields.custom.sub_nav_block_image_2
+                  or collection.metafields.custom.sub_nav_block_video_2
+                  or collection.metafields.custom.sub_nav_block_image_3
+                  or collection.metafields.custom.sub_nav_block_video_3
+                  or collection.metafields.custom.sub_nav_block_image_4
+                  or collection.metafields.custom.sub_nav_block_video_4
+                  or collection.metafields.custom.sub_nav_block_image_5
+                  or collection.metafields.custom.sub_nav_block_video_5
+                  or collection.metafields.custom.sub_nav_block_image_6
+                  or collection.metafields.custom.sub_nav_block_video_6
+                %}
+                  <div class="wrap-plp-nav">
+                    {% if collection.metafields.custom.sub_nav_block_image_1
+                      or collection.metafields.custom.sub_nav_block_video_1
+                    %}
+                      <div class="main-plp-nav">
+                        <a href="{{ collection.metafields.custom.sub_nav_block_url_1 }}">
+                          {% if collection.metafields.custom.sub_nav_block_video_1 == blank %}
+                            <img
+                              src="{{ collection.metafields.custom.sub_nav_block_image_1 |image_url: master }}"
+                              width="307"
+                              height="509"
+                            >
+                          {% endif %}
+                          {% if collection.metafields.custom.sub_nav_block_video_1 != blank %}
+                            <video
+                              autoplay
+                              muted
+                              playsinline
+                              loop
+                              preload="metadata"
+                              aria-label="The Celine Contour Cardigan"
+                              poster="{{ collection.metafields.custom.sub_nav_block_image_1 |image_url: master }}"
+                            >
+                              <source
+                                src="{{ collection.metafields.custom.sub_nav_block_video_1 | file_url }}"
+                                type="video/mp4"
+                              >
+                            </video>
+                          {% endif %}
+                          <div class="main-title">{{ collection.metafields.custom.sub_nav_block_title_1 }}</div>
+                        </a>
+                      </div>
+                    {% endif %}
+                    {% if collection.metafields.custom.sub_nav_block_image_2
+                      or collection.metafields.custom.sub_nav_block_video_2
+                    %}
+                      <div class="main-plp-nav">
+                        <a href="{{ collection.metafields.custom.sub_nav_block_url_2 }}">
+                          {% if collection.metafields.custom.sub_nav_block_video_2 == blank %}
+                            <img
+                              src="{{ collection.metafields.custom.sub_nav_block_image_2 |image_url: master }}"
+                              width="307"
+                              height="509"
+                            >
+                          {% endif %}
+                          {% if collection.metafields.custom.sub_nav_block_video_2 != blank %}
+                            <video
+                              autoplay
+                              muted
+                              playsinline
+                              loop
+                              preload="metadata"
+                              aria-label="The Celine Contour Cardigan"
+                              poster="{{ collection.metafields.custom.sub_nav_block_image_2 |image_url: master }}"
+                            >
+                              <source
+                                src="{{ collection.metafields.custom.sub_nav_block_video_2 | file_url  }}"
+                                type="video/mp4"
+                              >
+                            </video>
+                          {% endif %}
+                          <div class="main-title">{{ collection.metafields.custom.sub_nav_block_title_2 }}</div>
+                        </a>
+                      </div>
+                    {% endif %}
+                    {% if collection.metafields.custom.sub_nav_block_image_3
+                      or collection.metafields.custom.sub_nav_block_video_3
+                    %}
+                      <div class="main-plp-nav">
+                        <a href="{{ collection.metafields.custom.sub_nav_block_url_3 }}">
+                          {% if collection.metafields.custom.sub_nav_block_video_3 == blank %}
+                            <img
+                              src="{{ collection.metafields.custom.sub_nav_block_image_3 |image_url: master }}"
+                              width="307"
+                              height="509"
+                            >
+                          {% endif %}
+                          {% if collection.metafields.custom.sub_nav_block_video_3 != blank %}
+                            <video
+                              autoplay
+                              muted
+                              playsinline
+                              loop
+                              preload="metadata"
+                              aria-label="The Celine Contour Cardigan"
+                              poster="{{ collection.metafields.custom.sub_nav_block_image_3 |image_url: master }}"
+                            >
+                              <source
+                                src="{{ collection.metafields.custom.sub_nav_block_video_3 | file_url }}"
+                                type="video/mp4"
+                              >
+                            </video>
+                          {% endif %}
+                          <div class="main-title">{{ collection.metafields.custom.sub_nav_block_title_3 }}</div>
+                        </a>
+                      </div>
+                    {% endif %}
+                    {% if collection.metafields.custom.sub_nav_block_image_4
+                      or collection.metafields.custom.sub_nav_block_video_4
+                    %}
+                      <div class="main-plp-nav">
+                        <a href="{{ collection.metafields.custom.sub_nav_block_url_4 }}">
+                          {% if collection.metafields.custom.sub_nav_block_video_4 == blank %}
+                            <img
+                              src="{{ collection.metafields.custom.sub_nav_block_image_4 |image_url: master }}"
+                              width="307"
+                              height="509"
+                            >
+                          {% endif %}
+                          {% if collection.metafields.custom.sub_nav_block_video_4 != blank %}
+                            <video
+                              autoplay
+                              muted
+                              playsinline
+                              loop
+                              preload="metadata"
+                              aria-label="The Celine Contour Cardigan"
+                              poster="{{ collection.metafields.custom.sub_nav_block_image_4 |image_url: master }}"
+                            >
+                              <source
+                                src="{{ collection.metafields.custom.sub_nav_block_video_4 | file_url }}"
+                                type="video/mp4"
+                              >
+                            </video>
+                          {% endif %}
+                          <div class="main-title">{{ collection.metafields.custom.sub_nav_block_title_4 }}</div>
+                        </a>
+                      </div>
+                    {% endif %}
+                    {% if collection.metafields.custom.sub_nav_block_image_5
+                      or collection.metafields.custom.sub_nav_block_video_5
+                    %}
+                      <div class="main-plp-nav">
+                        <a href="{{ collection.metafields.custom.sub_nav_block_url_5 }}">
+                          {% if collection.metafields.custom.sub_nav_block_video_5 == blank %}
+                            <img
+                              src="{{ collection.metafields.custom.sub_nav_block_image_5 |image_url: master }}"
+                              width="307"
+                              height="509"
+                            >
+                          {% endif %}
+                          {% if collection.metafields.custom.sub_nav_block_video_5 != blank %}
+                            <video
+                              autoplay
+                              muted
+                              playsinline
+                              loop
+                              preload="metadata"
+                              aria-label="The Celine Contour Cardigan"
+                              poster="{{ collection.metafields.custom.sub_nav_block_image_5 |image_url: master }}"
+                            >
+                              <source
+                                src="{{ collection.metafields.custom.sub_nav_block_video_5 | file_url }}"
+                                type="video/mp4"
+                              >
+                            </video>
+                          {% endif %}
+                          <div class="main-title">{{ collection.metafields.custom.sub_nav_block_title_5 }}</div>
+                        </a>
+                      </div>
+                    {% endif %}
+                    {% if collection.metafields.custom.sub_nav_block_image_6
+                      or collection.metafields.custom.sub_nav_block_video_6
+                    %}
+                      <div class="main-plp-nav">
+                        <a href="{{ collection.metafields.custom.sub_nav_block_url_6 }}">
+                          {% if collection.metafields.custom.sub_nav_block_video_6 == blank %}
+                            <img
+                              src="{{ collection.metafields.custom.sub_nav_block_image_6 |image_url: master }}"
+                              width="307"
+                              height="609"
+                            >
+                          {% endif %}
+                          {% if collection.metafields.custom.sub_nav_block_video_6 != blank %}
+                            <video
+                              autoplay
+                              muted
+                              playsinline
+                              loop
+                              preload="metadata"
+                              aria-label="The Celine Contour Cardigan"
+                              poster="{{ collection.metafields.custom.sub_nav_block_image_6 |image_url: master }}"
+                            >
+                              <source
+                                src="{{ collection.metafields.custom.sub_nav_block_video_6 | file_url }}"
+                                type="video/mp4"
+                              >
+                            </video>
+                          {% endif %}
+                          <div class="main-title">{{ collection.metafields.custom.sub_nav_block_title_6 }}</div>
+                        </a>
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endif %}
+                <div class="collection__main swatch-{{ section.settings.swatch_type }}">
+                  {%- render 'active-facets', results: collection -%}
+                  {%- liquid
+                    assign fm_cols = 4
+                    if section.settings.filter_layout == 'sidebar' and show_filters
+                      if products_desktop_grid_mode == 'large'
+                        assign fm_cols = 2
+                      elsif products_desktop_grid_mode == 'medium'
+                        assign fm_cols = 3
+                      else
+                        assign fm_cols = 4
+                      endif
+                    else
+                      if products_desktop_grid_mode == 'large'
+                        assign fm_cols = 3
+                      elsif products_desktop_grid_mode == 'medium'
+                        assign fm_cols = 4
+                      else
+                        assign fm_cols = 6
+                      endif
+                    endif
+                  -%}
+                  <product-list
+                    id="product-list-{{ section.id }}"
+                    class="product-list  medium"
+                    collection-mobile-layout="{{ products_mobile_grid_mode }}"
+                    collection-desktop-layout="{{ products_desktop_grid_mode }}"
+                  >
+                    {%- for product in collection.products -%}
+                      {%- assign fm_local_index = forloop.index0 -%}
+                      {%- assign fm_global_index = paginate.current_offset | plus: fm_local_index -%}
+                      {%- for fm_block in section.blocks -%}
+                        {%- if fm_block.type == 'fm_4up' or fm_block.type == 'fm_6up' or fm_block.type == 'fm_2up' -%}
+                          {%- if fm_block.settings.enabled -%}
+                            {%- assign fm_row_zero = fm_block.settings.row_position | minus: 1 -%}
+                            {%- assign fm_target = fm_row_zero | times: fm_cols -%}
+                            {%- assign fm_insert = false -%}
+                            {%- if fm_block.settings.page_scope == 'each' and fm_local_index == fm_target -%}
+                              {%- assign fm_insert = true -%}
+                            {%- elsif fm_block.settings.page_scope == 'first'
+                              and paginate.current_page == 1
+                              and fm_local_index == fm_target
+                            -%}
+                              {%- assign fm_insert = true -%}
+                            {%- elsif fm_block.settings.page_scope == 'global' and fm_global_index == fm_target -%}
+                              {%- assign fm_insert = true -%}
+                            {%- endif -%}
+                            {%- if fm_insert -%}
+                              {%- render 'plp-merch-block', block: fm_block -%}
+                            {%- endif -%}
+                          {%- endif -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+                      {%- assign absolute_index = forloop.index0 | plus: 1 | plus: paginate.current_offset -%}
+                      {% for block in section.blocks %}
+                        {% case block.type %}
+                          {% when 'inline-banner' %}
+                            {%- if absolute_index == block.settings.position
+                              and block.settings.desktop_image != blank
+                            -%}
+                              <div
+                                class="desktop-inline-banner inline-banner block-{{block.id}}"
+                                {% if paginate.current_page == paginate.pages and forloop.last %}
+                                  {%- if block.settings.position > collection.products_count -%}
+                                    style="order:10;"
+                                  {% endif %}
+                                {% endif %}
+                              >
+                                {% if block.settings.desktop_image != blank %}
+                                  <style>
+                                    .desktop-inline-banner.block-{{block.id}} .ad-text h2 {
+                                        font-size: {{ block.settings.desktop_title_font_size }}px;
+                                        color: {{ block.settings.desktop_title_color }};
+                                    }
+
+                                    .desktop-inline-banner.block-{{block.id}} .ad-text .shop-link {
+                                        font-size: {{ block.settings.desktop_button_font_size }}px;
+                                        color: {{ block.settings.desktop_button_color }};
+                                    }
+                                  </style>
+                                  <div
+                                    class=""
+                                    style="--opacity:{{block.settings.overlay_opacity}};--background_color:{{block.settings.background_color}};"
+                                  >
+                                    <div class="ad-container">
+                                      {% if button_url != blank %}
+                                        <a href="button_url">
+                                      {% endif %}
+                                      <img
+                                        src="{{ block.settings.desktop_image | image_url: master }}"
+                                        alt=""
+                                        class="ad-image"
+                                      >
+                                      {% if button_url != blank %}
+                                        </a>
+                                      {% endif %}
+
+                                      <div class="ad-text">
+                                        {% if block.settings.title != blank %}
+                                          <h2>{{ block.settings.title }}</h2>
+                                        {% endif %}
+                                        {% if block.settings.button_url != blank %}
+                                          <a href="{{ block.settings.button_url }}" class="shop-link">
+                                            {{- block.settings.button_text -}}
+                                          </a>
+                                        {% endif %}
+                                      </div>
+                                    </div>
+                                  </div>
+                                {% endif %}
+                              </div>
+                            {%- endif -%}
+                            {%- if absolute_index == block.settings.mob_position
+                              and block.settings.mobile_image != blank
+                            -%}
+                              {% if block.settings.mobile_image != blank %}
+                                <style>
+                                  /* Mobile schema styling */
+                                  .mobile-inline-banner.block-{{block.id}} .ad-text h2 {
+                                      font-size: {{ block.settings.mobile_title_font_size }}px;
+                                      color: {{ block.settings.mobile_title_color }};
+                                  }
+
+                                  .mobile-inline-banner.block-{{block.id}} .ad-text .shop-link {
+                                      font-size: {{ block.settings.mobile_button_font_size }}px;
+                                      color: {{ block.settings.mobile_button_color }};
+                                  }
+                                </style>
+
+                                <div
+                                  class="mobile-inline-banner inline-banner block-{{block.id}} position-{{ block.settings.mobile_position }}"
+                                  style="--opacity:{{ block.settings.overlay_opacity }}; --background_color:{{ block.settings.overlay_color }};"
+                                  {% if paginate.current_page == paginate.pages and forloop.last %}
+                                    {%- if block.settings.mob_position > collection.products_count -%}
+                                      style="order:10;"
+                                    {% endif %}
+                                  {% endif %}
+                                >
+                                  <div class="ad-container">
+                                    {% if block.settings.button_url != blank %}
+                                      <a href="{{ block.settings.button_url }}">
+                                    {% endif %}
+                                    <img
+                                      src="{{ block.settings.mobile_image | image_url: master }}"
+                                      alt=""
+                                      class="ad-image"
+                                    >
+                                    {% if block.settings.button_url != blank %}
+                                      </a>
+                                    {% endif %}
+                                    <div class="ad-text">
+                                      {% if block.settings.title != blank %}
+                                        <h2>{{ block.settings.title }}</h2>
+                                      {% endif %}
+                                      {% if block.settings.button_url != blank %}
+                                        <a href="{{ block.settings.button_url }}" class="shop-link">
+                                          {{- block.settings.button_text -}}
+                                        </a>
+                                      {% endif %}
+                                    </div>
+                                  </div>
+                                </div>
+                              {% endif %}
+                            {%- endif -%}
+                          {% when 'promo-section' %}
+                            <style>
+                              .desktop-promo.block-{{ block.id }} .promo-text h3{ font-size: {{ block.settings.desktop_title_font_size }}px;color: {{ block.settings.desktop_title_color }};}
+                              .desktop-promo.block-{{ block.id }} .promo-text p{font-size: {{ block.settings.desktop_desc_font_size }}px;color: {{ block.settings.desktop_desc_color }};}
+                              .desktop-promo.block-{{ block.id }} .promo-text .shop-btn {font-size: {{ block.settings.desktop_button_font_size }}px;color: {{ block.settings.desktop_button_color }};}
+                              .desktop-promo.block-{{ block.id }} .promo-section{paddin-top:{{block.settings.padding_top }}px;paddin-bottom:{{block.settings.padding_bottom }}px;}
+                            </style>
+                            {%- if absolute_index == block.settings.position
+                              and block.settings.promo_image != blank
+                              or absolute_index == block.settings.position
+                              and block.settings.promo_video != blank
+                            -%}
+                              <div
+                                class="desktop-promo block-{{ block.id }}"
+                                {% if paginate.current_page == paginate.pages and forloop.last %}
+                                  {%- if block.settings.position > collection.products_count -%}
+                                    style="order:10;"
+                                  {% endif %}
+                                {% endif %}
+                              >
+                                <style></style>
+                                {% if block.settings.promo_image != blank or block.settings.promo_video != blank %}
+                                  <section class="promo-section{% if block.settings.promo_reverse %} reverse{% endif %}">
+                                    <div class="promo-content">
+                                      <div class="promo-image">
+                                        {% if block.settings.promo_video == blank %}
+                                          <img
+                                            src="{{ block.settings.promo_image | image_url: master }}"
+                                            alt="{{ block.settings.promo_alt }}"
+                                          >
+                                        {% endif %}
+
+                                        {% if block.settings.promo_video != blank %}
+                                          <video
+                                            autoplay
+                                            muted
+                                            playsinline
+                                            loop
+                                            preload="metadata"
+                                            poster="{{ block.settings.promo_image | image_url: master }}"
+                                          >
+                                            {% for source in block.settings.promo_video.sources %}
+                                              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                                            {% endfor %}
+                                          </video>
+                                        {% endif %}
+                                      </div>
+
+                                      <div class="promo-text">
+                                        {% if block.settings.promo_title != blank %}
+                                          <h3>{{ block.settings.promo_title }}</h3>
+                                        {% endif %}
+                                        {% if block.settings.promo_text != blank %}
+                                          <p>{{ block.settings.promo_text }}</p>
+                                        {% endif %}
+                                        {% if block.settings.promo_button_url != blank %}
+                                          <a href="{{ block.settings.promo_button_url }}" class="shop-btn">
+                                            {{- block.settings.promo_button_text -}}
+                                          </a>
+                                        {% endif %}
+                                      </div>
+                                    </div>
+                                  </section>
+                                {% endif %}
+                              </div>
+                            {%- endif -%}
+                            {%- if absolute_index == block.settings.mob_position
+                              and block.settings.promo_image != blank
+                              or absolute_index == block.settings.mob_position
+                              and block.settings.promo_video != blank
+                            -%}
+                              <style>
+                                .mobile-promo.block-{{ block.id }} .promo-text h3 {
+                                font-size: {{ block.settings.mobile_title_font_size }}px;
+                                color: {{ block.settings.mobile_title_color }};
+                                }
+
+                                .mobile-promo.block-{{ block.id }} .promo-text p {
+                                font-size: {{ block.settings.mobile_desc_font_size }}px;
+                                color: {{ block.settings.mobile_desc_color }};
+                                }
+
+                                .mobile-promo.block-{{ block.id }} .promo-text .shop-btn {
+                                font-size: {{ block.settings.mobile_button_font_size }}px;
+                                color: {{ block.settings.mobile_button_color }};
+                                }
+                                .mobile-promo.block-{{ block.id }} .promo-section{paddin-top:{{block.settings.mob_padding_top }}px;paddin-bottom:{{block.settings.mob_padding_bottom }}px;}
+                              </style>
+                              <div
+                                class="mobile-promo block-{{ block.id }}"
+                                {% if paginate.current_page == paginate.pages and forloop.last %}
+                                  {%- if block.settings.mob_position > collection.products_count -%}
+                                    style="order:10;"
+                                  {% endif %}
+                                {% endif %}
+                              >
+                                {% if block.settings.promo_image != blank or block.settings.promo_video != blank %}
+                                  <section class="promo-section{% if block.settings.promo_reverse %} reverse{% endif %}">
+                                    <div class="promo-content">
+                                      <div class="promo-image">
+                                        {% if block.settings.promo_video == blank %}
+                                          <img
+                                            src="{{ block.settings.promo_image | image_url: master }}"
+                                            alt="{{ block.settings.promo_alt }}"
+                                          >
+                                        {% endif %}
+
+                                        {% if block.settings.promo_video != blank %}
+                                          <video
+                                            autoplay
+                                            muted
+                                            playsinline
+                                            loop
+                                            preload="metadata"
+                                            poster="{{ block.settings.promo_image | image_url: master }}"
+                                          >
+                                            {% for source in block.settings.promo_video.sources %}
+                                              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                                            {% endfor %}
+                                          </video>
+                                        {% endif %}
+                                      </div>
+
+                                      <div class="promo-text">
+                                        {% if block.settings.promo_title != blank %}
+                                          <h3>{{ block.settings.promo_title }}</h3>
+                                        {% endif %}
+                                        {% if block.settings.promo_text != blank %}
+                                          <p>{{ block.settings.promo_text }}</p>
+                                        {% endif %}
+                                        {% if block.settings.promo_button_url != blank %}
+                                          <a href="{{ block.settings.promo_button_url }}" class="shop-btn">
+                                            {{- block.settings.promo_button_text -}}
+                                          </a>
+                                        {% endif %}
+                                      </div>
+                                    </div>
+                                  </section>
+                                {% endif %}
+                              </div>
+                            {%- endif -%}
+                          {% when 'feature-image' %}
+                            {%- if absolute_index == block.settings.position -%}
+                              {% if block.settings.small_image != blank %}
+                                <div
+                                  class="desktop-feature block-{{ block.id }}"
+                                  {% if paginate.current_page == paginate.pages and forloop.last %}
+                                    {%- if block.settings.position > collection.products_count -%}
+                                      style="order:10;"
+                                    {% endif %}
+                                  {% endif %}
+                                >
+                                  <style>
+                                    .desktop-feature.block-{{ block.id }} .feature-inner h3 {
+                                        font-size: {{ block.settings.desktop_title_font_size }}px;
+                                        color: {{ block.settings.desktop_title_color }};
+                                    }
+
+                                    .desktop-feature.block-{{ block.id }} .image-shop-btn {
+                                        font-size: {{ block.settings.desktop_button_font_size }}px;
+                                        color: {{ block.settings.desktop_button_color }};
+                                    }
+
+                                    .desktop-feature.block-{{ block.id }} .feature-section {
+                                        padding-top: {{ block.settings.padding_top }}px;
+                                        padding-bottom: {{ block.settings.padding_bottom }}px;
+                                    }
+                                  </style>
+                                  <div class="feature-section block-{{ block.id }} position-{{ block.settings.desktop_position }} {% if block.settings.image_reverse %} reverse{% endif %}">
+                                    <div class="feature-content">
+                                      <!-- Left Column -->
+                                      <div class="feature-left">
+                                        <div class="feature-inner">
+                                          {% if block.settings.title != blank %}
+                                            <h3>{{ block.settings.title }}</h3>
+                                          {% endif %}
+
+                                          {% if block.settings.small_image != blank %}
+                                            <div class="feature-subimage">
+                                              {% if block.settings.button_url != blank %}
+                                                <a href="{{ block.settings.button_url }}">
+                                              {% endif %}
+                                              <img
+                                                src="{{ block.settings.small_image | image_url: master }}"
+                                                alt="{{ block.settings.alt }}"
+                                              >
+                                              {% if block.settings.button_url != blank %}
+                                                </a>
+                                              {% endif %}
+                                            </div>
+                                          {% endif %}
+
+                                          {% if block.settings.button_url != blank %}
+                                            <a href="{{ block.settings.button_url }}" class="image-shop-btn">
+                                              {{- block.settings.button_text -}}
+                                            </a>
+                                          {% endif %}
+                                        </div>
+                                      </div>
+
+                                      <!-- Right Column -->
+                                      <div class="feature-right">
+                                        {% if block.settings.large_image != blank %}
+                                          {% if block.settings.button_url != blank %}
+                                            <a href="{{ block.settings.button_url }}">
+                                          {% endif %}
+                                          <img
+                                            src="{{ block.settings.large_image | image_url: master }}"
+                                            alt="{{ block.settings.alt }}"
+                                          >
+                                          {% if block.settings.button_url != blank %}
+                                            </a>
+                                          {% endif %}
+                                        {% endif %}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              {% endif %}
+                            {%- endif -%}
+
+                            {%- if absolute_index == block.settings.mob_position -%}
+                              {% if block.settings.small_image != blank %}
+                                <div
+                                  class="mobile-feature block-{{ block.id }}"
+                                  {% if paginate.current_page == paginate.pages and forloop.last %}
+                                    {%- if block.settings.mob_position > collection.products_count -%}
+                                      style="order:10;"
+                                    {% endif %}
+                                  {% endif %}
+                                >
+                                  <style>
+                                    .mobile-feature.block-{{ block.id }} .feature-inner h3 {
+                                        font-size: {{ block.settings.mobile_title_font_size }}px;
+                                        color: {{ block.settings.mobile_title_color }};
+                                    }
+
+                                    .mobile-feature.block-{{ block.id }} .image-shop-btn {
+                                        font-size: {{ block.settings.mobile_button_font_size }}px;
+                                        color: {{ block.settings.mobile_button_color }};
+                                    }
+
+                                    .mobile-feature.block-{{ block.id }} .feature-section {
+                                        padding-top: {{ block.settings.mob_padding_top }}px;
+                                        padding-bottom: {{ block.settings.mob_padding_bottom }}px;
+                                    }
+                                  </style>
+                                  <div class="feature-section block-{{ block.id }} position-{{ block.settings.desktop_position }} {% if block.settings.image_reverse %} reverse{% endif %}">
+                                    <div class="feature-content">
+                                      <!-- Left Column -->
+                                      <div class="feature-left">
+                                        <div class="feature-inner">
+                                          {% if block.settings.title != blank %}
+                                            <h3>{{ block.settings.title }}</h3>
+                                          {% endif %}
+
+                                          {% if block.settings.small_image != blank %}
+                                            <div class="feature-subimage">
+                                              {% if block.settings.button_url != blank %}
+                                                <a href="{{ block.settings.button_url }}">
+                                              {% endif %}
+                                              <img
+                                                src="{{ block.settings.small_image | image_url: master }}"
+                                                alt="{{ block.settings.alt }}"
+                                              >
+                                              {% if block.settings.button_url != blank %}
+                                                </a>
+                                              {% endif %}
+                                            </div>
+                                          {% endif %}
+
+                                          {% if block.settings.button_url != blank %}
+                                            <a href="{{ block.settings.button_url }}" class="image-shop-btn">
+                                              {{- block.settings.button_text -}}
+                                            </a>
+                                          {% endif %}
+                                        </div>
+                                      </div>
+
+                                      <!-- Right Column -->
+                                      <div class="feature-right">
+                                        {% if block.settings.large_image != blank %}
+                                          {% if block.settings.button_url != blank %}
+                                            <a href="{{ block.settings.button_url }}">
+                                          {% endif %}
+                                          <img
+                                            src="{{ block.settings.large_image | image_url: master }}"
+                                            alt="{{ block.settings.alt }}"
+                                          >
+                                          {% if block.settings.button_url != blank %}
+                                            </a>
+                                          {% endif %}
+                                        {% endif %}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              {% endif %}
+                            {%- endif -%}
+                        {% endcase %}
+                      {% endfor %}
+
+                      {%- render 'product-card',
+                        product: product,
+                        reveal: settings.stagger_products_apparition,
+                        position: forloop.index,
+                        hide_product_information: section.settings.hide_product_information,
+                        stacked: true
+                      -%}
+                      {%- if forloop.last -%}
+                        {%- for fm_block in section.blocks -%}
+                          {%- if fm_block.type == 'fm_4up' or fm_block.type == 'fm_6up' or fm_block.type == 'fm_2up' -%}
+                            {%- assign fm_target = fm_block.settings.row_position | minus: 1 | times: fm_cols -%}
+                            {%- assign fm_global_end = paginate.current_offset | plus: forloop.length -%}
+                            {%- if fm_block.settings.enabled
+                              and fm_target == forloop.length
+                              and fm_block.settings.page_scope == 'each'
+                            -%}
+                              {%- render 'plp-merch-block', block: fm_block -%}
+                            {%- elsif fm_block.settings.enabled
+                              and fm_target == forloop.length
+                              and fm_block.settings.page_scope == 'first'
+                              and paginate.current_page == 1
+                            -%}
+                              {%- render 'plp-merch-block', block: fm_block -%}
+                            {%- elsif fm_block.settings.enabled
+                              and fm_target == fm_global_end
+                              and fm_block.settings.page_scope == 'global'
+                            -%}
+                              {%- render 'plp-merch-block', block: fm_block -%}
+                            {%- endif -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                      {%- endif -%}
+                      {%- if paginate.current_page == paginate.pages -%}
+                        {% if forloop.last %}
+                          {%- if collection.metafields.custom.promo_section_index_1 > collection.products_count -%}
+                            {% render 'promo-section',
+                              promo_image: collection.metafields.custom.promo_section_image_1,
+                              promo_video: collection.metafields.custom.promo_section_video_1,
+                              promo_alt: collection.metafields.custom.promo_section_title_1,
+                              promo_title: collection.metafields.custom.promo_section_title_1,
+                              promo_text: collection.metafields.custom.promo_section_text_1,
+                              promo_button_url: collection.metafields.custom.promo_section_button_url_1,
+                              promo_button_text: collection.metafields.custom.promo_section_button_text_1,
+                              promo_reverse: collection.metafields.custom.promo_section_content_first_1
+                            %}
+                          {%- endif -%}
+                        {% endif %}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </product-list>
+                  {%- render 'pagination', paginate: paginate, facet: true -%}
+                </div>
+              {%- endif -%}
+            {%- endpaginate -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+{% endunless %}
+
+{% unless section.settings.hide_product_cards == false %}
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'inline-banner' %}
+        {%- if block.settings.desktop_image != blank -%}
+          <div class="desktop-inline-banner inline-banner block-{{block.id}}">
+            {% if block.settings.desktop_image != blank %}
+              <style>
+                .desktop-inline-banner.block-{{block.id}} .ad-text h2 {
+                    font-size: {{ block.settings.desktop_title_font_size }}px;
+                    color: {{ block.settings.desktop_title_color }};
+                }
+
+                .desktop-inline-banner.block-{{block.id}} .ad-text .shop-link {
+                    font-size: {{ block.settings.desktop_button_font_size }}px;
+                    color: {{ block.settings.desktop_button_color }};
+                }
+              </style>
+              <div
+                class=""
+                style="--opacity:{{block.settings.overlay_opacity}};--background_color:{{block.settings.background_color}};"
+              >
+                <div class="ad-container">
+                  {% if button_url != blank %}
+                    <a href="button_url">
+                  {% endif %}
+                  <img src="{{ block.settings.desktop_image | image_url: master }}" alt="" class="ad-image">
+                  {% if button_url != blank %}
+                    </a>
+                  {% endif %}
+
+                  <div class="ad-text">
+                    {% if block.settings.title != blank %}
+                      <h2>{{ block.settings.title }}</h2>
+                    {% endif %}
+                    {% if block.settings.button_url != blank %}
+                      <a href="{{ block.settings.button_url }}" class="shop-link">{{ block.settings.button_text }}</a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        {%- endif -%}
+        {%- if block.settings.mobile_image != blank -%}
+          {% if block.settings.mobile_image != blank %}
+            <style>
+              /* Mobile schema styling */
+              .mobile-inline-banner.block-{{block.id}} .ad-text h2 {
+                  font-size: {{ block.settings.mobile_title_font_size }}px;
+                  color: {{ block.settings.mobile_title_color }};
+              }
+
+              .mobile-inline-banner.block-{{block.id}} .ad-text .shop-link {
+                  font-size: {{ block.settings.mobile_button_font_size }}px;
+                  color: {{ block.settings.mobile_button_color }};
+              }
+            </style>
+
+            <div
+              class="mobile-inline-banner inline-banner block-{{block.id}} position-{{ block.settings.mobile_position }}"
+              style="--opacity:{{ block.settings.overlay_opacity }}; --background_color:{{ block.settings.overlay_color }};"
+            >
+              <div class="ad-container">
+                {% if block.settings.button_url != blank %}
+                  <a href="{{ block.settings.button_url }}">
+                {% endif %}
+                <img src="{{ block.settings.mobile_image | image_url: master }}" alt="" class="ad-image">
+                {% if block.settings.button_url != blank %}
+                  </a>
+                {% endif %}
+                <div class="ad-text">
+                  {% if block.settings.title != blank %}
+                    <h2>{{ block.settings.title }}</h2>
+                  {% endif %}
+                  {% if block.settings.button_url != blank %}
+                    <a href="{{ block.settings.button_url }}" class="shop-link">{{ block.settings.button_text }}</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {%- endif -%}
+      {% when 'promo-section' %}
+        <style>
+          .desktop-promo.block-{{ block.id }} .promo-text h3{ font-size: {{ block.settings.desktop_title_font_size }}px;color: {{ block.settings.desktop_title_color }};}
+          .desktop-promo.block-{{ block.id }} .promo-text p{font-size: {{ block.settings.desktop_desc_font_size }}px;color: {{ block.settings.desktop_desc_color }};}
+          .desktop-promo.block-{{ block.id }} .promo-text .shop-btn {font-size: {{ block.settings.desktop_button_font_size }}px;color: {{ block.settings.desktop_button_color }};}
+          .desktop-promo.block-{{ block.id }} .promo-section{paddin-top:{{block.settings.padding_top }}px;paddin-bottom:{{block.settings.padding_bottom }}px;}
+        </style>
+        {%- if block.settings.promo_image != blank or block.settings.promo_video != blank -%}
+          <div class="desktop-promo block-{{ block.id }}">
+            <style></style>
+            {% if block.settings.promo_image != blank or block.settings.promo_video != blank %}
+              <section class="promo-section{% if block.settings.promo_reverse %} reverse{% endif %}">
+                <div class="promo-content">
+                  <div class="promo-image">
+                    {% if block.settings.promo_video == blank %}
+                      <img
+                        src="{{ block.settings.promo_image | image_url: master }}"
+                        alt="{{ block.settings.promo_alt }}"
+                      >
+                    {% endif %}
+
+                    {% if block.settings.promo_video != blank %}
+                      <video
+                        autoplay
+                        muted
+                        playsinline
+                        loop
+                        preload="metadata"
+                        poster="{{ block.settings.promo_image | image_url: master }}"
+                      >
+                        {% for source in block.settings.promo_video.sources %}
+                          <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                        {% endfor %}
+                      </video>
+                    {% endif %}
+                  </div>
+
+                  <div class="promo-text">
+                    {% if block.settings.promo_title != blank %}
+                      <h3>{{ block.settings.promo_title }}</h3>
+                    {% endif %}
+                    {% if block.settings.promo_text != blank %}
+                      <p>{{ block.settings.promo_text }}</p>
+                    {% endif %}
+                    {% if block.settings.promo_button_url != blank %}
+                      <a href="{{ block.settings.promo_button_url }}" class="shop-btn">
+                        {{- block.settings.promo_button_text -}}
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </section>
+            {% endif %}
+          </div>
+        {%- endif -%}
+        {%- if block.settings.promo_image != blank or block.settings.promo_video != blank -%}
+          <style>
+            .mobile-promo.block-{{ block.id }} .promo-text h3 {
+            font-size: {{ block.settings.mobile_title_font_size }}px;
+            color: {{ block.settings.mobile_title_color }};
+            }
+
+            .mobile-promo.block-{{ block.id }} .promo-text p {
+            font-size: {{ block.settings.mobile_desc_font_size }}px;
+            color: {{ block.settings.mobile_desc_color }};
+            }
+
+            .mobile-promo.block-{{ block.id }} .promo-text .shop-btn {
+            font-size: {{ block.settings.mobile_button_font_size }}px;
+            color: {{ block.settings.mobile_button_color }};
+            }
+            .mobile-promo.block-{{ block.id }} .promo-section{paddin-top:{{block.settings.mob_padding_top }}px;paddin-bottom:{{block.settings.mob_padding_bottom }}px;}
+          </style>
+          <div class="mobile-promo block-{{ block.id }}">
+            {% if block.settings.promo_image != blank or block.settings.promo_video != blank %}
+              <section class="promo-section{% if block.settings.promo_reverse %} reverse{% endif %}">
+                <div class="promo-content">
+                  <div class="promo-image">
+                    {% if block.settings.promo_video == blank %}
+                      <img
+                        src="{{ block.settings.promo_image | image_url: master }}"
+                        alt="{{ block.settings.promo_alt }}"
+                      >
+                    {% endif %}
+
+                    {% if block.settings.promo_video != blank %}
+                      <video
+                        autoplay
+                        muted
+                        playsinline
+                        loop
+                        preload="metadata"
+                        poster="{{ block.settings.promo_image | image_url: master }}"
+                      >
+                        {% for source in block.settings.promo_video.sources %}
+                          <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                        {% endfor %}
+                      </video>
+                    {% endif %}
+                  </div>
+
+                  <div class="promo-text">
+                    {% if block.settings.promo_title != blank %}
+                      <h3>{{ block.settings.promo_title }}</h3>
+                    {% endif %}
+                    {% if block.settings.promo_text != blank %}
+                      <p>{{ block.settings.promo_text }}</p>
+                    {% endif %}
+                    {% if block.settings.promo_button_url != blank %}
+                      <a href="{{ block.settings.promo_button_url }}" class="shop-btn">
+                        {{- block.settings.promo_button_text -}}
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </section>
+            {% endif %}
+          </div>
+        {%- endif -%}
+      {% when 'feature-image' %}
+        {% if block.settings.small_image != blank %}
+          <div class="desktop-feature block-{{ block.id }}">
+            <style>
+              .desktop-feature.block-{{ block.id }} .feature-inner h3 {
+                  font-size: {{ block.settings.desktop_title_font_size }}px;
+                  color: {{ block.settings.desktop_title_color }};
+              }
+
+              .desktop-feature.block-{{ block.id }} .image-shop-btn {
+                  font-size: {{ block.settings.desktop_button_font_size }}px;
+                  color: {{ block.settings.desktop_button_color }};
+              }
+
+              .desktop-feature.block-{{ block.id }} .feature-section {
+                  padding-top: {{ block.settings.padding_top }}px;
+                  padding-bottom: {{ block.settings.padding_bottom }}px;
+              }
+            </style>
+            <div class="feature-section block-{{ block.id }} position-{{ block.settings.desktop_position }} {% if block.settings.image_reverse %} reverse{% endif %}">
+              <div class="feature-content">
+                <!-- Left Column -->
+                <div class="feature-left">
+                  <div class="feature-inner">
+                    {% if block.settings.title != blank %}
+                      <h3>{{ block.settings.title }}</h3>
+                    {% endif %}
+
+                    {% if block.settings.small_image != blank %}
+                      <div class="feature-subimage">
+                        {% if block.settings.button_url != blank %}
+                          <a href="{{ block.settings.button_url }}">
+                        {% endif %}
+                        <img src="{{ block.settings.small_image | image_url: master }}" alt="{{ block.settings.alt }}">
+                        {% if block.settings.button_url != blank %}
+                          </a>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+
+                    {% if block.settings.button_url != blank %}
+                      <a href="{{ block.settings.button_url }}" class="image-shop-btn">
+                        {{- block.settings.button_text -}}
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="feature-right">
+                  {% if block.settings.large_image != blank %}
+                    {% if block.settings.button_url != blank %}
+                      <a href="{{ block.settings.button_url }}">
+                    {% endif %}
+                    <img src="{{ block.settings.large_image | image_url: master }}" alt="{{ block.settings.alt }}">
+                    {% if block.settings.button_url != blank %}
+                      </a>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.small_image != blank %}
+          <div class="mobile-feature block-{{ block.id }}">
+            <style>
+              .mobile-feature.block-{{ block.id }} .feature-inner h3 {
+                  font-size: {{ block.settings.mobile_title_font_size }}px;
+                  color: {{ block.settings.mobile_title_color }};
+              }
+
+              .mobile-feature.block-{{ block.id }} .image-shop-btn {
+                  font-size: {{ block.settings.mobile_button_font_size }}px;
+                  color: {{ block.settings.mobile_button_color }};
+              }
+
+              .mobile-feature.block-{{ block.id }} .feature-section {
+                  padding-top: {{ block.settings.mob_padding_top }}px;
+                  padding-bottom: {{ block.settings.mob_padding_bottom }}px;
+              }
+            </style>
+            <div class="feature-section block-{{ block.id }} position-{{ block.settings.desktop_position }} {% if block.settings.image_reverse %} reverse{% endif %}">
+              <div class="feature-content">
+                <!-- Left Column -->
+                <div class="feature-left">
+                  <div class="feature-inner">
+                    {% if block.settings.title != blank %}
+                      <h3>{{ block.settings.title }}</h3>
+                    {% endif %}
+
+                    {% if block.settings.small_image != blank %}
+                      <div class="feature-subimage">
+                        {% if block.settings.button_url != blank %}
+                          <a href="{{ block.settings.button_url }}">
+                        {% endif %}
+                        <img src="{{ block.settings.small_image | image_url: master }}" alt="{{ block.settings.alt }}">
+                        {% if block.settings.button_url != blank %}
+                          </a>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+
+                    {% if block.settings.button_url != blank %}
+                      <a href="{{ block.settings.button_url }}" class="image-shop-btn">
+                        {{- block.settings.button_text -}}
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="feature-right">
+                  {% if block.settings.large_image != blank %}
+                    {% if block.settings.button_url != blank %}
+                      <a href="{{ block.settings.button_url }}">
+                    {% endif %}
+                    <img src="{{ block.settings.large_image | image_url: master }}" alt="{{ block.settings.alt }}">
+                    {% if block.settings.button_url != blank %}
+                      </a>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+    {% endcase %}
+  {% endfor %}
+{% endunless %}
+<script>
+  function closefn() {
+    const sidebar = document.querySelector('safe-sticky.facets-sidebar');
+    if (sidebar.classList.contains('active')) {
+      sidebar.classList.remove('active');
+    }
+  }
+  function openfn() {
+    const sidebar = document.querySelector('safe-sticky.facets-sidebar');
+    if (sidebar.classList.contains('active')) {
+      sidebar.classList.remove('active');
+    } else {
+      sidebar.classList.add('active');
+    }
+  }
+</script>
+{% schema %}
+{
+  "name": "t:sections.main_collection.name",
+  "class": "shopify-section--main-collection",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:global.colors.scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_product_cards",
+      "label": "Hide Product Cards",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_product_information",
+      "label": "t:global.product_list.hide_product_information",
+      "info": "t:global.product_list.hide_product_information_collection_info"
+    },
+    {
+      "type": "header",
+      "content": "t:global.product_list.product_list_category"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "t:global.faceting.products_per_page",
+      "min": 8,
+      "max": 50,
+      "step": 1,
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "products_per_row_mobile",
+      "label": "t:global.product_list.products_per_row_mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "swatch_type",
+      "label": "Swatch Type",
+      "options": [
+        {
+          "value": "square",
+          "label": "square"
+        },
+        {
+          "value": "circle",
+          "label": "circle"
+        }
+      ],
+      "default": "circle"
+    },
+    {
+      "type": "select",
+      "id": "products_size_desktop",
+      "label": "t:global.product_list.products_size_desktop",
+      "info": "t:global.product_list.products_size_desktop_info",
+      "options": [
+        {
+          "value": "compact",
+          "label": "t:global.product_list.products_size_desktop_options.compact"
+        },
+        {
+          "value": "medium",
+          "label": "t:global.product_list.products_size_desktop_options.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:global.product_list.products_size_desktop_options.large"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_grid_mode_selector",
+      "label": "t:global.product_list.show_grid_mode_selector",
+      "info": "t:global.product_list.show_grid_mode_selector_info",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:global.product_list.spacing_category",
+      "info": "t:global.product_list.spacing_category_info"
+    },
+    {
+      "type": "range",
+      "min": 0.2,
+      "max": 2,
+      "step": 0.1,
+      "id": "horizontal_spacing_factor",
+      "label": "t:global.product_list.horizontal_spacing_factor",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "min": 0.2,
+      "max": 2,
+      "step": 0.1,
+      "id": "vertical_spacing_factor",
+      "label": "t:global.product_list.vertical_spacing_factor",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "t:global.faceting.filters_and_sorting_category"
+    },
+    {
+      "type": "select",
+      "id": "filter_layout",
+      "label": "t:global.faceting.desktop_layout",
+      "options": [
+        {
+          "value": "sidebar",
+          "label": "t:global.faceting.desktop_layout_options.sidebar"
+        },
+        {
+          "value": "drawer",
+          "label": "t:global.faceting.desktop_layout_options.drawer"
+        }
+      ],
+      "default": "sidebar"
+    },
+    {
+      "type": "link_list",
+      "id": "quick_links_menu",
+      "label": "t:sections.main_collection.quick_links_menu",
+      "info": "t:sections.main_collection.quick_links_menu_info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort_by",
+      "label": "t:global.faceting.show_sort_by",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filters",
+      "label": "t:global.faceting.show_filters",
+      "info": "t:global.faceting.show_filters_info",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_results_count",
+      "label": "t:global.faceting.show_results_count",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filter_group_name",
+      "label": "t:global.faceting.show_group_name",
+      "info": "t:global.faceting.show_group_name_info",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filter_values_count",
+      "label": "t:global.faceting.show_filter_values_count",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "open_filters_by_default",
+      "label": "t:global.faceting.open_filters_by_default",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "inline-banner",
+      "name": "Inline Banner",
+      "settings": [
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "Overlay Color",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Overlay Opacity",
+          "min": 0,
+          "max": 1,
+          "step": 0.1,
+          "default": 0
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Banner Title"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "header",
+          "content": "Desktop Customization"
+        },
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "Banner Desktop Image"
+        },
+        {
+          "type": "range",
+          "id": "position",
+          "label": "Banner Position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "desktop_title_font_size",
+          "label": "Desktop Title Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 30
+        },
+        {
+          "type": "color",
+          "id": "desktop_title_color",
+          "label": "Desktop Title Color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "desktop_button_font_size",
+          "label": "Desktop Button Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 14
+        },
+        {
+          "type": "color",
+          "id": "desktop_button_color",
+          "label": "Desktop Button Color",
+          "default": "#000"
+        },
+        {
+          "type": "header",
+          "content": "Mobile Customization"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Banner Mobile Image"
+        },
+        {
+          "type": "range",
+          "id": "mob_position",
+          "label": "Mobile Banner Position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "mobile_title_font_size",
+          "label": "Mobile Title Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 16
+        },
+        {
+          "type": "color",
+          "id": "mobile_title_color",
+          "label": "Mobile Title Color",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "mobile_button_font_size",
+          "label": "Mobile Button Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 10
+        },
+        {
+          "type": "color",
+          "id": "mobile_button_color",
+          "label": "Mobile Button Color",
+          "default": "#000"
+        }
+      ]
+    },
+    {
+      "type": "promo-section",
+      "name": "Promo Image/Video Section",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "promo_image",
+          "label": "Promo Image"
+        },
+        {
+          "type": "video",
+          "id": "promo_video",
+          "label": "Promo Video"
+        },
+        {
+          "type": "text",
+          "id": "promo_title",
+          "label": "Promo Title"
+        },
+        {
+          "type": "textarea",
+          "id": "promo_text",
+          "label": "Promo Description"
+        },
+        {
+          "type": "url",
+          "id": "promo_button_url",
+          "label": "Promo Button URL"
+        },
+        {
+          "type": "text",
+          "id": "promo_button_text",
+          "label": "Promo Button Text",
+          "default": "Learn More"
+        },
+        {
+          "type": "checkbox",
+          "id": "promo_reverse",
+          "label": "Reverse Layout (Content First)",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Desktop Customization"
+        },
+        {
+          "type": "range",
+          "id": "position",
+          "label": "Banner Position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Desktop Padding Top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 32
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Desktop Padding Bottom",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 32
+        },
+        {
+          "type": "range",
+          "id": "desktop_title_font_size",
+          "label": "Desktop Title Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 36
+        },
+        {
+          "type": "color",
+          "id": "desktop_title_color",
+          "label": "Desktop Title Color",
+          "default": "#000"
+        },
+
+        {
+          "type": "range",
+          "id": "desktop_desc_font_size",
+          "label": "Desktop Description Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 14
+        },
+        {
+          "type": "color",
+          "id": "desktop_desc_color",
+          "label": "Desktop Description Color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "desktop_button_font_size",
+          "label": "Desktop Button Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 14
+        },
+        {
+          "type": "color",
+          "id": "desktop_button_color",
+          "label": "Desktop Button Color",
+          "default": "#000"
+        },
+        {
+          "type": "header",
+          "content": "Mobile Customization"
+        },
+        {
+          "type": "range",
+          "id": "mob_position",
+          "label": "Banner Position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "mob_padding_top",
+          "label": "Desktop Padding Top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "mob_padding_bottom",
+          "label": "Desktop Padding Bottom",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "mobile_title_font_size",
+          "label": "Mobile Title Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 36
+        },
+        {
+          "type": "color",
+          "id": "mobile_title_color",
+          "label": "Mobile Title Color",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "mobile_desc_font_size",
+          "label": "Mobile Description Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 14
+        },
+        {
+          "type": "color",
+          "id": "mobile_desc_color",
+          "label": "Mobile Description Color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "mobile_button_font_size",
+          "label": "Mobile Button Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 14
+        },
+        {
+          "type": "color",
+          "id": "mobile_button_color",
+          "label": "Mobile Button Color",
+          "default": "#000"
+        }
+      ]
+    },
+    {
+      "type": "feature-image",
+      "name": "Featured Images",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "small_image",
+          "label": "Small Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "large_image",
+          "label": "Large Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Section Title"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text"
+        },
+        {
+          "type": "checkbox",
+          "id": "image_reverse",
+          "label": "Reverse Image and Text Order",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Desktop Customization"
+        },
+        {
+          "type": "range",
+          "id": "position",
+          "label": "Banner Position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Desktop Padding Top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 32
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Desktop Padding Bottom",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 32
+        },
+        {
+          "type": "range",
+          "id": "desktop_title_font_size",
+          "label": "Desktop Title Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 36
+        },
+        {
+          "type": "color",
+          "id": "desktop_title_color",
+          "label": "Desktop Title Color",
+          "default": "#000"
+        },
+        {
+          "type": "range",
+          "id": "desktop_button_font_size",
+          "label": "Desktop Button Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 14
+        },
+        {
+          "type": "color",
+          "id": "desktop_button_color",
+          "label": "Desktop Button Color",
+          "default": "#000"
+        },
+        {
+          "type": "header",
+          "content": "Mobile Customization"
+        },
+        {
+          "type": "range",
+          "id": "mob_position",
+          "label": "Banner Position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "mob_padding_top",
+          "label": "Desktop Padding Top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "mob_padding_bottom",
+          "label": "Desktop Padding Bottom",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "mobile_title_font_size",
+          "label": "Mobile Title Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 36
+        },
+        {
+          "type": "color",
+          "id": "mobile_title_color",
+          "label": "Mobile Title Color",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "mobile_button_font_size",
+          "label": "Mobile Button Font Size",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 14
+        },
+        {
+          "type": "color",
+          "id": "mobile_button_color",
+          "label": "Mobile Button Color",
+          "default": "#000"
+        }
+      ]
+    },
+    {
+      "type": "fm_2up",
+      "name": "2 Up Category",
+      "settings": [
+        {
+          "type": "range",
+          "id": "row_position",
+          "label": "Row position (1 = before first row)",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "select",
+          "id": "page_scope",
+          "label": "Position applies to",
+          "options": [
+            {
+              "value": "first",
+              "label": "First page only"
+            },
+            {
+              "value": "each",
+              "label": "Every pagination page"
+            },
+            {
+              "value": "global",
+              "label": "Absolute row across pages"
+            }
+          ],
+          "default": "first"
+        },
+        {
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Enable block",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "CTA label"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "CTA link"
+        },
+        {
+          "type": "range",
+          "id": "gap",
+          "label": "Grid gap",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "default": 4
+        },
+      
+        {
+          "type": "color",
+          "id": "background",
+          "label": "Background",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#111111"
+        },
+        {
+          "type": "select",
+          "id": "feature_type",
+          "label": "Feature media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "feature_image",
+          "label": "Feature static image"
+        },
+        {
+          "type": "video",
+          "id": "feature_video",
+          "label": "Feature video"
+        },
+        {
+          "type": "image_picker",
+          "id": "mob_feature_image",
+          "label": "Mobile Feature static image"
+        },
+        {
+          "type": "video",
+          "id": "mob_feature_video",
+          "label": "Mobile Feature video"
+        },
+        {
+          "type": "url",
+          "id": "feature_link",
+          "label": "Feature link (optional)"
+        },
+        {
+          "type": "select",
+          "id": "feature_side",
+          "label": "Feature side",
+          "options": [
+            {
+              "value": "right",
+              "label": "Right"
+            },
+            {
+              "value": "left",
+              "label": "Left"
+            }
+          ],
+          "default": "right"
+        },
+        {
+          "type": "select",
+          "id": "mob_feature_side",
+          "label": "Mobile Feature position",
+          "options": [
+            {
+              "value": "top",
+              "label": "Top Of The Product Grid"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom Of The Product Grid"
+            }
+          ],
+          "default": "bottom"
+        },
+        {
+          "type": "header",
+          "content": "Product card 1"
+        },
+        {
+          "type": "product",
+          "id": "product_1",
+          "label": "Product 1"
+        },
+        {
+          "type": "select",
+          "id": "media_type_1",
+          "label": "Card 1 media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Card 1 static image"
+        },
+        {
+          "type": "video",
+          "id": "video_1",
+          "label": "Card 1 video"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover_1",
+          "label": "Card 1 hover image"
+        },
+        {
+          "type": "header",
+          "content": "Product card 2"
+        },
+        {
+          "type": "product",
+          "id": "product_2",
+          "label": "Product 2"
+        },
+        {
+          "type": "select",
+          "id": "media_type_2",
+          "label": "Card 2 media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Card 2 static image"
+        },
+        {
+          "type": "video",
+          "id": "video_2",
+          "label": "Card 2 video"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover_2",
+          "label": "Card 2 hover image"
+        },
+
+        {
+          "type": "select",
+          "id": "bottom_type",
+          "label": "Bottom content",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "text",
+              "label": "Text"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "bottom_image",
+          "label": "Bottom image"
+        },
+        {
+          "type": "richtext",
+          "id": "bottom_text",
+          "label": "Bottom text"
+        },
+        {
+          "type": "text",
+          "id": "bottom_subtext",
+          "label": "Bottom Sub Text"
+        },
+        {
+          "type": "url",
+          "id": "bottom_link",
+          "label": "Bottom link (optional)"
+        },
+        {
+          "type": "header",
+          "content": "Desktop Customization"
+        },
+          {
+  "type": "range",
+  "min": 0,
+  "max": 100,
+  "id": "padding_top",
+  "label": "Padding Top",
+  "default": 20,
+  "step": 1,
+  "unit": "px"
+},
+{
+  "type": "range",
+  "min": 0,
+  "max": 100,
+  "id": "padding_bottom",
+  "label": "Padding Bottom",
+  "default": 11,
+  "step": 1,
+  "unit": "px"
+},
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "eyebrow_font_size",
+          "label": "Eyebrow Font Size",
+          "default": 12,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "heading_font_size",
+          "label": "Heading Font Size",
+          "default": 64,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "intro_font_size",
+          "label": "Intro Font Size",
+          "default": 12,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "cta_font_size",
+          "label": "CTA Font Size",
+          "default": 12,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "product_title_font_size",
+          "label": "Product Title Font Size",
+          "default": 13,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "product_price_font_size",
+          "label": "Product Price Font Size",
+          "default": 13,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "bottom_main_font_size",
+          "label": "Bottom Text Font Size",
+          "default": 24,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "bottom_subfont_font_size",
+          "label": "Bottom Subtext Font Size",
+          "default": 12,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "header",
+          "content": "Mobile Customization"
+        },
+            {
+  "type": "range",
+  "min": 0,
+  "max": 100,
+  "id": "mob_padding_top",
+  "label": "Padding Top",
+  "default": 20,
+  "step": 1,
+  "unit": "px"
+},
+{
+  "type": "range",
+  "min": 0,
+  "max": 100,
+  "id": "mob_padding_bottom",
+  "label": "Padding Bottom",
+  "default": 11,
+  "step": 1,
+  "unit": "px"
+},
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_eyebrow_font_size",
+          "label": "Eyebrow Font Size",
+          "default": 11,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_heading_font_size",
+          "label": "Heading Font Size",
+          "default": 36,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_intro_font_size",
+          "label": "Intro Font Size",
+          "default": 14,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_cta_font_size",
+          "label": "CTA Font Size",
+          "default": 12,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_product_title_font_size",
+          "label": "Product Title Font Size",
+          "default": 13,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_product_price_font_size",
+          "label": "Product Price Font Size",
+          "default": 13,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_bottom_main_font_size",
+          "label": "Bottom Text Font Size",
+          "default": 20,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_bottom_subfont_font_size",
+          "label": "Bottom Subtext Font Size",
+          "default": 11,
+          "step": 1,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "fm_4up",
+      "name": "4 Up Category",
+      "settings": [
+        {
+          "type": "range",
+          "id": "row_position",
+          "label": "Row position (1 = before first row)",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "select",
+          "id": "page_scope",
+          "label": "Position applies to",
+          "options": [
+            {
+              "value": "first",
+              "label": "First page only"
+            },
+            {
+              "value": "each",
+              "label": "Every pagination page"
+            },
+            {
+              "value": "global",
+              "label": "Absolute row across pages"
+            }
+          ],
+          "default": "first"
+        },
+        {
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Enable block",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "CTA label"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "CTA link"
+        },
+        {
+          "type": "range",
+          "id": "gap",
+          "label": "Grid gap",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "default": 4
+        },
+        
+        {
+          "type": "color",
+          "id": "background",
+          "label": "Background",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#111111"
+        },
+        {
+          "type": "select",
+          "id": "feature_type",
+          "label": "Feature media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "feature_image",
+          "label": "Feature static image"
+        },
+        {
+          "type": "video",
+          "id": "feature_video",
+          "label": "Feature video"
+        },
+        {
+          "type": "image_picker",
+          "id": "mob_feature_image",
+          "label": "Mobile Feature static image"
+        },
+        {
+          "type": "video",
+          "id": "mob_feature_video",
+          "label": "Mobile Feature video"
+        },
+        {
+          "type": "url",
+          "id": "feature_link",
+          "label": "Feature link (optional)"
+        },
+        {
+          "type": "select",
+          "id": "feature_side",
+          "label": "Feature side",
+          "options": [
+            {
+              "value": "right",
+              "label": "Right"
+            },
+            {
+              "value": "left",
+              "label": "Left"
+            }
+          ],
+          "default": "right"
+        },
+        {
+          "type": "select",
+          "id": "mob_feature_side",
+          "label": "Mobile Feature position",
+          "options": [
+            {
+              "value": "top",
+              "label": "Top Of The Product Grid"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom Of The Product Grid"
+            }
+          ],
+          "default": "bottom"
+        },
+        {
+          "type": "header",
+          "content": "Product card 1"
+        },
+        {
+          "type": "product",
+          "id": "product_1",
+          "label": "Product 1"
+        },
+        {
+          "type": "select",
+          "id": "media_type_1",
+          "label": "Card 1 media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Card 1 static image"
+        },
+        {
+          "type": "video",
+          "id": "video_1",
+          "label": "Card 1 video"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover_1",
+          "label": "Card 1 hover image"
+        },
+        {
+          "type": "header",
+          "content": "Product card 2"
+        },
+        {
+          "type": "product",
+          "id": "product_2",
+          "label": "Product 2"
+        },
+        {
+          "type": "select",
+          "id": "media_type_2",
+          "label": "Card 2 media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Card 2 static image"
+        },
+        {
+          "type": "video",
+          "id": "video_2",
+          "label": "Card 2 video"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover_2",
+          "label": "Card 2 hover image"
+        },
+        {
+          "type": "header",
+          "content": "Product card 3"
+        },
+        {
+          "type": "product",
+          "id": "product_3",
+          "label": "Product 3"
+        },
+        {
+          "type": "select",
+          "id": "media_type_3",
+          "label": "Card 3 media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Card 3 static image"
+        },
+        {
+          "type": "video",
+          "id": "video_3",
+          "label": "Card 3 video"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover_3",
+          "label": "Card 3 hover image"
+        },
+        {
+          "type": "header",
+          "content": "Product card 4"
+        },
+        {
+          "type": "product",
+          "id": "product_4",
+          "label": "Product 4"
+        },
+        {
+          "type": "select",
+          "id": "media_type_4",
+          "label": "Card 4 media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_4",
+          "label": "Card 4 static image"
+        },
+        {
+          "type": "video",
+          "id": "video_4",
+          "label": "Card 4 video"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover_4",
+          "label": "Card 4 hover image"
+        },
+        {
+          "type": "header",
+          "content": "Desktop customization"
+        },
+          {
+  "type": "range",
+  "min": 0,
+  "max": 100,
+  "id": "padding_top",
+  "label": "Padding Top",
+  "default": 20,
+  "step": 1,
+  "unit": "px"
+},
+{
+  "type": "range",
+  "min": 0,
+  "max": 100,
+  "id": "padding_bottom",
+  "label": "Padding Bottom",
+  "default": 11,
+  "step": 1,
+  "unit": "px"
+},
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "eyebrow_font_size",
+          "label": "Eyebrow Font Size",
+          "default": 12,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "heading_font_size",
+          "label": "Heading Font Size",
+          "default": 64,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "intro_font_size",
+          "label": "Intro Font Size",
+          "default": 12,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "cta_font_size",
+          "label": "CTA Font Size",
+          "default": 12,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "product_title_font_size",
+          "label": "Product Title Font Size",
+          "default": 13,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "product_price_font_size",
+          "label": "Product Price Font Size",
+          "default": 13,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "header",
+          "content": "Mobile customization"
+        },
+            {
+  "type": "range",
+  "min": 0,
+  "max": 100,
+  "id": "mob_padding_top",
+  "label": "Padding Top",
+  "default": 20,
+  "step": 1,
+  "unit": "px"
+},
+{
+  "type": "range",
+  "min": 0,
+  "max": 100,
+  "id": "mob_padding_bottom",
+  "label": "Padding Bottom",
+  "default": 11,
+  "step": 1,
+  "unit": "px"
+},
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_eyebrow_font_size",
+          "label": "Eyebrow Font Size",
+          "default": 11,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_heading_font_size",
+          "label": "Heading Font Size",
+          "default": 36,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_intro_font_size",
+          "label": "Intro Font Size",
+          "default": 14,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_cta_font_size",
+          "label": "CTA Font Size",
+          "default": 12,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_product_title_font_size",
+          "label": "Product Title Font Size",
+          "default": 13,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_product_price_font_size",
+          "label": "Product Price Font Size",
+          "default": 13,
+          "step": 1,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "fm_6up",
+      "name": "6 Up Caegory",
+      "settings": [
+        {
+          "type": "range",
+          "id": "row_position",
+          "label": "Row position (1 = before first row)",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "select",
+          "id": "page_scope",
+          "label": "Position applies to",
+          "options": [
+            {
+              "value": "first",
+              "label": "First page only"
+            },
+            {
+              "value": "each",
+              "label": "Every pagination page"
+            },
+            {
+              "value": "global",
+              "label": "Absolute row across pages"
+            }
+          ],
+          "default": "first"
+        },
+        {
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Enable block",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "CTA label"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "CTA link"
+        },
+        {
+          "type": "range",
+          "id": "gap",
+          "label": "Grid gap",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "default": 4
+        },
+       
+        {
+          "type": "color",
+          "id": "background",
+          "label": "Background",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#111111"
+        },
+        {
+          "type": "select",
+          "id": "feature_type",
+          "label": "Feature media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "feature_image",
+          "label": "Feature static image"
+        },
+        {
+          "type": "video",
+          "id": "feature_video",
+          "label": "Feature video"
+        },
+        {
+          "type": "image_picker",
+          "id": "mob_feature_image",
+          "label": "Mobile Feature static image"
+        },
+        {
+          "type": "video",
+          "id": "mob_feature_video",
+          "label": "Mobile Feature video"
+        },
+        {
+          "type": "url",
+          "id": "feature_link",
+          "label": "Feature link (optional)"
+        },
+        {
+          "type": "select",
+          "id": "feature_side",
+          "label": "Feature side",
+          "options": [
+            {
+              "value": "right",
+              "label": "Right"
+            },
+            {
+              "value": "left",
+              "label": "Left"
+            }
+          ],
+          "default": "right"
+        },
+        {
+          "type": "select",
+          "id": "mob_feature_side",
+          "label": "Mobile Feature position",
+          "options": [
+            {
+              "value": "top",
+              "label": "Top Of The Product Grid"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom Of The Product Grid"
+            }
+          ],
+          "default": "bottom"
+        },
+        {
+          "type": "header",
+          "content": "Product card 1"
+        },
+        {
+          "type": "product",
+          "id": "product_1",
+          "label": "Product 1"
+        },
+        {
+          "type": "select",
+          "id": "media_type_1",
+          "label": "Card 1 media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Card 1 static image"
+        },
+        {
+          "type": "video",
+          "id": "video_1",
+          "label": "Card 1 video"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover_1",
+          "label": "Card 1 hover image"
+        },
+        {
+          "type": "header",
+          "content": "Product card 2"
+        },
+        {
+          "type": "product",
+          "id": "product_2",
+          "label": "Product 2"
+        },
+        {
+          "type": "select",
+          "id": "media_type_2",
+          "label": "Card 2 media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Card 2 static image"
+        },
+        {
+          "type": "video",
+          "id": "video_2",
+          "label": "Card 2 video"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover_2",
+          "label": "Card 2 hover image"
+        },
+        {
+          "type": "header",
+          "content": "Product card 3"
+        },
+        {
+          "type": "product",
+          "id": "product_3",
+          "label": "Product 3"
+        },
+        {
+          "type": "select",
+          "id": "media_type_3",
+          "label": "Card 3 media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Card 3 static image"
+        },
+        {
+          "type": "video",
+          "id": "video_3",
+          "label": "Card 3 video"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover_3",
+          "label": "Card 3 hover image"
+        },
+        {
+          "type": "header",
+          "content": "Product card 4"
+        },
+        {
+          "type": "product",
+          "id": "product_4",
+          "label": "Product 4"
+        },
+        {
+          "type": "select",
+          "id": "media_type_4",
+          "label": "Card 4 media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_4",
+          "label": "Card 4 static image"
+        },
+        {
+          "type": "video",
+          "id": "video_4",
+          "label": "Card 4 video"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover_4",
+          "label": "Card 4 hover image"
+        },
+        {
+          "type": "header",
+          "content": "Product card 5"
+        },
+        {
+          "type": "product",
+          "id": "product_5",
+          "label": "Product 5"
+        },
+        {
+          "type": "select",
+          "id": "media_type_5",
+          "label": "Card 5 media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_5",
+          "label": "Card 5 static image"
+        },
+        {
+          "type": "video",
+          "id": "video_5",
+          "label": "Card 5 video"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover_5",
+          "label": "Card 5 hover image"
+        },
+        {
+          "type": "header",
+          "content": "Product card 6"
+        },
+        {
+          "type": "product",
+          "id": "product_6",
+          "label": "Product 6"
+        },
+        {
+          "type": "select",
+          "id": "media_type_6",
+          "label": "Card 6 media",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_6",
+          "label": "Card 6 static image"
+        },
+        {
+          "type": "video",
+          "id": "video_6",
+          "label": "Card 6 video"
+        },
+        {
+          "type": "image_picker",
+          "id": "hover_6",
+          "label": "Card 6 hover image"
+        },
+        {
+          "type": "header",
+          "content": "Desktop Customization"
+        },
+          {
+  "type": "range",
+  "min": 0,
+  "max": 100,
+  "id": "padding_top",
+  "label": "Padding Top",
+  "default": 20,
+  "step": 1,
+  "unit": "px"
+},
+{
+  "type": "range",
+  "min": 0,
+  "max": 100,
+  "id": "padding_bottom",
+  "label": "Padding Bottom",
+  "default": 11,
+  "step": 1,
+  "unit": "px"
+},
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "eyebrow_font_size",
+          "label": "Eyebrow Font Size",
+          "default": 12,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "heading_font_size",
+          "label": "Heading Font Size",
+          "default": 64,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "intro_font_size",
+          "label": "Intro Font Size",
+          "default": 12,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "cta_font_size",
+          "label": "CTA Font Size",
+          "default": 12,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "product_title_font_size",
+          "label": "Product Title Font Size",
+          "default": 13,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "product_price_font_size",
+          "label": "Product Price Font Size",
+          "default": 13,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "header",
+          "content": "Mobile Customization"
+        },
+            {
+  "type": "range",
+  "min": 0,
+  "max": 100,
+  "id": "mob_padding_top",
+  "label": "Padding Top",
+  "default": 20,
+  "step": 1,
+  "unit": "px"
+},
+{
+  "type": "range",
+  "min": 0,
+  "max": 100,
+  "id": "mob_padding_bottom",
+  "label": "Padding Bottom",
+  "default": 11,
+  "step": 1,
+  "unit": "px"
+},
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_eyebrow_font_size",
+          "label": "Eyebrow Font Size",
+          "default": 11,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_heading_font_size",
+          "label": "Heading Font Size",
+          "default": 36,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_intro_font_size",
+          "label": "Intro Font Size",
+          "default": 14,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_cta_font_size",
+          "label": "CTA Font Size",
+          "default": 12,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_product_title_font_size",
+          "label": "Product Title Font Size",
+          "default": 13,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "min": 0,
+          "max": 100,
+          "id": "mob_product_price_font_size",
+          "label": "Product Price Font Size",
+          "default": 13,
+          "step": 1,
+          "unit": "px"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Collection Section"
+    }
+  ]
+}
+{% endschema %}

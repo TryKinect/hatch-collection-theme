@@ -1,0 +1,228 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------------------------------------------------
+  BUY BUTTONS
+  ----------------------------------------------------------------------------------------------------------------------
+
+  This component is used to show the buy buttons
+
+  ********************************************
+  Supported variables
+  ********************************************
+
+  * product: the product from which to show the buttons (if empty, a placeholder is displayed)
+  * show_payment_button: if we show or not the dynamic checkout button
+  * show_gift_card_recipient: for gift card products, an optional message/email to be sent to the recipient
+  * atc_button_background: the background of the ATC button
+  * atc_button_text_color: the color of the ATC button
+  * payment_button_background: the background of the dynamic payment button
+  * payment_button_background: the color of the dynamic payment button
+  * form_id: if specified, define the form ID linked to this input
+{%- endcomment -%}
+
+{%- if product != blank -%}
+  {%- liquid
+    assign variant_picker_block = section.blocks | where: 'type', 'variant_picker' | first
+    assign recipient_feature_active = false
+
+    if product.gift_card? and show_gift_card_recipient
+      assign recipient_feature_active = true
+      assign show_payment_button = false
+    endif
+  -%}
+
+  <product-form>
+    {%- form 'product', product, id: form_id -%}
+      <input
+        type="hidden"
+        {% if variant_picker_block != blank %}
+          disabled
+        {% endif %}
+        name="id"
+        value="{{ product.selected_or_first_available_variant.id }}"
+      >
+      {% assign hideuk-PDPTAG1 = false %}
+      {% if localization.country.iso_code == 'GB' %}
+        {% for tag in product.tags %}
+          {% if tag == 'hideuk-PDPTAG1' %}
+            {% assign hideuk-PDPTAG1 = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      {% unless hideuk-PDPTAG1 %}
+        {% for tag in product.tags %}
+          {% if tag contains 'PDPTAG1-' %}
+            {% assign tag_parts = tag | split: '-' %}
+            {% comment %} {% assign hascode = tag_parts[1] %} {% endcomment %}
+            {% assign tag_label = tag_parts[2] %}
+            <input type="hidden" id="status" name="properties[Note]" value="{{ tag_label }}">
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endunless %}
+      {% comment %}
+        {% if product.metafields.custom.promo_message.value %}
+         <input type="hidden" id="promo" name="properties[Promo]" value="{{ product.metafields.custom.promo_message.value |strip_html }}">
+        {% endif %}
+      {% endcomment %}
+      {% comment %}
+        {% if product.metafields.custom.final_sale_text.value %}
+          <input
+            type="hidden"
+            id="status"
+            name="properties[Note]"
+            value="{{ product.metafields.custom.final_sale_text.value |strip_html}}"
+          >
+        {% endif %}
+      {% endcomment %}
+      {% if product.metafields.custom.shipping_date %}
+        <input
+          type="hidden"
+          id="pre_order"
+          name="properties[PreOrder]"
+          value="This pre-ordered item will ship: {{ product.metafields.custom.shipping_date }}"
+        >
+      {% endif %}
+
+      {% liquid
+        assign is_not_sold_individually = false
+        for tag in product.tags
+          assign downcase_tag = tag | downcase | strip
+          if downcase_tag == 'not sold individually'
+            assign is_not_sold_individually = true
+            break
+          endif
+        endfor
+
+        assign button_disabled = false
+        assign atc_button_type = 'submit'
+
+        if is_not_sold_individually
+          assign button_disabled = false
+          assign atc_button_type = 'button'
+          assign button_content = 'Not sold individually'
+        elsif product.selected_or_first_available_variant == null
+          assign button_disabled = true
+          assign button_content = 'product.general.unavailable_button' | t
+        elsif product.selected_or_first_available_variant.available == false
+          assign button_disabled = true
+          assign button_content = 'Out Of Stock'
+        else
+          if product.template_suffix contains 'pre-order'
+            assign button_content = 'product.general.pre_order_button' | t
+          else
+            assign button_content = 'product.general.add_to_cart_button' | t
+          endif
+        endif
+      %}
+
+      <div class="v-stack gap-4">
+        {%- if recipient_feature_active -%}
+          <gift-card-recipient class="gift-card-recipient v-stack gap-3">
+            {%- assign checkbox_label = 'gift_card.recipient.checkbox' | t -%}
+            {%- render 'checkbox', label: checkbox_label, name: 'properties[__shopify_send_gift_card_to_recipient]' -%}
+
+            <div class="gift-card-recipient__fields" hidden>
+              <div class="fieldset">
+                {%- liquid
+                  assign recipient_email_label = 'gift_card.recipient.email_label' | t
+                  render 'input', type: 'email', label: recipient_email_label, name: 'properties[Recipient email]', value: form.email, required: true, maxlength: 138
+
+                  assign recipient_name_label = 'gift_card.recipient.name_label' | t
+                  render 'input', label: recipient_name_label, name: 'properties[Recipient name]', value: form.name
+
+                  assign send_on_label = 'gift_card.recipient.send_on_label' | t
+                  render 'input', type: 'date', label: send_on_label, name: 'properties[Send on]', value: form.send_on, pattern: '\d{4}-\d{2}-\d{2}'
+                  render 'input', type: 'hidden', name: 'properties[__shopify_offset]'
+
+                  assign message_label = 'gift_card.recipient.message_label' | t
+                  render 'input', label: message_label, name: 'properties[Message]', value: form.message, multiline: 3, maxlength: 200, show_max_characters_count: true
+                -%}
+              </div>
+            </div>
+          </gift-card-recipient>
+        {%- endif -%}
+
+        <buy-buttons
+          class="buy-buttons {% if show_payment_button and is_not_sold_individually == false %}buy-buttons--has-dynamic{% endif %} {% if is_not_sold_individually %}is-not-sold-individually{% endif %}"
+          form="{{ form_id }}"
+        >
+          {%- if product.selected_or_first_available_variant.available == false
+            or is_not_sold_individually
+            or show_payment_button
+            and atc_button_background == blank
+            and atc_button_text_color == blank
+          -%}
+            {%- assign atc_button_style = 'outline' -%}
+          {%- else -%}
+            {%- assign atc_button_style = 'solid' -%}
+          {%- endif -%}
+          {%- render 'button',
+            content: button_content,
+            type: atc_button_type,
+            disabled: button_disabled,
+            style: atc_button_style,
+            background: atc_button_background,
+            text_color: atc_button_text_color,
+            stretch: true
+          -%}
+
+          {%- if show_payment_button and is_not_sold_individually == false -%}
+            {{- form | payment_button -}}
+
+            <style>
+              #{{ form_id }} .shopify-payment-button {
+                {%- if payment_button_background != blank and payment_button_background != 'rgba(0,0,0,0)' -%}
+                  --button-background: {{ payment_button_background.rgb }};
+                {%- endif -%}
+
+                {%- if payment_button_text_color != blank and payment_button_text_color != 'rgba(0,0,0,0)' -%}
+                  --button-text-color: {{ payment_button_text_color.rgb }};
+                {%- endif -%}
+
+                {%- unless product.selected_or_first_available_variant.available -%}
+                  display: none;
+                {%- endunless -%}
+              }
+            </style>
+          {%- endif -%}
+        </buy-buttons>
+      </div>
+    {%- endform -%}
+  </product-form>
+  {%- if is_not_sold_individually -%}
+    <style>
+      .buy-buttons.is-not-sold-individually .button,
+      .buy-buttons.is-not-sold-individually button,
+      .is-not-sold-individually .button {
+        pointer-events: none !important;
+        opacity: 0.6 !important;
+        cursor: not-allowed !important;
+      }
+      .product-info__block-item.buy-buttons:has(.is-not-sold-individually) .klaviyo-bis-trigger.join-to-waitlist,
+      .klaviyo-bis-trigger.join-to-waitlist {
+        display: none !important;
+      }
+    </style>
+  {%- else -%}
+    <a
+      class="klaviyo-bis-trigger join-to-waitlist"
+      href="javascript:void(0);"
+      onclick="hideKlaviyoIframe()"
+      role="button"
+      tabindex="0"
+      ><span>JOIN WAITLIST</span></a
+    >
+  {%- endif -%}
+{%- else -%}
+  <buy-buttons class="buy-buttons" template="{{ product.template_suffix | escape }}" form="{{ form_id }}">
+    {%- assign button_content = 'product.general.add_to_cart_button' | t -%}
+    {%- render 'button',
+      content: button_content,
+      type: 'submit',
+      background: variant_picker_block.settings.atc_button_background,
+      text_color: variant_picker.settings.atc_button_text_color,
+      stretch: true
+    -%}
+  </buy-buttons>
+{%- endif -%}

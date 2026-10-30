@@ -1,0 +1,198 @@
+{% liquid
+  assign count = 4
+  if block.type == 'fm_6up'
+    assign count = 6
+  elsif block.type == 'fm_2up'
+    assign count = 3
+  endif
+%}
+<div class="fm-plp-block fm-plp-block--{{ block.type }}" id="fm-merch-{{ block.id }}" {{ block.shopify_attributes }} style="--fm-gap:{{ block.settings.gap }}px;--fm-text:{{ block.settings.text_color }};--fm-bg:{{ block.settings.background }};--fm-pad:{{ block.settings.padding_y }}px;
+--desktop-eyebrow: {{ block.settings.eyebrow_font_size }}px;
+--desktop-heading: {{ block.settings.heading_font_size }}px;
+--desktop-intro: {{ block.settings.intro_font_size }}px;
+--desktop-cta: {{ block.settings.cta_font_size }}px;
+--desktop-product-title: {{ block.settings.product_title_font_size }}px;
+--desktop-product-price: {{ block.settings.product_price_font_size }}px;
+--mob-eyebrow: {{ block.settings.mob_eyebrow_font_size }}px;
+--mob-heading: {{ block.settings.mob_heading_font_size }}px;
+--mob-intro: {{ block.settings.mob_intro_font_size }}px;
+--mob-cta: {{ block.settings.mob_cta_font_size }}px;
+--mob-product-title: {{ block.settings.mob_product_title_font_size }}px;
+--mob-product-price: {{ block.settings.mob_product_price_font_size }}px;
+--desk-bottom-main-heading: {{ block.settings.bottom_main_font_size }}px;
+--desk-bottom-sub-heading: {{ block.settings.bottom_subfont_font_size }}px;
+--mob-bottom-main-heading: {{ block.settings.mob_bottom_main_font_size }}px;
+--mob-bottom-sub-heading: {{ block.settings.mob_bottom_subfont_font_size }}px;
+--desk_top_padding: {{block.settings.padding_top}}px;
+--desk_bottom_padding: {{block.settings.padding_bottom}}px;
+--mob_top_padding: {{block.settings.mob_padding_top}}px;
+--mob_bottom_padding: {{block.settings.mob_padding_bottom}}px;
+">
+  <div class="fm-plp-block__header">
+    <div>{% if block.settings.eyebrow != blank %}<p class="fm-plp-block__eyebrow">{{ block.settings.eyebrow | escape }}</p>{% endif %}{% if block.settings.heading != blank %}<h2>{{ block.settings.heading | escape }}</h2>{% endif %}</div>
+    <div class="fm-plp-block__description">{% if block.settings.description != blank %}<div>{{ block.settings.description }}</div>{% endif %}{% if block.settings.cta_link != blank and block.settings.cta_label != blank %}<a href="{{ block.settings.cta_link }}">{{ block.settings.cta_label | escape }}</a>{% endif %}</div>
+  </div>
+  <div class="fm-plp-block__layout fm-layout-cards--{{ count }} {% if block.settings.feature_side == 'left' %}fm-plp-block__layout--reverse{% endif %} {% if block.settings.mob_feature_side == 'top' %} mobile-reverse{% endif %}">
+    <div class="fm-plp-block__left">
+      <div class="fm-plp-block__cards fm-plp-block__cards--{{ count }}">
+        {% for i in (1..count) %}
+          {% liquid
+            assign pkey = 'product_' | append: i
+            assign ikey = 'image_' | append: i
+            assign vkey = 'video_' | append: i
+            assign tkey = 'media_type_' | append: i
+            assign hkey = 'hover_' | append: i
+            assign product = block.settings[pkey]
+            assign image = block.settings[ikey]
+            assign video = block.settings[vkey]
+            assign hover = block.settings[hkey]
+            assign kind = block.settings[tkey]
+            assign variant = product.selected_or_first_available_variant
+          %}
+          <div class="fm-plp-block__card {% if  product == blank %} product-hide{% endif %}">
+            {% if product != blank %}<a href="{{ product.url }}" class="fm-plp-block__card-link" aria-label="{{ product.title | escape }}">{% endif %}
+              <div class="fm-plp-block__card-media">
+                {% if kind == 'video' and video != blank %}
+                  {{ video | video_tag: autoplay: true, muted: true, loop: true, controls: false, playsinline: true, image_size: '700x' }}
+                {% elsif image != blank %}
+                  {{ image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '240,400,600,900', class: 'fm-plp-block__primary' }}
+                  {% if hover != blank %}{{ hover | image_url: width: 900 | image_tag: loading: 'lazy', widths: '240,400,600,900', class: 'fm-plp-block__hover' }}{% endif %}
+                {% else %}{{ 'product-1' | placeholder_svg_tag }}{% endif %}
+              </div>
+              {% if product != blank %}
+                <div class="fm-plp-block__details"><p>{{ product.title | escape }}</p><div class="fm-plp-block__price">{% if variant.compare_at_price > variant.price %}<s>{{ variant.compare_at_price | money }}</s>{% endif %}<span>{{ variant.price | money }}</span></div></div>
+              {% endif %}
+            {% if product != blank %}</a>{% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      {% if block.type == 'fm_2up' %}
+       
+        <div class="fm-plp-block__bottom">
+          {% if block.settings.bottom_type == 'text' %}<div class="fm-plp-block__bottom-text">
+            <div>{{ block.settings.bottom_text }}</div>
+              <span>{{ block.settings.bottom_subtext }}</span>
+          </div>
+          {% elsif block.settings.bottom_image != blank %}
+            {% if block.settings.bottom_link != blank %}<a href="{{ block.settings.bottom_link }}">{% endif %}
+              {{ block.settings.bottom_image | image_url: width: 1100 | image_tag: loading: 'lazy', widths: '360,600,900,1100' }}
+            {% if block.settings.bottom_link != blank %}</a>{% endif %}
+          {% endif %}
+        </div>
+    
+      {% endif %}
+    </div>
+    <div class="fm-plp-block__feature">
+      {% capture feature_content %}
+        <div class="plp-desktop-media">
+        {% if block.settings.feature_type == 'video' and block.settings.feature_video != blank %}
+          {{ block.settings.feature_video | video_tag: autoplay: true, muted: true, loop: true, playsinline: true, controls: false, image_size: '1200x' }}
+        {% elsif block.settings.feature_image != blank %}
+          {{ block.settings.feature_image | image_url: width: 1800 | image_tag: loading: 'lazy', widths: '500,800,1200,1800' }}
+        {% endif %}
+        </div>
+         <div class="plp-mobile-media">
+        {% if block.settings.feature_type == 'video' and block.settings.mob_feature_video != blank %}
+          {{ block.settings.mob_feature_video | video_tag: autoplay: true, muted: true, loop: true, playsinline: true, controls: false, image_size: '1200x' }}
+        {% elsif block.settings.mob_feature_image != blank %}
+          {{ block.settings.mob_feature_image | image_url: width: 1800 | image_tag: loading: 'lazy', widths: '500,800,1200,1800' }}
+        {% else %}
+         {{ block.settings.feature_image | image_url: width: 1800 | image_tag: loading: 'lazy', widths: '500,800,1200,1800' }}
+        {% endif %}
+        </div>
+      
+      {% endcapture %}
+      {% if block.settings.feature_link != blank %}<a href="{{ block.settings.feature_link }}">{{ feature_content }}</a>{% else %}{{ feature_content }}{% endif %}
+    </div>
+  </div>
+</div>
+<style>
+#fm-merch-{{ block.id }}{padding:var(--desk_top_padding) 0 var(--desk_bottom_padding);background:var(--fm-bg);color:var(--fm-text);width:100%;}
+#fm-merch-{{ block.id }} .fm-plp-block__header{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:40px;}
+#fm-merch-{{ block.id }} .fm-plp-block__header h2{font-family: Canela; font-weight: 100; line-height: 108%; font-size: var(--desktop-heading);}
+#fm-merch-{{ block.id }} .fm-plp-block__eyebrow{font-size:var(--desktop-eyebrow);font-weight: 400;line-height: normal;text-transform: uppercase;margin:0 0 9px;font-family: inter;}
+#fm-merch-{{ block.id }} .fm-plp-block__header>div:last-child{text-align:right;}
+#fm-merch-{{ block.id }} .fm-plp-block__description { text-align: right; max-width: 590px; font-size: var(--desktop-intro); font-family: "Circular Std"; font-weight: 450; line-height: normal; letter-spacing: 0; }
+#fm-merch-{{ block.id }} .fm-plp-block__description p { margin: 0 }
+#fm-merch-{{ block.id }} .fm-plp-block__description a { font-size: var(--desktop-cta); color: inherit; text-decoration: underline; display: block; margin-top: 12px; font-family: Inter; font-weight: 400; line-height: normal; text-underline-offset: 2px; }
+#fm-merch-{{ block.id }} .fm-plp-block__header a{text-decoration:underline}
+#fm-merch-{{ block.id }} .fm-plp-block__layout{display:grid;grid-template-columns:1fr 61.05%;gap:var(--fm-gap)}
+#fm-merch-{{ block.id }}  .fm-plp-block__layout.fm-layout-cards--6{grid-template-columns: 1fr 42.935%;}
+#fm-merch-{{ block.id }}  .fm-plp-block__layout.fm-layout-cards--3 .fm-plp-block__left{display: grid;grid-template-rows: 1fr 1fr;gap: 5px;}
+#fm-merch-{{ block.id }} .fm-plp-block__layout--reverse{grid-template-columns:minmax(0,3fr) minmax(0,2fr)}
+#fm-merch-{{ block.id }} .fm-plp-block__layout--reverse .fm-plp-block__feature{order:-1}
+#fm-merch-{{ block.id }} .fm-plp-block__left{min-width:0}
+#fm-merch-{{ block.id }} .fm-plp-block__cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--fm-gap);min-height: 100%;height: 100%;}
+#fm-merch-{{ block.id }} .fm-plp-block__cards--6{grid-template-columns:repeat(3,minmax(0,1fr))}
+#fm-merch-{{ block.id }} .fm-plp-block__cards--3 .fm-plp-block__card:nth-child(3){grid-column:1/-1}
+#fm-merch-{{ block.id }} .fm-plp-block__cards--3 .fm-plp-block__card.product-hide{display: none ;}
+#fm-merch-{{ block.id }} .fm-plp-block__card{min-width:0}
+#fm-merch-{{ block.id }} .fm-plp-block__card-link{display:block;text-decoration:none;color:inherit}
+#fm-merch-{{ block.id }} .fm-plp-block__card-media{position:relative;overflow:hidden;background:#f4f4f4}
+#fm-merch-{{ block.id }} .fm-plp-block__card-media img,#fm-merch-{{ block.id }} .fm-plp-block__card-media video,#fm-merch-{{ block.id }} .fm-plp-block__card-media svg{width:100%;height:100%;object-fit:cover;display:block}
+#fm-merch-{{ block.id }} .fm-plp-block__hover{position:absolute;inset:0;opacity:0;transition:opacity .2s}
+#fm-merch-{{ block.id }} .fm-plp-block__card:hover .fm-plp-block__hover{opacity:1}
+#fm-merch-{{ block.id }} .fm-plp-block__details{font-size:11px;line-height:1.3;padding:5px 0;opacity:0;transition:opacity .2s}
+#fm-merch-{{ block.id }} .fm-plp-block__card:hover .fm-plp-block__details,#fm-merch-{{ block.id }} .fm-plp-block__card:focus-within .fm-plp-block__details{opacity:1}
+#fm-merch-{{ block.id }} .fm-plp-block__details p{margin:0}
+#fm-merch-{{ block.id }} .fm-plp-block__price{display:flex;gap:5px;flex-wrap:wrap}
+#fm-merch-{{ block.id }} .fm-plp-block__feature{min-width:0;overflow:hidden;background:#f4f4f4}
+#fm-merch-{{ block.id }} .fm-plp-block__feature>a{display:block;height:100%}
+#fm-merch-{{ block.id }} .fm-plp-block__feature img,#fm-merch-{{ block.id }} .fm-plp-block__feature video{width:100%;height:100%;object-fit:cover;display:block}
+#fm-merch-{{ block.id }} .fm-plp-block__bottom{margin-top:var(--fm-gap);min-height:120px}
+#fm-merch-{{ block.id }} .fm-plp-block__bottom img{display:block;width:100%;height:auto;object-fit:cover}
+#fm-merch-{{ block.id }} .fm-plp-block__bottom-text{padding:20px;font-size:18px;line-height:1.4}
+#fm-merch-{{ block.id }} .fm-plp-block__details{padding: 5px;}
+#fm-merch-{{ block.id }} .fm-plp-block__details > p{margin:0 0 5px;color:#000;font-family: "Circular Std";font-weight: 450;line-height: 1.53;letter-spacing: 1.17px;font-size: var(--desktop-product-title);}
+#fm-merch-{{ block.id }} .fm-plp-block__details .fm-plp-block__price{gap:8px;flex-wrap:wrap;color: #000;font-family: "Circular Std";font-weight: 450;line-height: 1.53;letter-spacing: 9%;font-size: var(--desktop-product-price);}
+#fm-merch-{{ block.id }} .fm-plp-block__details .fm-plp-block__price s{color: #535353;}
+#fm-merch-{{ block.id }} .plp-mobile-media{display: none;}
+#fm-merch-{{ block.id }} .plp-desktop-media{height: 100%;position: relative;}
+#fm-merch-{{ block.id }} .plp-desktop-media video{position: absolute;top: 0;left: 0;width: 100%;height: 100%;}
+#fm-merch-{{ block.id }}  .fm-plp-block__bottom-text{height:100%;display:flex;flex-direction:column;justify-content:center;font-family: Canela;
+font-weight: 100;
+line-height: 120%;font-size: var(--desk-bottom-main-heading);
+letter-spacing: 0%;padding: 10px 46px;}
+  #fm-merch-{{ block.id }}  .fm-plp-block__bottom-text div{margin:0 0 16px}
+  #fm-merch-{{ block.id }}  .fm-plp-block__bottom-text span{font-size: var(--desk-bottom-sub-heading);text-transform:uppercase;font-family: Inter;
+font-weight: 400;
+line-height: 100%;
+letter-spacing: 0%;
+}
+@media(min-width: 750px){
+#fm-merch-{{ block.id }} .fm-plp-block__card .fm-plp-block__details{opacity: 0;padding: 5px;position: absolute;bottom: 0;width: 100%;transition: opacity 0.2s ease;background: rgba(255,255,255,0.83);}
+#fm-merch-{{ block.id }} .fm-plp-block__card:hover .fm-plp-block__details{opacity: 1;}
+#fm-merch-{{ block.id }} .fm-plp-block__card{position: relative;}
+#fm-merch-{{ block.id }} .fm-plp-block__header{min-height: 94px;}
+#fm-merch-{{ block.id }} .fm-plp-block__header div:first-child{align-self: flex-start;}
+#fm-merch-{{ block.id }} .fm-plp-block__card,#fm-merch-{{ block.id }} .fm-plp-block__card .fm-plp-block__card-media,#fm-merch-{{ block.id }} .fm-plp-block__card-link{height: 100%; min-height: 100%;max-height: 100%;}
+}
+@media(max-width:749px){
+#fm-merch-{{ block.id }} .fm-plp-block__header{align-items:start;flex-direction:column;gap:8px}
+#fm-merch-{{ block.id }} .fm-plp-block__header>div:last-child{text-align:left}
+#fm-merch-{{ block.id }} .fm-plp-block__layout,#fm-merch-{{ block.id }} .fm-plp-block__layout--reverse,#fm-merch-{{ block.id }}  .fm-plp-block__layout.fm-layout-cards--6{grid-template-columns:1fr !important;}
+#fm-merch-{{ block.id }} .fm-plp-block__layout--reverse .fm-plp-block__feature{order:0}
+#fm-merch-{{ block.id }} .fm-plp-block__details{opacity:1}
+#fm-merch-{{ block.id }} .fm-plp-block__cards--6{grid-template-columns:repeat(2,minmax(0,1fr))}
+#fm-merch-{{ block.id }} .fm-plp-block__cards--3 .fm-plp-block__card:nth-child(3){grid-column:1/-1}
+#fm-merch-{{ block.id }} .fm-plp-block__header{flex-flow: column wrap;margin-bottom: 24px;gap: 12px;}
+#fm-merch-{{ block.id }} .fm-plp-block__header h2{font-family: Canela;font-size:var(--mob-heading);font-style: normal;font-weight: 100;line-height: 112%;}
+#fm-merch-{{ block.id }} .fm-plp-block__eyebrow{font-family: Inter;font-size:var(--mob-eyebrow);font-style: normal;font-weight: 400;line-height: normal;margin:0 0 12px}
+#fm-merch-{{ block.id }} .fm-plp-block__description{font-family: Inter; font-size: var(--mob-intro); font-style: normal; font-weight: 400; line-height: 150%;}
+#fm-merch-{{ block.id }} .fm-plp-block__description a{font-size: var(--mob-cta)}
+#fm-merch-{{ block.id }} .fm-plp-block__details > p{margin:0 0 5px;color:#000;font-family: "Circular Std"; font-size:var(--mob-product-title); font-style: normal; font-weight: 450; line-height: 1.53; letter-spacing: 1.17px;}
+#fm-merch-{{ block.id }} .fm-plp-block__details .fm-plp-block__price{gap:8px;flex-wrap:wrap;color: #000;font-family: "Circular Std"; font-size: var(--mob-product-price); font-style: normal; font-weight: 450; line-height: 1.53; letter-spacing: 1.17px;}
+#fm-merch-{{ block.id }} .fm-plp-block__details .fm-plp-block__price s{color: #535353;}
+#fm-merch-{{ block.id }} .plp-desktop-media{display : none;}
+#fm-merch-{{ block.id }} .plp-mobile-media{display : block;}
+  #fm-merch-{{ block.id }} .fm-plp-block__layout{gap: 24px;}
+  #fm-merch-{{ block.id }} .fm-plp-block__layout.mobile-reverse .fm-plp-block__feature{order: 0;}
+  #fm-merch-{{ block.id }} .fm-plp-block__layout.mobile-reverse .fm-plp-block__left{order: 1;}
+  #fm-merch-{{ block.id }}  .fm-plp-block__bottom-text{padding: 5px 12px;font-size: var(--mob-bottom-main-heading);line-height: 1.4;}
+  #fm-merch-{{ block.id }}  .fm-plp-block__bottom-text div{margin:0 0 20px}
+  #fm-merch-{{ block.id }}  .fm-plp-block__bottom-text span{font-size: var(--mob-bottom-sub-heading)}
+  #fm-merch-{{ block.id }}  .fm-plp-block__layout.fm-layout-cards--3 .fm-plp-block__left{gap: 19px;grid-template-rows: auto auto;}
+  #fm-merch-{{ block.id }}{padding:   var(--mob_top_padding) 0 var(--mob_bottom_padding);}
+
+}
+</style>

@@ -1,0 +1,416 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------------------------------------------------
+  HEADER SIDEBAR COMPONENT
+  ----------------------------------------------------------------------------------------------------------------------
+
+  This snippet the navigation sidebar for the header. It is used for both the mobile menu and for the desktop menu when
+  the merchant configures the drawer mode.
+
+  ********************************************
+  Supported variables
+  ********************************************
+
+  * menu: the menu to render
+  * color_scheme: the color scheme to use for the sidebar
+  * show_dividers: whether dividers are shown for the collapsible
+  * open_second_level_menus: if true, second level dropdown are open by default
+{%- endcomment -%}
+
+{%- comment -%}
+  IMPLEMENTATION NOTE: while being a drawer, the sidebar has a completely different structure for the content. We are
+  therefore using a different structure for the Shadow DOM template
+{%- endcomment -%}
+<template id="header-sidebar-template">
+  <div part="base">
+    <div part="overlay"></div>
+
+    <div part="content">
+      <header part="header">
+        <dialog-close-button class="contents">
+          <button
+            type="button"
+            part="close-button tap-area"
+            aria-label="{{ 'general.accessibility.close' | t | escape }}"
+          >
+            {%- render 'icon' with 'close', width: 16 -%}
+          </button>
+        </dialog-close-button>
+      </header>
+
+      <div part="panel-list">
+        <slot name="main-panel"></slot>
+
+        {%- if menu.levels > 0 -%}
+          <slot name="collapsible-panel"></slot>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</template>
+
+<header-sidebar
+  id="sidebar-menu"
+  class="header-sidebar drawer drawer--sm color-scheme color-scheme--{{ color_scheme.id }}"
+  template="header-sidebar-template"
+  open-from="left"
+>
+  {%- comment -%}We are using a Shadow DOM where each panel has a slot, so we can directly render each level individually{%- endcomment -%}
+
+  {%- comment -%}Panel 1 is the first level{%- endcomment -%}
+  <div class="header-sidebar__main-panel" slot="main-panel">
+    {% comment %} <div class="mega-menu-mobile-slider">
+      <div class="mega-menu-mobile-slider__track">
+        {% for i in (1..5) %}
+          {% case i %}
+            {% when 1 %}
+              {% assign mobile_image = mobile_image_1 %}
+              {% assign mobile_heading = mobile_image_1_heading %}
+              {% assign mobile_text = mobile_image_1_text %}
+              {% assign mobile_link = mobile_image_1_link %}
+
+            {% when 2 %}
+              {% assign mobile_image = mobile_image_2 %}
+              {% assign mobile_heading = mobile_image_2_heading %}
+              {% assign mobile_text = mobile_image_2_text %}
+              {% assign mobile_link = mobile_image_2_link %}
+
+            {% when 3 %}
+              {% assign mobile_image = mobile_image_3 %}
+              {% assign mobile_heading = mobile_image_3_heading %}
+              {% assign mobile_text = mobile_image_3_text %}
+              {% assign mobile_link = mobile_image_3_link %}
+
+            {% when 4 %}
+              {% assign mobile_image = mobile_image_4 %}
+              {% assign mobile_heading = mobile_image_4_heading %}
+              {% assign mobile_text = mobile_image_4_text %}
+              {% assign mobile_link = mobile_image_4_link %}
+
+            {% when 5 %}
+              {% assign mobile_image = mobile_image_5 %}
+              {% assign mobile_heading = mobile_image_5_heading %}
+              {% assign mobile_text = mobile_image_5_text %}
+              {% assign mobile_link = mobile_image_5_link %}
+          {% endcase %}
+
+          {% if mobile_image != blank %}
+            <div class="mega-menu-mobile-slider__item">
+              {% if mobile_link != blank %}
+                <a href="{{ mobile_link }}" class="mega-menu-mobile-slider__link">
+              {% endif %}
+
+              {{
+                mobile_image
+                | image_url: width: 800
+                | image_tag: loading: 'lazy', class: 'mega-menu-mobile-slider__image', alt: mobile_image.alt
+              }}
+
+              {% if mobile_heading != blank %}
+                <h3 class="mega-menu-mobile-slider__heading">
+                  {{ mobile_heading }}
+                </h3>
+              {% endif %}
+
+              {% if mobile_text != blank %}
+                <div class="mega-menu-mobile-slider__text">
+                  {{ mobile_text }}
+                </div>
+              {% endif %}
+
+              {% if mobile_link != blank %}
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div> {% endcomment %}
+
+    <div class="header-sidebar__scroller">
+        <div class="mega-menu-mobile-img-slider">
+      <div class="mega-menu-mobile-slider__track">
+        {% for i in (1..5) %}
+          {% case i %}
+            {% when 1 %}
+              {% assign mobile_image = mobile_image_1 %}
+              {% assign mobile_heading = mobile_image_1_heading %}
+              {% assign mobile_text = mobile_image_1_text %}
+              {% assign mobile_link = mobile_image_1_link %}
+
+            {% when 2 %}
+              {% assign mobile_image = mobile_image_2 %}
+              {% assign mobile_heading = mobile_image_2_heading %}
+              {% assign mobile_text = mobile_image_2_text %}
+              {% assign mobile_link = mobile_image_2_link %}
+
+            {% when 3 %}
+              {% assign mobile_image = mobile_image_3 %}
+              {% assign mobile_heading = mobile_image_3_heading %}
+              {% assign mobile_text = mobile_image_3_text %}
+              {% assign mobile_link = mobile_image_3_link %}
+
+            {% when 4 %}
+              {% assign mobile_image = mobile_image_4 %}
+              {% assign mobile_heading = mobile_image_4_heading %}
+              {% assign mobile_text = mobile_image_4_text %}
+              {% assign mobile_link = mobile_image_4_link %}
+
+            {% when 5 %}
+              {% assign mobile_image = mobile_image_5 %}
+              {% assign mobile_heading = mobile_image_5_heading %}
+              {% assign mobile_text = mobile_image_5_text %}
+              {% assign mobile_link = mobile_image_5_link %}
+          {% endcase %}
+
+          {% if mobile_image != blank %}
+            <div class="mega-menu-mobile-slider__item">
+              {% if mobile_link != blank %}
+                <a href="{{ mobile_link }}" class="mega-menu-mobile-slider__link">
+              {% endif %}
+
+              {{
+                mobile_image
+                | image_url: width: 800
+                | image_tag: loading: 'lazy', class: 'mega-menu-mobile-slider__image', alt: mobile_image.alt
+              }}
+
+              {% if mobile_heading != blank %}
+                <h3 class="mega-menu-mobile-slider__heading">
+                  {{ mobile_heading }}
+                </h3>
+              {% endif %}
+
+              {% if mobile_text != blank %}
+                <div class="mega-menu-mobile-slider__text">
+                  {{ mobile_text }}
+                </div>
+              {% endif %}
+
+              {% if mobile_link != blank %}
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+      <ul class="header-sidebar__linklist {% if show_dividers %}divide-y{% endif %} unstyled-list" role="list">
+        {%- for link in menu.links -%}
+          <li class="{{- link.title -}}">
+            {%- if link.links.size > 0 -%}
+              <button
+                type="button"
+                class="header-sidebar__linklist-button {% if section.settings.sidebar_text_font == 'heading' %}h6{% endif %}"
+                aria-controls="header-panel-{{ forloop.index }}"
+                aria-expanded="false"
+              >
+                {{- link.title -}}
+                {%- render 'icon' with 'chevron-right', width: 12, direction_aware: true -%}
+              </button>
+            {%- else -%}
+              <a
+                href="{{ link.url }}"
+                class="header-sidebar__linklist-button {% if section.settings.sidebar_text_font == 'heading' %}h6{% endif %}"
+              >
+                {{- link.title -}}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+
+    {%- liquid
+      if section.settings.show_country_selector and localization.available_countries.size > 1
+        assign show_country_selector = true
+      endif
+
+      if section.settings.show_locale_selector and localization.available_languages.size > 1
+        assign show_locale_selector = true
+      endif
+    -%}
+
+    {%- if shop.customer_accounts_enabled or show_country_selector or show_locale_selector -%}
+      <div class="header-sidebar__footer">
+        {% if section.settings.babe_icon != blank %}
+          <div class="babe-icon">
+            {% if section.settings.Babe_url != blank %}
+              <a href="{{ section.settings.Babe_url }}" title="" target="_blank">
+            {% endif %}
+            <img
+              src="{{ section.settings.babe_icon | img_url: 'master' }}"
+              class="nav__image-alt"
+              alt="Babe Icon"
+              loading="lazy"
+            >
+            {% if section.settings.Babe_url != blank %}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if section.settings.com_text != blank %}
+          <div class="com-text">
+            {% if section.settings.com_url != blank %}
+              <a href="{{ section.settings.com_url }}" title="Community Events" class="link-title" target="_blank">
+            {% endif %}
+            {{ section.settings.com_text }}
+            {% if section.settings.com_url != blank %}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+        {%- if shop.customer_accounts_enabled -%}
+          <a
+            href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+            class="text-with-icon smallcaps sm:hidden"
+          >
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.32136 8.35714C10.564 8.35714 11.5714 7.34978 11.5714 6.10714C11.5714 4.8645 10.564 3.85714 9.32136 3.85714C8.07872 3.85714 7.07136 4.8645 7.07136 6.10714C7.07136 7.34978 8.07872 8.35714 9.32136 8.35714ZM9.32136 9.64285C11.2741 9.64285 12.8571 8.05986 12.8571 6.10714C12.8571 4.15442 11.2741 2.57143 9.32136 2.57143C7.36864 2.57143 5.78564 4.15442 5.78564 6.10714C5.78564 8.05986 7.36864 9.64285 9.32136 9.64285Z" fill-rule="evenodd" clip-rule="evenodd" fill="black"/>
+              <path d="M10.2856 12.2143H8.357C6.31849 12.2143 4.59656 13.5698 4.04335 15.4286H14.5992C14.046 13.5698 12.3241 12.2143 10.2856 12.2143ZM15.9279 15.4286C15.3433 12.852 13.039 10.9286 10.2856 10.9286H8.357C5.60353 10.9286 3.29931 12.852 2.71466 15.4286C2.62083 15.8421 2.57129 16.2724 2.57129 16.7143H16.0713C16.0713 16.2724 16.0217 15.8421 15.9279 15.4286Z" fill-rule="evenodd" clip-rule="evenodd" fill="black"/>
+            </svg>
+
+            {%- if customer -%}
+              {{- 'header.general.account' | t -}}
+            {%- else -%}
+              {{- 'header.general.login' | t -}}
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+
+        {%- if show_country_selector or show_locale_selector -%}
+          <div class="localization-selectors">
+            {%- if show_country_selector -%}
+              {%- render 'localization-selector',
+                type: 'country',
+                placement: 'top-start',
+                show_country_name: section.settings.show_country_name,
+                show_country_flag: section.settings.show_country_flag,
+                id_prefix: 'header-sidebar'
+              -%}
+            {%- endif -%}
+
+            {%- if show_country_selector and show_locale_selector -%}
+              <span class="localization-selectors__separator" aria-hidden="true"></span>
+            {%- endif -%}
+
+            {%- if show_locale_selector -%}
+              {%- render 'localization-selector',
+                type: 'locale',
+                placement: 'top-start',
+                id_prefix: 'header-sidebar'
+              -%}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%}Panel 2 holds all the second levels{%- endcomment -%}
+  {%- if menu.levels > 0 -%}
+    <header-sidebar-collapsible-panel class="header-sidebar__collapsible-panel" slot="collapsible-panel">
+      <div class="header-sidebar__scroller">
+        {%- for link in menu.links -%}
+          {%- if link.links.size > 0 -%}
+            <div id="header-panel-{{ forloop.index }}" class="header-sidebar__sub-panel" hidden>
+              <button
+                type="button"
+                class="header-sidebar__back-button link-faded {% if show_dividers %}is-divided{% endif %} text-with-icon {% if section.settings.sidebar_text_font == 'heading' %}h6{% endif %} md:hidden"
+                data-action="close-panel"
+              >
+                {%- render 'icon' with 'chevron-left', width: 12, direction_aware: true -%}
+                {{- link.title -}}
+              </button>
+
+              <ul class="header-sidebar__linklist {% if show_dividers %}divide-y{% endif %} unstyled-list" role="list">
+                {%- for sub_link in link.links -%}
+                  <li>
+                    {% if show_accordion %}
+                    {%- if sub_link.links.size > 0 -%}
+                      <accordion-disclosure>
+                        <details
+                          class="accordion__disclosure group"
+                          {% if open_second_level_menus %}
+                            open
+                          {% endif %}
+                        >
+                          <summary class="header-sidebar__linklist-button {% if section.settings.sidebar_text_font == 'heading' %}h6{% endif %}">
+                            {{- sub_link.title -}}
+                            <span class="animated-plus group-expanded:rotate" aria-hidden="true"></span>
+                          </summary>
+
+                          <div class="header-sidebar__nested-linklist">
+                            {%- for sub_sub_link in sub_link.links -%}
+                              <a href="{{ sub_sub_link.url }}" class="link-faded-reverse">{{ sub_sub_link.title }}</a>
+                            {%- endfor -%}
+                          </div>
+                        </details>
+                      </accordion-disclosure>
+                    {%- else -%}
+                      <a
+                        href="{{ sub_link.url }}"
+                        class="header-sidebar__linklist-button {% if section.settings.sidebar_text_font == 'heading' %}h6{% endif %}"
+                      >
+                        {{- sub_link.title -}}
+                      </a>
+                    {%- endif -%}
+                  {% else %}
+                     {%- if sub_link.links.size > 0 -%}
+                      <div>
+                        <a   href="{{ sub_link.url }}">
+                          <span>
+                            {{- sub_link.title -}}
+                          
+                          </span>
+                          </a>
+                          <div class="header-sidebar__nested-linklist no-accordion">
+                            {%- for sub_sub_link in sub_link.links -%}
+                              <a href="{{ sub_sub_link.url }}" class="link-faded-reverse">{{ sub_sub_link.title }}</a>
+                            {%- endfor -%}
+                          </div>
+                        
+                      </div>
+                    {%- else -%}
+                      <a
+                        href="{{ sub_link.url }}"
+                        class="header-sidebar__linklist-button {% if section.settings.sidebar_text_font == 'heading' %}h6{% endif %}"
+                      >
+                        {{- sub_link.title -}}
+                      </a>
+                    {%- endif -%}
+                  {% endif %}
+                  </li>
+                {%- endfor -%}
+              </ul>
+
+              {%- liquid
+                assign link_title_downcase = link.title | strip | downcase
+                assign mega_menu_block = ''
+
+                for block in section.blocks
+                  assign menu_item_downcase = block.settings.menu_item | strip | downcase
+
+                  if menu_item_downcase == link_title_downcase
+                    assign mega_menu_block = block
+                    break
+                  endif
+                endfor
+              -%}
+
+              {%- capture mega_menu_content -%}
+                {%- render 'mega-menu-images', context: 'sidebar', block: mega_menu_block -%}
+              {%- endcapture -%}
+
+              {%- if mega_menu_content != blank -%}
+                <div class="header-sidebar__promo scroll-area bleed md:unbleed">
+                  {{- mega_menu_content -}}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </header-sidebar-collapsible-panel>
+  {%- endif -%}
+</header-sidebar>

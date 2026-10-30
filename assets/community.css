@@ -1,0 +1,429 @@
+.template-page-community main:before {
+  background-color: #fff !important;
+}
+
+.community-section .title {
+  font-family: "CircularStd";
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  margin: 0 -2px .5rem -3px;
+}
+
+.community-section .center {
+  margin: 0 auto;
+}
+
+.community-section .video-wrapper {
+  height: 300px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.community-section .video-wrapper iframe {
+  margin: -50% 0;
+}
+
+.community-text {
+font-family: 'Canela Web';
+}
+
+.community-section .community-form p {
+  text-transform: none;
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-align: center;
+  font-family: Circular Book;
+}
+
+#contact_form .row input {
+  margin-bottom: 0;
+}
+
+.community-stores .cta-event {
+  border: 1px solid #ef898d;
+  padding: 5px 25px 5px 5px;
+  line-height: 1;
+}
+
+.community-stores .cta-event:after {
+  bottom: 2px;
+  right: 5px;
+}
+
+.community-stores .cta-event:hover:after {
+  right: 1px;
+}
+
+.community-stores p {
+  font-family: Circular Book;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+
+.community-stores .cta-book {
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 15px;
+  font-family: Circular Book;
+}
+
+.community-stores .cta-book:hover {
+  text-decoration: underline;
+}
+
+.community-section .form-control, .sAppForm-section .form-control, .appointment-form .cSelect select {
+  color: #000;
+  background-color: transparent;
+  border-radius: 0;
+  border: 1px solid #000 !important;
+  font-family: "CircularStd";
+  font-size: 12px;
+  padding: 20px;
+  margin: 10px 0 !important;
+  text-transform: uppercase;
+}
+
+.appointment-form .cSelect {
+  background: transparent;
+  padding: 0;
+}
+
+.appointment-form .cForm-group {
+  margin-bottom: 0;
+}
+
+.appointment-form .cSelect::before {
+  content: none;
+}
+
+.community-section .form-control::placeholder {
+  color: #000;
+}
+
+.community-section .cForm-submit-wrapper, .contact-form .cForm-submit-wrapper {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.community-section .cForm-submit-wrapper .loader, .contact-form .cForm-submit-wrapper .loader {
+  width: 32px;
+  margin: 0 auto;
+  display: block;
+}
+
+.community-section .cForm-submit, .contact-form .cForm-submit {
+  background: transparent;
+  font-family: "CircularStd";
+  font-size: 12px;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 5px 25px 5px 5px;
+}
+
+.community-section .cForm-submit:after, .contact-form .cForm-submit:after {
+  bottom: 4px;
+}
+
+.cSvg-wrapper {
+  display: inline-block;
+  padding: 0 20px;
+  max-width: 150px;
+  margin: 0 15px;
+}
+
+.cSvg-wrapper h3 {
+  line-height: 1.5;
+}
+
+.submit-appointment h2 {
+  font-family: "CircularStd";
+  font-size: 1.5rem;
+  text-transform: uppercase;
+}
+
+.submit-appointment p {
+  font-family: Circular Book;
+}
+
+.community-stores .stores-wrapper {
+  margin: 0 auto;
+}
+
+.community-stores .store-item {
+  clear: both;
+  float: left;
+  margin: 0 auto;
+  min-height: 250px;
+  z-index: 1;
+  margin-bottom: 50px;
+}
+
+.community-stores h1 {
+  text-align: left;
+}
+
+.community-stores .right {
+  float: right;
+  padding-right: 0;
+}
+
+.community-stores .left {
+  float: left;
+  text-align: right;
+  padding-left: 0;
+}
+
+.community-stores .left h1 {
+  text-align: right;
+}
+
+.community-stores .store-item div {
+  height: 100%;
+}
+
+.community-stores .store-item div.left a {
+  right: 0;
+}
+
+.sAppForm-section, .sAppForm-section .cForm-input::placeholder,
+.sAppForm-section .cForm-input {
+  font-family: "CircularStd";
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.community-section .cForm-fieldset {
+  border: none;
+  padding: 10px 0;
+}
+
+.cm_hero {
+  display: flex;
+  width: 100%;
+  position: relative;
+}
+
+.cm_hero img {
+  width: 100%;
+  height: 100%;
+}
+
+.cm_hero .banner_info {
+  position: absolute;
+  padding: 100px 20px;
+  bottom: 0;
+  top: 0;
+  margin: auto;
+  height: 300px;
+}
+
+.cm_hero .banner_info.left {
+  left: 0;
+}
+
+.cm_hero .banner_info.right {
+  right: 0;
+}
+
+.cm_hero .banner_info.center {
+  left: 0;
+  right: 0;
+}
+
+.cm_hero .banner_info h2 {
+  font-size: 4rem;
+}
+
+.appointment-form .btn.btn-secondary {
+  width: 100%;
+  background-color: #faf1ef;
+  border: none;
+  color: #000;
+  padding: 15px;
+  font-size: 12px;
+  font-family: "CircularStd";
+}
+
+.appointment-form .btn.btn-secondary input {
+  opacity: 0;
+  position: absolute;
+}
+
+.appointment-form .btn.btn-secondary.active {
+  background-color: #e6e6e6;
+}
+
+.cm-stores-events-wrapper .multi-collapse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #faf1ef;
+  z-index: 2;
+  top: 0;
+}
+
+.cm-stores-events-wrapper .multi-collapse .events-wrapper {
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  top: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cm-stores-events-wrapper .card-body .close-events {
+  padding: 10px;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  -webkit-appearance: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 3;
+}
+
+.cm-stores-events-wrapper .card-body {
+  margin: 20px auto 70px;
+  padding: 30px;
+  border: none;
+  border-radius: 0;
+  flex: 1;
+  overflow-y: auto;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.cm-stores-events-wrapper {
+  position: relative;
+}
+
+.event-month {
+  text-align: center;
+  font-family: Circular Book;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+
+.event-day {
+  text-align: center;
+  font-size: 5rem;
+  line-height: 70px;
+}
+
+.events__heading {
+  margin: 0 auto;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.events__heading h1 {
+  font-family: "CircularStd";
+  font-size: 2rem;
+  text-align: left;
+  text-transform: uppercase;
+  padding: 20px 0 0;
+}
+
+.events__heading p {
+  margin-bottom: 0;
+}
+
+.events__heading p > span {
+  font-family: "CircularStd";
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.event-header {
+  letter-spacing: 0.2em;
+}
+
+.event-title {
+   font-family: "CircularStd";
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.event-description p {
+  font-size: 16px;
+  padding-bottom: 20px;
+}
+
+.event-items {
+  padding: 10px 0;
+}
+
+.event-item {
+  border-top: 1px solid #e1e2e4;
+  padding: 20px 0;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.event-item:last-child {
+  border-bottom: 1px solid #e1e2e4;
+}
+
+.event-item a {
+  position: absolute;
+  bottom: 0;
+}
+
+.event-description-wrapper {
+  padding-right: 50px;
+}
+
+.event-date-details p {
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.icon-pregnancy .cSvg {
+  height: 3rem;
+}
+
+.icon-shower .cSvg {
+  height: 4rem;
+}
+
+@media only screen and (max-width: 767px) {
+  .cm_hero .banner_info h2 {
+    font-size: 2rem;
+  }
+
+  .cm_hero .banner_info {
+    padding: 130px 20px;
+  }
+
+  .community-stores .store-item div {
+    height: auto;
+    padding: 20px 0;
+  }
+
+  .cSvg-wrapper {
+    padding: 20px;
+    width: 100%;
+  }
+
+  .event-title {
+    text-align: center;
+  }
+
+  .event-description-wrapper {
+    padding-right: 0;
+  }
+
+  .cm-stores-events-wrapper .multi-collapse h1 {
+    padding: 20px 20px 0;
+  }
+
+  .community-section .video-wrapper iframe {
+    margin: 0;
+    height: 300px !important;
+  }
+}

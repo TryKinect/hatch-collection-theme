@@ -1,0 +1,49 @@
+<style>
+  .container.pt-6 {
+    padding-top: 96px;
+}
+
+.tC--pink {
+    margin-bottom: 40px;
+}
+</style>
+{% comment %} Content variables {% endcomment %}
+{% assign title = section.settings.title %}
+{% assign subtitle = section.settings.subtitle %}
+<div class="container pt-6">
+  <div class="row">
+    <div class="col-sm-8 offset-sm-2 text-center">
+      <div id="shopify-section-wishlist_header" class="shopify-section sWishlist-section">
+<h1 class=" tC--pink ">{{ title }}</h1>
+<p>{{ subtitle }}</p>
+</div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Wishlist Header",
+  "class": "sWishlist-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Title"
+    },
+    {
+      "id": "subtitle",
+      "type": "richtext",
+      "label": "Subtitle"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wishlist Header"
+    }
+  ]
+}
+{% endschema %}

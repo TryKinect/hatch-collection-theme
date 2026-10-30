@@ -1,0 +1,238 @@
+{% doc %}
+  @prompt
+    A button that is centered on the page. Add option to change color, type, and link
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-centered-button-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  .ai-centered-button__wrapper-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: {{ block.settings.desktop_width_percent }}%;
+    margin: 0 auto;
+  }
+
+  .ai-centered-button__link-{{ ai_gen_id }} {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 32px;
+    text-decoration: none;
+    border-radius: {{ block.settings.border_radius }}px;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  {% if block.settings.button_type == 'primary' %}
+    .ai-centered-button__link-{{ ai_gen_id }} {
+      background-color: {{ block.settings.primary_bg_color }};
+      color: {{ block.settings.primary_text_color }};
+      border: 2px solid {{ block.settings.primary_bg_color }};
+    }
+
+    .ai-centered-button__link-{{ ai_gen_id }}:hover {
+      background-color: {{ block.settings.primary_hover_bg_color }};
+      border-color: {{ block.settings.primary_hover_bg_color }};
+      color: {{ block.settings.primary_hover_text_color }};
+    }
+  {% elsif block.settings.button_type == 'secondary' %}
+    .ai-centered-button__link-{{ ai_gen_id }} {
+      background-color: transparent;
+      color: {{ block.settings.secondary_text_color }};
+      border: 2px solid {{ block.settings.secondary_border_color }};
+    }
+
+    .ai-centered-button__link-{{ ai_gen_id }}:hover {
+      background-color: {{ block.settings.secondary_hover_bg_color }};
+      border-color: {{ block.settings.secondary_hover_border_color }};
+      color: {{ block.settings.secondary_hover_text_color }};
+    }
+  {% elsif block.settings.button_type == 'text' %}
+    .ai-centered-button__link-{{ ai_gen_id }} {
+      background-color: transparent;
+      color: {{ block.settings.text_color }};
+      border: none;
+      padding: 12px 16px;
+      text-decoration: underline;
+    }
+
+    .ai-centered-button__link-{{ ai_gen_id }}:hover {
+      color: {{ block.settings.text_hover_color }};
+    }
+  {% endif %}
+
+  @media screen and (max-width: 749px) {
+    .ai-centered-button__wrapper-{{ ai_gen_id }} {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-centered-button-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-centered-button__wrapper-{{ ai_gen_id }}">
+    <a href="{{ block.settings.button_link }}" class="ai-centered-button__link-{{ ai_gen_id }}">
+      {{ block.settings.button_text }}
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Centered button",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Button content"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "select",
+      "id": "button_type",
+      "label": "Button type",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Primary"
+        },
+        {
+          "value": "secondary",
+          "label": "Secondary"
+        },
+        {
+          "value": "text",
+          "label": "Text"
+        }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Primary button colors"
+    },
+    {
+      "type": "color",
+      "id": "primary_bg_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "primary_text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "primary_hover_bg_color",
+      "label": "Hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "primary_hover_text_color",
+      "label": "Hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Secondary button colors"
+    },
+    {
+      "type": "color",
+      "id": "secondary_text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "secondary_border_color",
+      "label": "Border",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "secondary_hover_bg_color",
+      "label": "Hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "secondary_hover_border_color",
+      "label": "Hover border",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "secondary_hover_text_color",
+      "label": "Hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Text button colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_hover_color",
+      "label": "Hover text",
+      "default": "#333333"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Centered button"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

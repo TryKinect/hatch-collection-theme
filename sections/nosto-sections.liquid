@@ -1,0 +1,51 @@
+{% assign _section = section.settings %}
+
+{% if _section.nosto_markup != blank %}
+  <div class="home-featured-products">
+    <div class="shell home-featured-products__shell">
+      {%- if _section.title != blank or _section.subtitle != blank -%}
+        <header class="home-featured-products__header">
+          {%- if _section.subtitle != blank -%}
+            <h4>{{ _section.subtitle }}</h4>
+          {%- endif -%}
+
+          {%- if _section.title != blank -%}
+            <h2>{{- _section.title -}}</h2>
+          {%- endif -%}
+        </header>
+      {%- endif -%}
+
+      <div class="home-featured-products__body">
+        {{- _section.nosto_markup -}}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Nosto Section",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "html",
+      "id": "nosto_markup",
+      "label": "Nosto Markup"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nosto Section"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,178 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------------------------------------------------
+  LINE ITEM
+  ----------------------------------------------------------------------------------------------------------------------
+
+  This component renders a single line item product information, and is used on order and cart page.
+
+  ********************************************
+  Supported variables
+  ********************************************
+
+  * line_item: the line item to render (required)
+  * show_quantity_selector: if set to true, the quantity selector is displayed (useful for instance of mini-cart)
+{%- endcomment -%}
+
+<line-item class="line-item" data-pid="{{ line_item.product.id }}" data-url="{{ line_item.product.url }}">
+  {%- if line_item.image != blank -%}
+    {{-
+      line_item.image
+      | image_url: width: line_item.image.width
+      | image_tag:
+        loading: 'lazy',
+        sizes: '(max-width: 699px) 70px, 120px',
+        widths: '70,120,140,210,240,360',
+        class: 'line-item__media'
+    -}}
+  {%- endif -%}
+
+  <div class="line-item-info">
+    {%- assign text_class = '' -%}
+
+    {%- if settings.product_card_text_font == 'heading' -%}
+      {%- assign text_class = 'h6' -%}
+    {%- endif -%}
+
+    <div class="v-stack justify-items-start gap-2">
+      {%- if settings.show_vendor and line_item.vendor != blank -%}
+        {%- capture vendor_class -%}smallcaps {% if settings.product_card_text_font == 'heading' %}heading{% endif %}{% endcapture %}
+        {%- render 'vendor' with line_item.vendor, class: vendor_class -%}
+      {%- endif -%}
+
+      {% for tag in line_item.product.tags %}
+        {% if tag contains 'PDPTAG1-' %}
+          {% assign tag_parts = tag | split: '-' %}
+          {% assign hascode = tag_parts[1] %}
+        {% endif %}
+      {% endfor %}
+
+      {%- unless line_item.properties == empty -%}
+        {%- for property in line_item.properties -%}
+          {% if line_item.product.metafields.custom.shipping_date %}
+            <p class="special-tag">{{- 'cart.general.pre_order' | t -}}</p>
+            {% break %}
+            {% comment %}
+              {% elsif property.first == 'Note' %}
+              {%- if line_item.product.tags contains '#final-sale' or line_item.product.tags contains 'final-sale' -%}
+                <p class="special-tag">{{- 'cart.general.final_sale' | t -}}</p>
+              {%- endif -%}
+            {% endcomment %}
+          {% endif %}
+        {%- endfor -%}
+      {%- endunless -%}
+      {% comment %}
+        {% assign hideuk_PDPTAG1 = false %}
+
+        {% if localization.country.iso_code == 'GB' %}
+          {% for tag in line_item.product.tags %}
+            {% if tag == 'hideuk-PDPTAG1' %}
+              {% assign hideuk_PDPTAG1 = true %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% unless line_item.properties == empty %}
+          {% for property in line_item.properties %}
+            {% if line_item.product.metafields.custom.shipping_date %}
+              <p class="special-tag">{{ 'cart.general.pre_order' | t }}</p>
+              {% break %}
+
+            {% elsif hideuk_PDPTAG1 == false %}
+
+              {% for tag in line_item.product.tags %}
+                {% if tag contains 'PDPTAG1-' %}
+                  {% assign tag_parts = tag | split: '-' %}
+                   {% assign hascode = tag_parts[1] %}
+                  {% assign tag_label = tag_parts[2] %}
+                   <p class="special-tag">{{ tag_label }}</p>
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+
+            {% endif %}
+          {% endfor %}
+        {% endunless %}
+      {% endcomment %}
+
+      <div class="v-stack justify-items-start gap-1">
+        {%- if line_item.url != blank -%}
+          <a href="{{ line_item.url }}" class="h4">{{ line_item.product.title | default: line_item.title }}</a>
+        {%- else -%}
+          <p class="{{ text_class }}">{{ line_item.product.title | default: line_item.title }}</p>
+        {%- endif -%}
+
+        {%- render 'price-list', line_item: line_item, context: 'line_item' -%}
+      </div>
+
+      {%- capture secondary_information -%}
+        {%- unless line_item.product.has_only_default_variant or line_item.gift_card -%}
+          <p class="smallcaps text-subdued">{{ line_item.variant.title }}</p>
+        {%- endunless -%}
+
+        {%- if line_item.selling_plan_allocation -%}
+          <p class="text-subdued">{{ line_item.selling_plan_allocation.selling_plan.name }}</p>
+        {%- endif -%}
+
+        {%- unless line_item.properties == empty -%}
+          <ul class="text-subdued">
+            {%- for property in line_item.properties -%}
+              {%- assign first_character_in_key = property.first | truncate: 1, '' -%}
+
+              {%- if property.last == blank or first_character_in_key == '_' -%}
+                {%- continue -%}
+              {%- endif -%}
+
+                {%- if property.last contains '/uploads/' -%}
+                <li>
+                  <a href="{{ property.last }}">{{ property.last | split: '/' | last }}</a>
+                </li>
+                {%- else -%}
+                  {% if property.first == 'Note' %}
+                   <span class="final_sale" style="color:#{{ hascode }};">{{ property.last }}</span>
+                  {% else %}
+                    <li>
+                    {{ property.first }}: {{ property.last }}
+                    </li>
+                  {% endif %}
+                {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endunless -%}
+      {%- endcapture -%}
+
+      {%- if secondary_information != blank -%}
+        <div class="v-stack justify-items-start gap-1">
+          {{- secondary_information -}}
+        </div>
+      {%- endif -%}
+
+      {%- if show_quantity_selector -%}
+        <line-item-quantity class="h-stack gap-4 {% if request.page_type == 'cart' %}sm:hidden{% endif %}">
+          {%- render 'quantity-selector', line_item: line_item, size: 'sm' -%}
+
+          <a
+            href="{{ line_item.url_to_remove }}"
+            class="link text-xs"
+            aria-label="{{ 'cart.order.remove_with_title' | t: title: line_item.title | escape }}"
+          >
+            {{- 'cart.order.remove' | t -}}
+          </a>
+        </line-item-quantity>
+      {%- else -%}
+        <p class="text-subdued text-sm sm:hidden">{{ 'customer.order.quantity' | t }}: {{ line_item.quantity }}</p>
+      {%- endif -%}
+
+      {%- if line_item.line_level_discount_allocations != blank -%}
+        <ul class="v-stack justify-items-start gap-1 unstyled-list" role="list">
+          {%- for discount_allocation in line_item.line_level_discount_allocations -%}
+            <li class="discount-badge text-xs">
+              {%- render 'icon' with 'discount', width: 12 -%}
+              {{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </div>
+</line-item>

@@ -1,0 +1,199 @@
+{%- assign full_desctipyion = false -%}
+
+{%- for tag in product.tags -%}
+  {%- if tag == 'full_description' -%}
+    {%- assign full_desctipyion = true -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{% if template contains 'product.gift-card' %}
+  {% assign collapsed = true %}
+{% endif %}
+
+<ul class="product_description_accordion">
+  {%- if template == 'product.beauty_pdp_v3' -%}
+    {%- if product.metafields.custom.why_we_love_it != blank -%}
+      <li>
+        <a class="acc_toggle js-acc-toggle active" href="javascript:void(0);">Why We Love It</a>
+
+        <div class="inner show">
+          {{ product.metafields.custom.why_we_love_it }}
+        </div>
+      </li>
+    {%- endif -%}
+
+    {%- if product.metafields.custom.how_to_use_it != blank -%}
+      <li>
+        <a class="acc_toggle js-acc-toggle active" href="javascript:void(0);">How To Use It</a>
+
+        <div class="inner show">
+          {{ product.metafields.custom.how_to_use_it }}
+        </div>
+      </li>
+    {%- endif -%}
+  {%- else -%}
+    <li open>
+      <a class="toggle {% unless collapsed %}active{% endunless %}" href="javascript:void(0);">Description</a>
+      <div class="inner {% unless collapsed %}show{% endunless %} js-accordion-desc" data-height="75" {% if collapsed %}style="display: none;"{% endif %}>
+        <div class="inner-default {% if full_desctipyion %}inner-default--full{% endif %}">
+          {{ product.description }}
+        </div><!-- /.inner-default -->
+
+        <div class="inner-actions">
+          <a href="#" class="link-primary js-accordion-desc-link">
+            <span>Read More +</span>
+
+            <span>See Less -</span>
+          </a>
+        </div><!-- /.inner-actions -->
+      </div>
+    </li>
+
+    <li>
+      {% for tag in product.tags %}
+        {% if tag contains 'size_chart:' %}
+            {% assign current_tag = tag | replace: 'size_chart:', '' | strip | handle %}
+
+            <a href="#modal-size-{{- current_tag -}}" class="toggle js-modal-alt">Size Chart</a>
+        {% endif %}
+      {% endfor %}
+    </li>
+
+    {% if product.metafields.custom.the_specifics %}
+      {% assign toggle_title = 'Details' %}
+
+      {% if product.template_suffix == 'beauty_pdp' %}
+        {% assign toggle_title = 'Benefits' %}
+      {% endif %}
+
+      <li>
+        <a class="toggle" href="javascript:void(0);">{{ toggle_title }}</a>
+        <div class="inner" {% if collapsed %}style="display: none;"{% endif %}>
+            {{ product.metafields.custom.the_specifics  }}
+        </div>
+      </li>
+    {% endif %}
+
+    {% if product.metafields.custom.fit_detail %}
+      {% assign toggle_title = 'Measurements' %}
+
+      {% if product.template_suffix == 'beauty_pdp' %}
+        {% assign toggle_title = 'The Facts' %}
+      {% endif %}
+
+      <li>
+        <a class="toggle" href="javascript:void(0);">{{ toggle_title }}</a>
+
+        <div class="inner">
+          {{ product.metafields.custom.fit_detail }}
+        </div>
+      </li>
+    {% endif %}
+
+    <li>
+      <a class="link-scroll link-yotpo" href="#yotpo-holder">
+        Reviews
+
+        <div class="yotpo bottomLine"
+            data-appkey="tVnLeF5tdgk3PYyWhDoPltJB4djmrpGspiVp6JSy"
+            data-domain="{{shop.permanent_domain | escape }}"
+            data-product-id="{{ product.id }}"
+            data-product-models="{{ product.id }}"
+            data-name="{{ product.title | escape }}"
+            data-url="{{ shop.url }}{{ product.url }}"
+            data-image-url="{{ product.featured_image | product_img_url: 'large' |replace: '?', '%3F' | replace: '&','%26'}}"
+            data-description="{{ product.description | escape }}"
+            data-bread-crumbs="{% for tag in product.tags %}{{ tag | escape }};{% endfor %}">
+        </div>
+      </a>
+    </li>
+  {%- endif -%}
+</ul>
+
+<!-- <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const accordionItems = document.querySelectorAll('.product_description_accordion > li');
+
+  accordionItems.forEach(item => {
+    const toggle = item.querySelector('.toggle');
+    const inner = item.querySelector('.inner');
+
+    // If the <li> has "open" attribute, show it initially
+    if (item.hasAttribute('open')) {
+      toggle.classList.add('active');
+      if (inner) {
+        inner.style.display = 'block';
+        inner.classList.add('show');
+      }
+    } else {
+      if (inner) {
+        inner.style.display = 'none';
+        inner.classList.remove('show');
+      }
+    }
+
+    // Add toggle click event
+    toggle.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      // Ignore modal links (like Size Chart)
+      if (toggle.classList.contains('js-modal-alt')) return;
+
+      const isActive = toggle.classList.contains('active');
+
+      // Close all
+      document.querySelectorAll('.product_description_accordion .toggle').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.product_description_accordion .inner').forEach(innerDiv => {
+        innerDiv.style.display = 'none';
+        innerDiv.classList.remove('show');
+      });
+
+      // If not already active, open it
+      if (!isActive) {
+        toggle.classList.add('active');
+        if (inner) {
+          inner.style.display = 'block';
+          inner.classList.add('show');
+        }
+      }
+    });
+  });
+  
+});
+  document.addEventListener('click', function (e) {
+    const link = e.target.closest('.js-accordion-desc-link');
+    if (link) {
+      e.preventDefault();
+
+      const wrapper = link.closest('.js-accordion-desc');
+      if (!wrapper) return;
+
+      const isExpanded = wrapper.classList.contains('expanded');
+      wrapper.classList.toggle('expanded');
+
+      // Toggle text
+      const spans = link.querySelectorAll('span');
+      spans.forEach(span => {
+        span.style.display = 'none';
+      });
+
+      if (isExpanded) {
+        spans[0].style.display = 'inline'; // "Read More +"
+      } else {
+        spans[1].style.display = 'inline'; // "See Less -"
+      }
+    }
+  });
+
+  // Optional: On load, show only the correct span
+  document.querySelectorAll('.js-accordion-desc-link').forEach(link => {
+    const spans = link.querySelectorAll('span');
+    if (spans.length >= 2) {
+      spans[0].style.display = 'inline'; // Read More +
+      spans[1].style.display = 'none';   // See Less -
+    }
+  });
+
+
+</script>
+ -->

@@ -1,0 +1,33 @@
+{%- liquid
+  assign handle_list = null
+  if search.terms != blank
+    assign handle_list = search.terms | split: ','
+  endif
+-%}
+{%- for handle in handle_list -%}
+  {%- assign product = all_products[handle] -%}
+  {%- if product != blank -%}
+    <li class="nostoItem">
+      <div class="image">
+        <a href="{{ product.url }}" title="{{ product.title | escape }}">
+          <p class="lazy-container">
+            {{-
+              product.featured_image
+              | image_url: width: 750
+              | image_tag: alt: '', loading: 'lazy', sizes: '(min-width: 991px) 25vw, 50vw'
+            -}}
+          </p>
+        </a>
+        <div class="product_title">
+          <a href="{{ product.url }}" title="{{ product.title | escape }}">{{ product.title | downcase }}</a>
+        </div>
+        <p class="pdp_product_price">
+          {%- if product.compare_at_price > product.price -%}
+            <span class="original_price">{{ product.compare_at_price | money }}</span>
+          {% endif -%}
+          <span class="price">{{ product.price | money }}</span>
+        </p>
+      </div>
+    </li>
+  {%- endif -%}
+{%- endfor -%}

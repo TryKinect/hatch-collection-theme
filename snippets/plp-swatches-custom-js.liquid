@@ -1,0 +1,836 @@
+{% if collection or request.page_type == 'search' %}
+  <!--
+    ======================
+         Product Images JSON
+    =======================
+  -->
+  <style>
+  /* Safari only */
+/* Safari only */
+@supports (-webkit-hyphens: none) {
+  .product-card__media video.product-card__image {
+    width: 100% !important;
+    height: auto !important;        /* match <img> scaling */
+    aspect-ratio: 1440 / 2000;      /* same as your image */
+    object-fit: cover !important;
+    display: block;
+  }
+}
+
+  </style>
+  <script>
+    window.productImages = {
+      {% paginate collection.products by 1000 %}
+      {% for product in collection.products %}
+        {% assign all_unavailable = true %}
+
+        {% for variant in product.variants %}
+          {% if variant.available %}
+            {% assign all_unavailable = false %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+
+        {% comment %} Extract PDPTAG suffixes {% endcomment %}
+        {% assign pdptag1 = null %}
+        {% assign pdptag2 = null %}
+        {% assign pdptag4 = null %}
+        {% assign plpcomingsoon = null %}
+        {% assign hideuk-PDPTAG1 = null %}
+        {% assign hideuk-PDPTAG2 = null %}
+        {% assign hideuk-PDPTAG4 = null %}
+        {% for tag in product.tags %}
+          {% if tag contains 'PDPTAG1-' and pdptag1 == null %}
+            {% assign pdptag1 = tag | remove: 'PDPTAG1-' %}
+          {% endif %}
+          {% if tag contains 'PDPTAG2-' and pdptag2 == null %}
+            {% assign pdptag2 = tag | remove: 'PDPTAG2-' %}
+          {% endif %}
+          {% if tag contains 'PDPTAG4-' and pdptag4 == null %}
+            {% assign pdptag4 = tag | remove: 'PDPTAG4-' %}
+          {% endif %}
+          {% if tag == 'plp-coming-soon' and plpcomingsoon == null %}
+            {% assign plpcomingsoon = tag %}
+          {% endif %}
+          {% if tag == 'hideuk-PDPTAG1' and hideuk-PDPTAG1 == null %}
+            {% assign hideuk-PDPTAG1 = tag %}
+          {% endif %}
+          {% if tag == 'hideuk-PDPTAG2' and hideuk-PDPTAG2 == null %}
+            {% assign hideuk-PDPTAG2 = tag %}
+          {% endif %}
+          {% if tag == 'hideuk-PDPTAG4' and hideuk-PDPTAG4 == null %}
+            {% assign hideuk-PDPTAG4 = tag %}
+          {% endif %}
+        {% endfor %}
+
+        {% assign first_media = product.media.first %}
+        {% assign second_media = product.media[1] %}
+
+        "{{ product.id }}": {
+          "handle": "{{ product.handle }}",
+          "featured": {
+            "type": "{{ first_media.media_type }}",
+            {% if first_media.media_type == 'image' %}
+              "src": "{{ first_media | img_url: '800x' }}",
+              "poster": null,
+              "video": null
+            {% elsif first_media.media_type == 'video' %}
+              "src": null,
+              "poster": null,
+              "video": {
+                "poster": "{% if first_media.preview_image %}{{ first_media.preview_image | img_url: '800x' }}{% else %}null{% endif %}",
+                "duration": {{ first_media.duration | default: 0 }},
+                "sources": [
+                  {% for s in first_media.sources %}
+                    {
+                      "format": "{{ s.format }}",
+                      "mime_type": "{{ s.mime_type }}",
+                      "width": {{ s.width }},
+                      "height": {{ s.height }},
+                      "url": "{{ s.url }}"
+                    }{% unless forloop.last %},{% endunless %}
+                  {% endfor %}
+                ]
+              }
+            {% else %}
+              "src": null,
+              "poster": null,
+              "video": null
+            {% endif %}
+          },
+          "second": {
+            {% assign second_media = product.media[1] %}
+            {% if second_media %}
+              "type": "{{ second_media.media_type }}",
+              {% if second_media.media_type == 'image' %}
+                "src": "{{ second_media | img_url: '800x' }}",
+                "poster": null,
+                "video": null
+              {% elsif second_media.media_type == 'video' %}
+                "src": null,
+                "poster": null,
+                "video": {
+                  "poster": "{% if second_media.preview_image %}{{ second_media.preview_image | img_url: '800x' }}{% else %}null{% endif %}",
+                  "duration": {{ second_media.duration | default: 0 }},
+                  "sources": [
+                    {% for s in second_media.sources %}
+                      {
+                        "format": "{{ s.format }}",
+                        "mime_type": "{{ s.mime_type }}",
+                        "width": {{ s.width }},
+                        "height": {{ s.height }},
+                        "url": "{{ s.url }}"
+                      }{% unless forloop.last %},{% endunless %}
+                    {% endfor %}
+                  ]
+                }
+              {% else %}
+                "src": null,
+                "poster": null,
+                "video": null
+              {% endif %}
+            {% else %}
+              "type": null,
+              "src": null,
+              "poster": null,
+              "video": null
+            {% endif %}
+          },
+          "price": "{{ product.price | money }}",
+          "compare_at_price": {% if product.compare_at_price > product.price %}"{{ product.compare_at_price | money }}"{% else %}null{% endif %},
+          "tags": {
+            "PDPTAG1": {% if pdptag1 %}"{{ pdptag1 }}"{% else %}null{% endif %},
+            "PDPTAG2": {% if pdptag2 %}"{{ pdptag2 }}"{% else %}null{% endif %},
+            "PDPTAG4": {% if pdptag4 %}"{{ pdptag4 }}"{% else %}null{% endif %},
+            "plpcomingsoon": {% if plpcomingsoon %}"{{ plpcomingsoon }}"{% else %}null{% endif %},
+            "hideukPDPTAG1": {% if hideuk-PDPTAG1 and localization.country.iso_code == 'GB' %}"{{ hideuk-PDPTAG1 }}"{% else %}null{% endif %},
+            "hideukPDPTAG2": {% if hideuk-PDPTAG2 and localization.country.iso_code == 'GB' %}"{{ hideuk-PDPTAG2 }}"{% else %}null{% endif %},
+            "hideukPDPTAG4": {% if hideuk-PDPTAG4 and localization.country.iso_code == 'GB' %}"{{ hideuk-PDPTAG4 }}"{% else %}null{% endif %}
+          },
+          "all_unavailable" : {{ all_unavailable }}
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+      {% endpaginate %}
+    };
+  </script>
+
+  <!--
+    ======================
+         Handle Missing Products
+    =======================
+  -->
+  <script>
+    const shopCurrency = {% if localization.country.iso_code == 'GB' %}
+        'GBP'
+      {% else %}
+        '{{ shop.currency }}'
+      {% endif %};
+
+    const formatMoney = (cents) => {
+      if (cents == null) return null;
+
+      return new Intl.NumberFormat(
+        shopCurrency === 'GBP' ? 'en-GB' : 'en-US',
+        {
+          style: 'currency',
+          currency: shopCurrency
+        }
+      ).format(cents / 100);
+    };
+
+    // Track processed products
+    window.productProcessed = window.productProcessed || new Set();
+    window.productImages = window.productImages || {};
+    window.fetchingHandles = window.fetchingHandles || new Set();
+
+    function addProductToImages(product) {
+      if (!product || !product.id) return;
+
+      // Skip if product already processed
+      if (window.productProcessed.has(product.id)) return;
+      window.productProcessed.add(product.id);
+
+      // Extract tag suffix by prefix
+      const getTagSuffix = (tags, prefix) => {
+        if (!Array.isArray(tags)) return '';
+        for (let tag of tags) {
+          const t = tag.trim();
+          if (t.toUpperCase().startsWith(prefix.toUpperCase())) {
+            return t.slice(prefix.length);
+          }
+        }
+        return '';
+      };
+
+      // Pick highest resolution video source
+      const getMaxResolutionVideo = (video) => {
+        if (!video || !Array.isArray(video.sources)) return '';
+        const sorted = [...video.sources].sort((a, b) => (b.width || 0) - (a.width || 0));
+        return sorted.length > 0 ? sorted[0].url : '';
+      };
+
+      // Helper to extract media item from product.media or product.images or product.featured_image
+      const getMediaItem = (prod, index) => {
+        if (Array.isArray(prod.media) && prod.media[index]) {
+          return prod.media[index];
+        }
+        if (Array.isArray(prod.images) && prod.images[index]) {
+          return prod.images[index];
+        }
+        if (index === 0 && prod.featured_image) {
+          return prod.featured_image;
+        }
+        return null;
+      };
+
+      // Normalize media (image/video/string URL)
+      const mapMedia = (media) => {
+        if (!media) return null;
+
+        if (typeof media === 'string') {
+          return {
+            type: 'image',
+            src: media.startsWith('//') ? 'https:' + media : media,
+            poster: null,
+            video: null,
+            video_url: null,
+          };
+        }
+
+        if (media.media_type === 'image') {
+          return {
+            type: 'image',
+            src: media.src || '',
+            poster: null,
+            video: null,
+            video_url: null,
+          };
+        }
+
+        if (media.media_type === 'video') {
+          return {
+            type: 'video',
+            src: null,
+            poster: null, // keep poster only inside video
+            video: {
+              poster: media.preview_image ? media.preview_image.src : null,
+              duration: media.duration || 0,
+              sources: media.sources || [],
+            },
+            video_url: getMaxResolutionVideo(media),
+          };
+        }
+
+        return null;
+      };
+
+      const all_unavailable = Array.isArray(product.variants)
+        ? product.variants.every(v => v && v.available === false)
+        : false;
+
+      // Save product object
+      window.productImages[product.id] = {
+        handle: product.handle,
+        featured: mapMedia(getMediaItem(product, 0)),
+        second: mapMedia(getMediaItem(product, 1)),
+        price: formatMoney(product.price),
+        compare_at_price: product.compare_at_price > product.price ? formatMoney(product.compare_at_price) : null,
+        tags: {
+          PDPTAG1: getTagSuffix(product.tags, 'PDPTAG1-'),
+          PDPTAG2: getTagSuffix(product.tags, 'PDPTAG2-'),
+          PDPTAG4: getTagSuffix(product.tags, 'PDPTAG4-'),
+          plpcomingsoon: product.tags && product.tags.includes('plp-coming-soon') ? 'plp-coming-soon' : null,
+          hideukPDPTAG1: {% if localization.country.iso_code == 'GB' %}product.tags && product.tags.includes('hideuk-PDPTAG1') ? 'hideuk-PDPTAG1' : null{% else %}null{% endif %},
+          hideukPDPTAG2: {% if localization.country.iso_code == 'GB' %}product.tags && product.tags.includes('hideuk-PDPTAG2') ? 'hideuk-PDPTAG2' : null{% else %}null{% endif %},
+          hideukPDPTAG4: {% if localization.country.iso_code == 'GB' %}product.tags && product.tags.includes('hideuk-PDPTAG4') ? 'hideuk-PDPTAG4' : null{% else %}null{% endif %}
+        },
+        all_unavailable: all_unavailable
+      };
+
+      console.log('[PLP-SWATCHES] Added product once:', product.handle, window.productImages[product.id]);
+    }
+
+    function processHandles() {
+      const elements = document.querySelectorAll(
+        'king-linked-options-collection [data-handle], king-linked-options-collection .lv-option-collection-wrapper [data-handle]'
+      );
+
+      const handles = Array.from(elements)
+        .map((el) => el.dataset.handle)
+        .filter(Boolean);
+
+      const uniqueHandles = [...new Set(handles)];
+      const existingHandles = Object.values(window.productImages || {}).map((p) => p.handle);
+      const missingHandles = uniqueHandles.filter((h) => !existingHandles.includes(h));
+
+      if (missingHandles.length) {
+        console.log('[PLP-SWATCHES] Missing handles to fetch:', missingHandles);
+        missingHandles.forEach((handle) => {
+          if (window.fetchingHandles.has(handle)) return;
+          window.fetchingHandles.add(handle);
+
+          const element = Array.from(elements).find(el => el.dataset.handle === handle);
+          console.log('[PLP-SWATCHES] Fetching product handle:', handle);
+
+          fetch(`/products/${handle}.js`)
+            .then(res => res.text())
+            .then(text => {
+              let data;
+              try {
+                data = JSON.parse(text);
+              } catch (err) {
+                console.warn(`[PLP-SWATCHES] Invalid JSON for product ${handle}`, err);
+                window.fetchingHandles.delete(handle);
+                throw err;
+              }
+              window.fetchingHandles.delete(handle);
+              console.log('[PLP-SWATCHES] Successfully fetched product data for handle:', handle, data);
+              addProductToImages(data);
+              preloadAllProductImages();
+            })
+            .catch((err) => {
+              console.error('[PLP-SWATCHES] Error fetching product', handle, err);
+              window.fetchingHandles.delete(handle);
+              if (element) {
+                element.style.display = 'none';
+              }
+            });
+        });
+      }
+    }
+
+    // Set to track preloaded image URLs
+    window.preloadedImages = window.preloadedImages || new Set();
+
+    function preloadAllProductImages() {
+      if (!window.productImages) return;
+
+      Object.values(window.productImages).forEach(product => {
+        ['featured', 'second'].forEach(key => {
+          const media = product[key];
+          if (media?.type === 'image' && media.src && !window.preloadedImages.has(media.src)) {
+            const img = new Image();
+            img.onload = () => {
+              console.log(`[PLP-SWATCHES] Preloaded ${key} image for ${product.handle}`);
+            };
+            img.src = media.src;
+            window.preloadedImages.add(media.src);
+          }
+        });
+      });
+    }
+
+    // Call this after window.productImages is fully populated
+    preloadAllProductImages();
+
+    const observer = new MutationObserver(processHandles);
+    observer.observe(document.body, { childList: true, subtree: true });
+    processHandles(); // Run immediately
+  </script>
+
+  <!--
+    ======================
+         Click Handlers
+    =======================
+  -->
+  <script>
+let quickModalTimeout;
+
+function openQuickModal(handle) {
+  if (quickModalTimeout) return;
+  quickModalTimeout = setTimeout(() => { quickModalTimeout = null; }, 100);
+
+  // Hide/remove any body-level quick-buy-modal that is NOT ours
+  document.querySelectorAll('body > quick-buy-modal').forEach(modal => {
+    if (!modal.classList.contains('fmdev-quick-modal')) {
+      modal.remove();
+    }
+  });
+
+  // Reuse our quick view if exists
+  let quickModal = document.querySelector('body > quick-buy-modal.fmdev-quick-modal');
+
+  if (quickModal) {
+    quickModal.setAttribute('handle', handle);
+  } else {
+    // Create a new one with our class
+    quickModal = document.createElement('quick-buy-modal');
+    quickModal.classList.add('quick-buy-modal', 'modal', 'fmdev-quick-modal');
+    quickModal.setAttribute('role', 'dialog');
+    quickModal.setAttribute('aria-modal', 'true');
+    quickModal.setAttribute('handle', handle);
+    document.body.appendChild(quickModal);
+  }
+
+  // Show our quick view
+  quickModal.show();
+  quickModal.style.display = 'block';
+  quickModal.style.opacity = 1;
+}
+
+const quickModalObserver = new MutationObserver((mutations) => {
+  mutations.forEach(({ addedNodes }) => {
+    addedNodes.forEach((node) => {
+      if (!(node instanceof HTMLElement)) return;
+
+      if (node.tagName.toLowerCase() === 'quick-buy-modal' &&
+          node.classList.contains('fmdev-quick-modal')) {
+
+        const allModals = Array.from(document.querySelectorAll('body > quick-buy-modal.fmdev-quick-modal'));
+        allModals.forEach((modal, index) => {
+          if (index > 0) modal.remove(); // remove duplicates
+        });
+      }
+    });
+  });
+});
+
+quickModalObserver.observe(document.body, { childList: true, subtree: true });
+
+
+
+    // Swatch Hover Event Listener (250ms debounce)
+    let hoverTimeout = null;
+    let lastHoveredSwatch = null;
+
+    document.addEventListener('mouseover', (e) => {
+      const swatch = e.target.closest('.lv-option-collection-item, .lv-option-item');
+      if (!swatch || lastHoveredSwatch === swatch) return;
+
+      clearTimeout(hoverTimeout);
+      hoverTimeout = setTimeout(() => {
+        lastHoveredSwatch = swatch;
+        const swatchColor = swatch.getAttribute("data-value") || swatch.dataset.value || swatch.dataset.color || swatch.getAttribute("title") || "";
+        const productHandle = swatch.getAttribute("data-handle") || swatch.dataset.handle || "";
+        const productId = swatch.getAttribute("data-pid") || swatch.dataset.pid || "";
+
+        console.log("[PLP-SWATCHES] =================================");
+        console.log("[PLP-SWATCHES] SWATCH HOVER DETECTED");
+        console.log("[PLP-SWATCHES] Swatch element:", swatch);
+        console.log("[PLP-SWATCHES] Color:", swatchColor);
+        console.log("[PLP-SWATCHES] Handle:", productHandle);
+        console.log("[PLP-SWATCHES] Product ID:", productId);
+        console.log("[PLP-SWATCHES] =================================");
+
+        window.dataLayer = window.dataLayer || [];
+
+        const hoverEventData = {
+          event: "swatch_hover",
+          swatch_color: swatchColor,
+          product_handle: productHandle,
+          product_id: productId
+        };
+
+        console.log("[PLP-SWATCHES] Pushing to dataLayer:", hoverEventData);
+        window.dataLayer.push(hoverEventData);
+        console.log("[PLP-SWATCHES] Swatch hover event pushed successfully");
+      }, 250);
+    }, true);
+
+    document.addEventListener('mouseout', (e) => {
+      const swatch = e.target.closest('.lv-option-collection-item, .lv-option-item');
+      if (swatch) {
+        clearTimeout(hoverTimeout);
+        lastHoveredSwatch = null;
+      }
+    }, true);
+
+    document.addEventListener('click',(e) => {
+        console.log("[PLP-SWATCHES] window.productImages", window.productImages);
+        try {
+          // Swatch Quick View
+          const qkSwatch = e.target.closest('.lv-option-item');
+          if (qkSwatch?.dataset?.handle && e.target.closest('a')) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            console.log("[PLP-SWATCHES] Opening quick modal for:", qkSwatch.dataset.handle);
+            openQuickModal(qkSwatch.dataset.handle);
+          }
+
+          // Quick Add Button Quick View
+          const qkAddBtn = e.target.closest('.product-card__quick-add-button');
+          if (qkAddBtn?.dataset?.handle) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            console.log("[PLP-SWATCHES] Quick add button clicked for:", qkAddBtn.dataset.handle);
+            openQuickModal(qkAddBtn.dataset.handle);
+          }
+
+          // Collection Swatch Variant Switcher
+          const swatch = e.target.closest('.lv-option-collection-item');
+          if (swatch?.dataset?.pid || swatch?.dataset?.handle) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            const swatchColor = swatch.getAttribute("data-value") || swatch.dataset.value || swatch.dataset.color || swatch.getAttribute("title") || "";
+            const productHandle = swatch.getAttribute("data-handle") || swatch.dataset.handle || "";
+            const productId = swatch.getAttribute("data-pid") || swatch.dataset.pid || "";
+
+            console.log("[PLP-SWATCHES] =================================");
+            console.log("[PLP-SWATCHES] SWATCH CLICK DETECTED");
+            console.log("[PLP-SWATCHES] Swatch element:", swatch);
+            console.log("[PLP-SWATCHES] Color:", swatchColor);
+            console.log("[PLP-SWATCHES] Handle:", productHandle);
+            console.log("[PLP-SWATCHES] Product ID:", productId);
+            console.log("[PLP-SWATCHES] =================================");
+
+            window.dataLayer = window.dataLayer || [];
+
+            const eventData = {
+              event: "swatch_click",
+              swatch_color: swatchColor,
+              product_handle: productHandle,
+              product_id: productId
+            };
+
+            console.log("[PLP-SWATCHES] Pushing to dataLayer:", eventData);
+            window.dataLayer.push(eventData);
+            console.log("[PLP-SWATCHES] Swatch event pushed successfully");
+
+            const productCard = swatch.closest('.product-card');
+            if (!productCard) return;
+
+            // Find images by PID or handle fallback
+            let images = window.productImages?.[productId];
+            if (!images && productHandle) {
+              images = Object.values(window.productImages || {}).find(p => p.handle === productHandle);
+            }
+
+            if (!images) {
+              console.warn("[PLP-SWATCHES] Product data not found for PID:", productId, "Handle:", productHandle);
+              if (productHandle) {
+                console.log("[PLP-SWATCHES] Fetching on-demand product data for handle:", productHandle);
+                fetch(`/products/${productHandle}.js`)
+                  .then(res => res.json())
+                  .then(data => {
+                    addProductToImages(data);
+                    swatch.click();
+                  })
+                  .catch(err => console.error("[PLP-SWATCHES] On-demand fetch failed for", productHandle, err));
+              }
+              return;
+            }
+
+            console.log("[PLP-SWATCHES] Swatch product images data:", images);
+
+            if (images.all_unavailable) {
+              console.log("[PLP-SWATCHES] Product is unavailable, plpcomingsoon tag:", images?.tags?.plpcomingsoon);
+
+              productCard.classList.add("card-sold-out");
+
+              const figure = productCard.querySelector(".product-card__figure");
+              const infoWrapper = productCard.querySelector(".product-card__info .v-stack .v-stack");
+
+              const comingSoonLabel = figure?.querySelector(".text-soldout.coming-soon");
+              const soldOutLabel = infoWrapper?.querySelector(".text-soldout:not(.coming-soon)");
+
+              if (images?.tags?.plpcomingsoon === 'plp-coming-soon') {
+                // === COMING SOON STATE ===
+                productCard.classList.add("iscommingsoon");
+
+                // remove Sold Out if exists
+                if (soldOutLabel) {
+                  soldOutLabel.remove();
+                }
+
+                // add Coming Soon if not exists
+                if (figure && !comingSoonLabel) {
+                  figure.insertAdjacentHTML(
+                    "beforeend",
+                    '<div class="text-soldout coming-soon">Coming Soon</div>'
+                  );
+                }
+              } else {
+                // === SOLD OUT STATE ===
+                productCard.classList.remove("iscommingsoon");
+
+                // remove Coming Soon if exists
+                if (comingSoonLabel) {
+                  comingSoonLabel.remove();
+                }
+
+                // add Sold Out if not exists
+                if (infoWrapper && !soldOutLabel) {
+                  infoWrapper.insertAdjacentHTML(
+                    "beforeend",
+                    '<div class="text-soldout">Sold Out</div>'
+                  );
+                }
+              }
+            } else {
+              // === AVAILABLE STATE (cleanup everything) ===
+              console.log("[PLP-SWATCHES] Product is available");
+
+              productCard.classList.remove("card-sold-out", "iscommingsoon");
+
+              // remove all labels added by this logic
+              productCard
+                .querySelectorAll(".text-soldout")
+                .forEach(el => el.remove());
+            }
+
+            const tagSelectors = [
+              { key: 'PDPTAG1', container: '.price-taglist-main.tag1', cssVar: '--tag1color' },
+              { key: 'PDPTAG2', container: '.media-taglist-main.tag2', cssVar: '--tag2color' },
+              { key: 'PDPTAG4', container: '.tg4-taglist-main.tag4', cssVar: '--tag4color' } // if exists
+            ];
+
+            tagSelectors.forEach(({ key, container, cssVar }) => {
+              const tagContainer = productCard.querySelector(container);
+              if (!tagContainer) return;
+
+              const innerDiv = tagContainer.querySelector('div');
+              if (!innerDiv) return;
+
+              // 🔹 ADDITION: check hideuk flag
+              const hideKey = `hideuk${key}`;
+              const isHiddenForUK = images.tags?.[hideKey];
+
+              if (isHiddenForUK) {
+                tagContainer.style.display = 'none';
+                innerDiv.textContent = '';
+                innerDiv.style.removeProperty(cssVar);
+                return;
+              }
+
+              const rawValue = images.tags?.[key];
+
+              if (rawValue) {
+                const [colorPart, ...textParts] = rawValue.split('-');
+                const textValue = textParts.join('-');
+                const color = `#${colorPart}`;
+
+                innerDiv.textContent = textValue;
+                innerDiv.style.setProperty(cssVar, color);
+
+                // ✅ Show container again if previously hidden
+                tagContainer.style.removeProperty('display');
+              } else {
+                // ✅ Hide container if no data
+                tagContainer.style.display = 'none';
+
+                // Clear leftover content/styles
+                innerDiv.textContent = '';
+                innerDiv.style.removeProperty(cssVar);
+              }
+            });
+
+            function updateProductMedia(productCard, media, position) {
+              console.log(`[PLP-SWATCHES] [updateProductMedia] Updating ${position}`, media);
+
+              if (!productCard) return console.warn('[PLP-SWATCHES] [updateProductMedia] No productCard provided');
+              if (!media) return console.warn('[PLP-SWATCHES] [updateProductMedia] No media provided for position:', position);
+
+              const mediaLink = productCard.querySelector('a.product-card__media');
+              if (!mediaLink) return console.warn('[PLP-SWATCHES] [updateProductMedia] No <a> container found');
+
+              const className = `product-card__image product-card__image--${position} object-cover aspect-portrait`;
+
+              // Remove any existing <img> or <video> for this slot
+              const existing = mediaLink.querySelector(`.product-card__image--${position}`);
+              if (existing) existing.remove();
+
+              // IMAGE
+              if (media.type === 'image') {
+                let img = mediaLink.querySelector(`.product-card__image--${position}`);
+
+                if (img && img.tagName === 'IMG') {
+                  // Update only if changed (faster, avoids reflows)
+                  if (img.src !== media.src) img.src = media.src;
+                  if (img.getAttribute('srcset') !== (media.srcset || '')) {
+                    img.setAttribute('srcset', media.srcset || '');
+                  }
+                  if (img.alt !== (media.alt || '')) img.alt = media.alt || '';
+                } else {
+                  // If not an <img>, replace with new one
+                  if (img) img.remove();
+
+                  img = document.createElement('img');
+                  img.className = className;
+                  img.src = media.src;
+                  if (media.srcset) img.setAttribute('srcset', media.srcset);
+                  img.alt = media.alt || '';
+                  mediaLink.appendChild(img);
+                }
+                return;
+              }
+
+
+              // VIDEO
+              if (media.type === 'video' && media.video) {
+                console.log(`[PLP-SWATCHES] [updateProductMedia] Rendering plain <video> for ${position}`);
+                const video = document.createElement('video');
+                video.className = className;
+                video.autoplay = true;
+                video.muted = true; // required for autoplay
+                video.loop = true;
+                video.playsInline = true;
+                video.preload = 'metadata';
+
+                if (media.video.poster) {
+                  video.poster = media.video.poster.startsWith('//') ? 'https:' + media.video.poster : media.video.poster;
+                }
+
+                if (Array.isArray(media.video.sources)) {
+                  media.video.sources.forEach(srcObj => {
+                    const source = document.createElement('source');
+                    source.src = srcObj.url.startsWith('//') ? 'https:' + srcObj.url : srcObj.url;
+                    source.type = srcObj.mime_type;
+                    video.appendChild(source);
+                  });
+                }
+
+                video.addEventListener('canplay', () => {
+                  video.play().catch(err => console.warn('[PLP-SWATCHES] Autoplay blocked:', err));
+                });
+
+                mediaLink.appendChild(video);
+              }
+            }
+
+            console.log('[PLP-SWATCHES] Updating featured and secondary images for PID:', productId);
+            if (images.featured) updateProductMedia(productCard, images.featured, 'primary');
+            if (images.second) updateProductMedia(productCard, images.second, 'secondary');
+
+            // Mark selected swatch
+            productCard
+              .querySelectorAll('.lv-option-collection-item')
+              .forEach((btn) => btn.removeAttribute('selected'));
+            swatch.setAttribute('selected', 'true');
+
+            // Update quick add button attributes
+            const quickAddBtn = productCard.querySelector('.product-card__quick-add-button');
+            const oldViewId = quickAddBtn?.getAttribute('aria-controls');
+            if (!oldViewId) return;
+
+            if (swatch.dataset.handle) {
+              quickAddBtn.setAttribute('data-handle', swatch.dataset.handle);
+            }
+
+            const priceList = productCard.querySelector('price-list');
+            if (priceList) {
+              priceList.innerHTML = '';
+
+              const salePrice = document.createElement('sale-price');
+              salePrice.className = images.compare_at_price ? 'h6 text-on-sale' : 'h6 text-subdued';
+              salePrice.innerHTML = `<span class="sr-only">Sale price</span>${images.price}`;
+              priceList.appendChild(salePrice);
+
+              if (images.compare_at_price) {
+                const compareAt = document.createElement('compare-at-price');
+                compareAt.className = 'h6 text-subdued line-through';
+                compareAt.innerHTML = `<span class="sr-only">Regular price</span>${images.compare_at_price}`;
+                priceList.appendChild(compareAt);
+              }
+            }
+
+            console.log('[PLP-SWATCHES] Swatch update completed for PID:', productId, 'Handle:', productHandle);
+          }
+
+        } catch (err) {
+          console.error('[PLP-SWATCHES] Click handler error:', err);
+        }
+      },
+      true
+    );
+  </script>
+{% endif %}
+
+<!--
+  ======================
+       DOM Mutation for Swatches
+  =======================
+-->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach(({ addedNodes }) => {
+          addedNodes.forEach((node) => {
+            if (!(node instanceof HTMLElement)) return;
+
+            // Collection Page Swatches
+            document.querySelectorAll('king-linked-options-collection').forEach((appBlock) => {
+              if (appBlock.dataset.appended === 'true') return;
+
+              const card = appBlock.closest('product-card');
+              if (card) {
+                card.querySelector('fieldset')?.style.setProperty('display', 'none');
+                const target = card.querySelector('.color-swatches-plp .custom-more');
+                if (target) {
+                  target.after(appBlock);
+                  if (window.matchMedia('(min-width: 768px)').matches) {
+                    appBlock.style.setProperty('display', 'block');
+                  }
+                  appBlock.dataset.appended = 'true';
+                }
+              }
+            });
+
+            // Product Page Swatches
+            document.querySelectorAll('king-linked-options-product').forEach((appBlock) => {
+              const mainGrid = document.querySelector('variant-picker');
+              const colorOptions = mainGrid?.querySelectorAll('.variant-picker__option.opt-Color');
+              colorOptions?.forEach((option) => {
+                option.style.display = 'none';
+              });
+            });
+
+            // Show swatches if more than 1
+            document.querySelectorAll('.color-swatches-plp').forEach((btn) => {
+              const swatchContainer = btn.querySelector('king-linked-options-collection');
+              const swatches = swatchContainer?.querySelectorAll('.lv-option-collection-wrapper');
+              if (swatches && swatches.length > 1) {
+                btn.classList.remove('hide');
+              }
+            });
+          });
+        });
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+    } catch (err) {
+      console.error('[PLP-SWATCHES] Observer error:', err);
+    }
+  });
+</script>

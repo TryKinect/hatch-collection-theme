@@ -1,0 +1,53 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "color_scheme": "",
+        "show_title": true,
+        "page_width": "xs"
+      }
+    },
+    "wishlist_header_j9zWVE": {
+      "type": "wishlist_header",
+      "name": "Wishlist Header",
+      "settings": {
+        "title": "Heart your HATCH Obsessions!",
+        "subtitle": "<p>Save your most coveted items in one place, then share them with<br/>friends so they’re in-the-know (hint, hint!)</p>"
+      }
+    },
+    "1751023917b651c957": {
+      "type": "apps",
+      "blocks": {
+        "swish_formerly_wishlist_king_wishlist_page_block_7hLbzb": {
+          "type": "shopify://apps/swish-wishlist-king/blocks/wishlist-page-block/194f5011-a43c-4b22-b12e-eaf20dc4506a",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "swish_formerly_wishlist_king_wishlist_page_block_7hLbzb"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": false,
+        "remove_vertical_spacing": false,
+        "remove_horizontal_spacing": false
+      }
+    }
+  },
+  "order": [
+    "main",
+    "wishlist_header_j9zWVE",
+    "1751023917b651c957"
+  ]
+}

@@ -1,0 +1,252 @@
+{% unless section.blocks == empty %}
+	{% assign storeLocations = '' | split: '' %}
+  	{% for block in section.blocks %}
+		{% assign store = block.settings.location | split: '_' | first | split: ',' %}
+    	{% assign storeLocations = storeLocations | concat: store %}
+  	{% endfor %}
+
+	{% assign storeLocations = storeLocations | uniq %}
+
+	{% for store in storeLocations %}
+		{% assign handle = store | handle %}
+		<div class="collapse multi-collapse" id="{{ handle }}">
+          <div class="events-wrapper">
+          	<div class="events__heading">
+              <h1 class="tC--pink title">{{ store }} <span>Events</span></h1>
+            </div>
+          <div class="card card-body">
+          	<button type="button" class="close-events" data-toggle="collapse" data-target="#{{ handle }}" aria-expanded="false" aria-controls="{{ handle }}">
+            	<div class="cSvg cSvg--xs cSvg--pink">
+                	<svg class="cSvg-el">
+                    	<use xlink:href="#icon-icon-close"></use>
+                    </svg>
+                </div>
+            </button>
+            <div class="event-items cLego-bg--white">
+              <div class="d-flex text-uppercase p--small event-header"><span class="col-md-4">When</span> <span class="col-md-8">Details</span></div>
+          		{% for block in section.blocks %}
+              		{% assign location = block.settings.location | handle %}
+              		{% if location == handle %}
+          				<div class="d-flex event-item">
+                      		<div class="col-md-4 p--small event-date-wrapper">
+                              <div class="event-month">{{ block.settings.month }}</div>
+                              <div class="tC--pink event-day">{{ block.settings.day }}</div>
+                              <div class="tC--pink event-date-details">{{ block.settings.date_details }}</div>
+                          	</div>
+                      		<div class="col-md-8 flex-lg-last event-description-wrapper">
+                        		<h2 class="tC--pink event-title">{{ block.settings.title }}</h2>
+                              	<div class="event-description">{{ block.settings.description }}
+                              </div>
+                              {% if block.settings.show-rsvp %}
+                                <span class="cCta--arrow cHeader-featuredCta">
+                                  {%- assign date = block.settings.month | append: ' ' | append: block.settings.day -%}
+                                  <input type="button" class="cForm-submit rsvp-btn" data-toggle="modal" data-target="#rsvpForm" event-date="{{ date }}" event-title="{{ block.settings.title }}" value="RSVP">
+                                </span>
+                              {% endif %}
+                      		</div>
+                    	</div>
+          	  		{% endif %}
+          		{% endfor %}
+             </div>
+          </div>
+          </div>
+        </div>
+	{% endfor %}
+{% endunless %}
+
+<div class="modal fade rsvp-form" id="rsvpForm" tabindex="-1" role="dialog" aria-labelledby="rsvpFormTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog--l" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        {% comment %} BODY {% endcomment %}
+          <button type="button" class="close cModal-close" data-dismiss="modal" aria-label="Close">
+            <div class="cSvg cSvg--sm cSvg--pink">{% include 'svg' with 'icon-x-close' %}</div>
+          </button>
+
+          <div class="form-row">
+            <div class="col-12 p-2 cLego-bg--white">
+
+              <div class="aaa_formbuilder_container loaded_aaa_formbuilder">
+                <form method="post" action="" enctype="multipart/form-data" class="aaaformbuilder_form">
+                  <input type="hidden" name="url" class="get_current_page_url" value="">
+                  <input type="hidden" name="container_id" value="">
+                  <input type="hidden" name="form_id" value="4292">
+                  <input type="hidden" name="form_domain" value="hatchcollection.myshopify.com">
+                  <input type="hidden" name="" value="Thanks for your RSVP, we'll see you soon!" class="success_msg">
+                  <input type="hidden" name="" value="" class="aaa_thankyoupageurl">
+                  <input type="hidden" name="uploadeLimit" class="formUploadLimit" value="20">
+                  <input type="hidden" name="allowefiletype" class="allowedfiletype" value="">
+                  <input type="hidden" name="conditionallogic" class="conditionallogic" value="">
+                  <div class="text-center">
+                    <h1 class="tC--pink title">Let us know you're popping in!</h1>
+                  </div>
+					
+                  <input type="hidden" id="rsvp-event-name" name="event-name" />
+                  <input type="hidden" id="rsvp-event-date" name="event-date" />
+                  
+                  <div class="cForm-fieldset">
+                    <div class="form-row">
+                      <div class="col-sm-6">
+                        <div class="cForm-group">
+                          <input class="cForm-input cForm-input--wide form-control" type="text" id="first-name"
+                            name="first-name"
+                            placeholder="Your First Name"
+                            autocapitalize="words"
+                            value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required>
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="cForm-group">
+                          <input class="cForm-input cForm-input--wide form-control" type="text" id="last-name"
+                            name="last-name"
+                            placeholder="Your Last Name"
+                            autocapitalize="words"
+                            value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required>
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="cForm-group">
+                          <input class="cForm-input cForm-input--wide form-control" type="email" id="replyemail"
+                            name="replyemail"
+                            placeholder="Your Email *" autocorrect="off"
+                            autocapitalize="off"
+                            value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                  <div class="pt-2 cForm-submit-wrapper">
+                    <button type="submit" class="cForm-submit cCta--arrow">Submit</button>
+                    
+                  </div>
+                </form>
+              </div>
+
+            </div>
+          </div>
+
+        {% comment %} END BODY {% endcomment %}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Event Blocks",
+  "blocks": [
+    {
+      "type": "add_event",
+      "name": "Add Event",
+      "settings": [
+		{
+           "type": "text",
+           "id": "location",
+           "label": "Location"
+        },
+        {
+           "type": "text",
+           "id": "title",
+           "label":"Title"
+        },
+		{
+          "id": "description",
+          "type": "richtext",
+          "label": "Description"
+        },
+		{
+           "type": "select",
+           "id": "month",
+           "label": "Month of Event",
+           "options": [
+             {
+               "group": "months",
+               "value": "January",
+               "label": "January"
+             },
+             {
+               "group": "months",
+               "value": "February",
+               "label": "February"
+             },
+			{
+               "group": "months",
+               "value": "March",
+               "label": "March"
+             },
+             {
+               "group": "months",
+               "value": "April",
+               "label": "April"
+             },
+			{
+               "group": "months",
+               "value": "May",
+               "label": "May"
+             },
+             {
+               "group": "months",
+               "value": "June",
+               "label": "June"
+             },
+			 {
+               "group": "months",
+               "value": "July",
+               "label": "July"
+             },
+             {
+               "group": "months",
+               "value": "August",
+               "label": "August"
+             },
+			 {
+               "group": "months",
+               "value": "September",
+               "label": "September"
+             },
+             {
+               "group": "months",
+               "value": "October",
+               "label": "October"
+             },
+			{
+               "group": "months",
+               "value": "November",
+               "label": "November"
+             },
+             {
+               "group": "months",
+               "value": "December",
+               "label": "December"
+             }
+           ]
+        },
+        {
+            "type": "range",
+            "id": "day",
+            "min": 1,
+            "max": 31,
+            "step": 1,
+            "label": "Day of Event",
+            "default": 1
+        },
+		{
+          "id": "date_details",
+          "type": "richtext",
+          "label": "More Date Details"
+        },
+        {
+          "id": "show-rsvp",
+          "type": "checkbox",
+          "label": "Show RSVP Button",
+          "default": true
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

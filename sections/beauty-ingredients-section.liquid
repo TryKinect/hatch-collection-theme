@@ -1,0 +1,518 @@
+
+
+<style>
+  .product-accordion-primary {
+  /*  PDP Accordion  */
+}
+.product-accordion-primary .product_description_accordion {
+  padding-top: 17px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: none;
+  margin: 27px 0;
+  list-style:none;
+}
+.product-accordion-primary .product_description_accordion li {
+  position: relative;
+  padding-top: 0;
+  border-top: none;
+  margin: 0 0 7px;
+}
+.product-accordion-primary .product_description_accordion li:last-child {
+  margin-bottom: 0;
+}
+.product-accordion-primary .product_description_accordion a.acc_toggle, .product-accordion-primary .product_description_accordion a.toggle {
+  display: block;
+  padding: 8px 0;
+  font-family: circular std;
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-transform: none;
+}
+.product-accordion-primary .product_description_accordion a.acc_toggle.active:after, .product-accordion-primary .product_description_accordion a.toggle.active:after {
+  opacity: 1;
+}
+.product-accordion-primary .product_description_accordion a.acc_toggle:after, .product-accordion-primary .product_description_accordion a.toggle:after {
+  padding-left: 6px;
+  -webkit-transition: opacity 0.4s;
+  -o-transition: opacity 0.4s;
+  transition: opacity 0.4s;
+  content: "+";
+}
+.product-accordion-primary .product_description_accordion a.acc_toggle.active:after, .product-accordion-primary .product_description_accordion a.toggle.active:after {
+  content: "-";
+}
+.product-accordion-primary .product_description_accordion a.acc_toggle:before, .product-accordion-primary .product_description_accordion a.toggle:before {
+  display: none;
+}
+.product-accordion-primary .product_description_accordion .inner {
+  position: relative;
+  padding-bottom: 7px;
+  padding-left: 0;
+  margin-top: 0;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.95;
+}
+.product-accordion-primary .product_description_accordion .inner p {
+  margin-bottom: 20px;
+}
+.product-accordion-primary .product_description_accordion .inner p + .link-primary {
+  margin-top: -20px;
+}
+.product-accordion-primary .product_description_accordion .inner p:last-child {
+  margin-bottom: 0;
+}
+.product-accordion-primary .product_description_accordion .inner .link-primary {
+  float: left;
+  width: 100%;
+  opacity: 0.5;
+  -webkit-transition: opacity 0.4s;
+  -o-transition: opacity 0.4s;
+  transition: opacity 0.4s;
+}
+.product-accordion-primary .product_description_accordion .inner .link-primary:hover {
+  opacity: 1;
+}
+.product-accordion-primary .product_description_accordion .inner-default--full {
+  max-height: none !important;
+}
+.product-accordion-primary .product_description_accordion .inner-default--full + .inner-actions {
+  display: none !important;
+}
+.product-accordion-primary .product_description_accordion .inner-default-cloned {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.product-accordion-primary .product_description_accordion .inner-default {
+  overflow: hidden;
+}
+.product-accordion-primary .product_description_accordion .inner-actions {
+  display: none;
+}
+.product-accordion-primary .product_description_accordion .inner-actions .link-primary span:nth-child(2) {
+  display: none;
+}
+.product-accordion-primary .product_description_accordion .alt .inner-default {
+  max-height: 75px;
+}
+.product-accordion-primary .product_description_accordion .alt .inner-actions {
+  display: block;
+}
+.product-accordion-primary .product_description_accordion .expanded .inner-default {
+  max-height: none;
+}
+.product-accordion-primary .product_description_accordion .expanded .inner-actions .link-primary span:first-child {
+  display: none;
+}
+.product-accordion-primary .product_description_accordion .expanded .inner-actions .link-primary span:nth-child(2) {
+  display: inline;
+}
+.product-accordion-primary ol {
+  padding-left: 0;
+  list-style: none outside none;
+  counter-reset: accordion-counter;
+}
+.product-accordion-primary ol li:before {
+  padding-right: 3px;
+  font-family: circular std;
+  counter-increment: accordion-counter;
+  content: counter(accordion-counter) ".";
+}
+@media (max-width: 991px) {
+  .product-accordion-primary .product_description_accordion {
+    padding-top: 19px;
+    margin-bottom: 0;
+  }
+  .product-accordion-primary .product_description_accordion li {
+    margin-bottom: 5px;
+  }
+  .product-accordion-primary .product_description_accordion .inner {
+    padding-top: 3px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+  
+.shell-secondary {
+    padding: 0 20px;
+    margin: 0 auto;
+    max-width:1300px;
+}
+
+.section-ingredients {
+  margin-bottom: 50px;
+}
+.section-ingredients:last-child {
+  margin-bottom: 0;
+}
+.section-ingredients.expanded .section__content-actions .btn-toggle:after {
+  opacity: 0;
+}
+.section-ingredients .section__body {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+.section-ingredients .section__content {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 1 100%;
+  flex: 0 1 100%;
+  max-width: 640px;
+  padding-left: 25px;
+}
+.section-ingredients .section__content-head {
+  margin-bottom: 26px;
+}
+.section-ingredients .section__content-actions {
+  padding-top: 3px;
+}
+.section-ingredients .section__content-actions .btn-toggle {
+  display: inline-block;
+  padding: 20px 0;
+  font-family: circular std;
+  letter-spacing: 1px;
+  text-transform: none;
+}
+.section-ingredients .section__content-actions .btn-toggle:after {
+  padding-left: 6px;
+  -webkit-transition: opacity 0.4s;
+  -o-transition: opacity 0.4s;
+  transition: opacity 0.4s;
+  content: "\002b";
+}
+.section-ingredients .section__content-foot {
+  display: none;
+  font-size: 13px;
+}
+.section-ingredients .section__aside {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 452px;
+  flex: 0 0 452px;
+  padding: 4px 50px 0;
+}
+.section-ingredients .product_description_accordion {
+  padding-top: 0;
+  border-top: none;
+  margin-top: 0;
+}
+@media (max-width: 1279px) {
+  .section-ingredients .section__inner {
+    max-width: 60%;
+    padding-left: 10px;
+  }
+  .section-ingredients .section__aside {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 40%;
+    flex: 0 0 40%;
+    max-width: 40%;
+    padding: 4px 10px 0 20px;
+  }
+  .section-ingredients .section__aside .product-accordion-primary {
+    max-width: 353px;
+    margin: 0 auto;
+  }
+}
+@media (max-width: 1199px) {
+  .section-ingredients .section__inner {
+    max-width: calc(100% - 40.6%);
+    padding-left: 10px;
+  }
+  .section-ingredients .section__aside {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 40.6%;
+    flex: 0 0 40.6%;
+    max-width: 40.6%;
+    padding: 4px 40px 0;
+  }
+}
+@media (max-width: 991px) {
+  .section-ingredients .section__body {
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+  .section-ingredients .section__inner {
+    max-width: none;
+    padding: 0 12px;
+  }
+  .section-ingredients .section__content {
+    max-width: none;
+    padding-left: 0;
+  }
+  .section-ingredients .section__aside {
+    -webkit-box-ordinal-group: 0;
+    -ms-flex-order: -1;
+    order: -1;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 1 100%;
+    flex: 0 1 100%;
+    max-width: none;
+    padding: 0;
+    margin-bottom: 30px;
+  }
+  .section-ingredients .section__aside .product-accordion-primary {
+    max-width: none;
+  }
+}
+/* ------------------------------------------------------------ *\
+ List Ingredients
+ \* ------------------------------------------------------------ */
+.list-ingredients {
+  padding-left: 0;
+  margin-left: 0;
+  list-style: none outside none;
+}
+.list-ingredients:last-child {
+  margin-bottom: 0;
+}
+.list-ingredients li {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 28px;
+}
+.list-ingredients li:last-child {
+  margin-bottom: 0;
+}
+.list-ingredients figure {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 70px;
+  flex: 0 0 70px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-right: 18px;
+  margin-bottom: 0;
+}
+.list-ingredients img {
+  width: auto;
+}
+.list-ingredients div {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 1 100%;
+  flex: 0 1 100%;
+}
+.list-ingredients h6 {
+  margin-bottom: 13px;
+  font-family: circular std;
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-transform: none;
+}
+.list-ingredients h6:last-child {
+  margin-bottom: 0;
+}
+.list-ingredients p {
+  font-size: 13px;
+  margin: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+.section-ingredients .section__content-actions .btn-toggle:after {
+    padding-left: 6px;
+    -webkit-transition: opacity .4s;
+    -o-transition: opacity .4s;
+    transition: opacity .4s;
+    content: "+";
+}
+.section__content:has(.section__content-foot[style="display: block;"]) .btn-toggle:after {
+    opacity: 0;
+}
+
+</style>
+ {%- assign section_ingredient_title = product.metafields.custom.section_ingredient_title -%}
+  {%- assign section_ingredient_btn = product.metafields.custom.section_ingredient_button_toggle -%}
+  {%- assign section_ingredient_list = product.metafields.custom.ingredient_list -%}
+  {%- assign ingredient = product.metafields.custom.ingredient_title -%}
+  {%- assign ingredient_titles = product.metafields.custom.ingredient_title.value | replace: '["', '' | replace: '"]', '' | replace: '","', '|' | split: '|' -%}
+  {%- assign ingredient_images = product.metafields.custom.ingredient_image.value | replace: '["', '' | replace: '"]', '' | replace: '","', '|' | split: '|' -%}
+  {%- assign ingredient_texts = product.metafields.custom.ingredient_text.value | replace: '["', '' | replace: '"]', '' | replace: '","', '|' | split: '|' -%}
+  <section class="section-ingredients" id="section-ingredients">
+    <div class="shell-secondary container container--lg">
+      <div class="section__body">
+        <div class="section__content">
+          {%- if section_ingredient_title != blank -%}
+            <div class="section__content-head" >
+              <h2 class="title-primary section__content-title">{{ section_ingredient_title }}</h2>
+            </div><!-- /.section__content-head -->
+          {%- endif -%}
+
+          {%- if ingredient_titles != blank -%}
+            <div class="section__content-body">
+              <ul class="list-ingredients">
+                {%- for ingredient_title in ingredient_titles -%}
+                  {%- assign i = forloop.index0 -%}
+                  {%- assign ingredient_image = ingredient_images[i] -%}
+                  {%- assign ingredient_text = ingredient_texts[i] -%}
+
+                  <li>
+                    <figure>
+                      {%- if ingredient_image != blank -%}
+                        <img src="{{ ingredient_image }}" alt="{{ ingredient_title }}">
+                      {%- endif -%}
+                    </figure>
+
+                    <div>
+                      {%- if ingredient_title != blank -%}
+                        <h3>{{ ingredient_title }}</h3>
+
+                      {%- endif -%}
+
+                      {%- if ingredient_text != blank -%}
+                        <p>{{ ingredient_text | newline_to_br }}</p>
+                      {%- endif -%}
+                    </div>
+                  </li>
+                {%- endfor -%}
+              </ul><!-- /.list-ingredients -->
+            </div><!-- /.section__content-body -->
+          {%- endif -%}
+
+          {%- if section_ingredient_btn != blank -%}
+            <div class="section__content-actions">
+              <a href="#" class="js-btn-toggle btn-toggle" data-class="expanded" data-target="#section-ingredients" data-slide-target="#ingredient-text">{{ section_ingredient_btn }}</a>
+            </div><!-- /.section__content-actions -->
+          {%- endif -%}
+
+          {%- if section_ingredient_list != blank -%}
+            <div class="section__content-foot" id="ingredient-text" >
+              <p>{{ section_ingredient_list | newline_to_br }}</p>
+            </div><!-- /.section__content-foot -->
+          {%- endif -%}
+        </div><!-- /.section__content -->
+
+        {%- if product.metafields.custom.why_we_love_it != blank or product.metafields.custom.how_to_use_it != blank -%}
+          <aside class="section__aside">
+            <div class="product-accordion-primary">
+              {% include 'product_description.accordion' %}
+            </div><!-- /.product-accordion-primary -->
+          </aside><!-- /.section__aside -->
+        {%- endif -%}
+      </div><!-- /.section__body -->
+    </div><!-- /.shell-secondary -->
+  </section><!-- /.section-ingredients -->
+
+  <div class="beauty_lifestyle_pdp" data-stop-sticky>
+    {% include 'beauty_lifestyle_pdp' %}
+  </div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.querySelector(".js-btn-toggle");
+    const box = document.querySelector("#ingredient-text");
+
+    let open = false;
+
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      box.style.overflow = "hidden";
+      box.style.transition = "height 0.4s ease";
+
+      if (!open) {
+        box.style.display = "block";
+        box.style.height = "0px";
+        requestAnimationFrame(() => {
+          box.style.height = box.scrollHeight + "px";
+        });
+        setTimeout(() => {
+          box.style.height = "";
+          box.style.overflow = "";
+          box.style.transition = "";
+        }, 400);
+      } else {
+        box.style.height = box.scrollHeight + "px";
+        requestAnimationFrame(() => {
+          box.style.height = "0px";
+        });
+        setTimeout(() => {
+          box.style.display = "none";
+          box.style.height = "";
+          box.style.overflow = "";
+          box.style.transition = "";
+        }, 400);
+      }
+
+      open = !open;
+    });
+  });
+document.querySelectorAll(".product_description_accordion .acc_toggle").forEach(toggle => {
+  toggle.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const item = toggle.closest("li");
+    const box = item.querySelector(".inner");
+
+    const isActive = toggle.classList.contains("active");
+
+    if (isActive) {
+      // Animate closing
+      box.style.height = box.scrollHeight + "px";
+      box.offsetHeight; // Force reflow
+      box.style.transition = "height 0.4s ease";
+      box.style.height = "0px";
+
+      box.addEventListener("transitionend", function handler() {
+        box.style.display = "none";
+        box.style.height = "";
+        box.style.transition = "";
+        toggle.classList.remove("active");
+        box.removeEventListener("transitionend", handler);
+      });
+    } else {
+      // Prepare for opening
+      box.style.display = "block";
+      box.style.height = "0px";
+      box.offsetHeight; // Force reflow
+      box.style.transition = "height 0.4s ease";
+      box.style.height = box.scrollHeight + "px";
+
+      box.addEventListener("transitionend", function handler() {
+        box.style.height = "";
+        box.style.transition = "";
+        toggle.classList.add("active");
+        box.removeEventListener("transitionend", handler);
+      });
+    }
+  });
+});
+
+</script>
+
+{% schema %}
+  {
+    "name": "Beauty Ingredients",
+    "settings": [],
+    "presets": [
+      {
+        "name": "Beauty Ingredients"
+      }
+    ]
+  }
+{% endschema %}

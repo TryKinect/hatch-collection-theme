@@ -1,0 +1,72 @@
+{% unless section.blocks == empty %}
+{% assign alignment = 1 %}
+  <div class="container community-stores">
+    <div class="row">
+      {% for block in section.blocks %}
+        {% assign mod = alignment | modulo: 2 %}
+        {% assign handleStore = block.settings.title | handle %}
+        <div class="store-item col-lg-8">
+          <div class="col-md-6{% if mod != 0 %} right {% else %} left {% endif %}" >
+
+            <h2 class="tC--pink title">{{ block.settings.title }}</h2>
+
+            {{ block.settings.description }}
+            {% if block.settings.show-book %}
+            <a href="#appointmentForm" data-toggle="modal" class="cta-book text-uppercase tC--pink">Book your appointment +</a>
+            {% endif %}
+            {% if block.settings.show-events %}
+            <a class="cCta--arrow cta-event" data-toggle="collapse" href="#{{ handleStore }}" role="button" aria-expanded="false" aria-controls="{{ handleStore }}">
+              Upcoming Events
+            </a>
+            {% endif %}
+          </div>
+          <div class="col-md-6{% if mod != 0 %} left {% else %} right {% endif %}">
+            <img src="{{ block.settings.image  | img_url: '512x' }}" importance="low"/>
+          </div>
+        </div>
+        {% assign alignment = alignment | plus: 1 %}
+      {% endfor %}
+    </div>
+  </div>
+{% endunless%}
+
+{% schema %}
+{
+  "name": "Store Blocks",
+  "blocks": [
+    {
+      "type": "add_store",
+      "name": "Add Store",
+      "settings": [
+        {
+           "type": "text",
+           "id": "title",
+           "label": "Title"
+        },
+        {
+		  "id": "image",
+          "type": "image_picker",
+          "label": "Store Image"
+        },
+		{
+          "id": "description",
+          "type": "richtext",
+          "label": "Store Description"
+        },
+		{
+			"id": "show-book",
+			"type": "checkbox",
+			"label": "Show Book Link",
+			"default": true
+		},
+		{
+			"id": "show-events",
+			"type": "checkbox",
+			"label": "Show Upcoming Event Link",
+			"default": true
+		}
+      ]
+    }
+  ]
+}
+{% endschema %}

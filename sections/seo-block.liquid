@@ -1,0 +1,68 @@
+{%- assign title = collection.metafields.seo_block.title -%}
+{%- assign content = collection.metafields.seo_block.content.html -%}
+
+{%- if title != blank or content != blank -%}
+  <section class="seo-block">
+    <div class="seo-block__inner">
+      <div class="seo-block__content js-read-more-parent">
+        {%- if title != blank -%}
+          <h2 class="seo-block__title">{{- title -}}</h2><!-- /.seo-block__title -->
+        {%- endif -%}
+  
+        {%- if content != blank -%}
+          <div class="seo-block__entry">{{- content | truncatewords: 50, '...' -}}</div><!-- /.seo-block__entry -->
+
+          <div class="seo-block__entry seo-block__entry--full">{{- content -}}</div><!-- /.seo-block__entry -->
+        {%- endif -%}
+  
+        <div class="seo-block__actions">
+          <div
+            href="#"
+            class="seo-block__btn js-read-more-trigger"
+            data-default="Read"
+            data-active="Hide"
+          >
+            Read
+          </div><!-- /.seo-block__btn -->
+        </div><!-- /.seo-block__actions -->
+      </div><!-- /.seo-block__content -->
+    </div><!-- /.seo-block__inner -->
+  </section><!-- /.seo-block -->
+{%- endif -%}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const readMoreBtn = document.querySelector('.js-read-more-trigger');
+    const contentWrapper = document.querySelector('.js-read-more-parent');
+
+    if (readMoreBtn && contentWrapper) {
+      readMoreBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        contentWrapper.classList.toggle('is-shown');
+        readMoreBtn.classList.toggle('is-active');
+
+        // Update button text
+        if (readMoreBtn.classList.contains('is-active')) {
+          readMoreBtn.textContent = readMoreBtn.dataset.active || 'Hide';
+        } else {
+          readMoreBtn.textContent = readMoreBtn.dataset.default || 'Read';
+        }
+      });
+    }
+  });
+</script>
+<style>
+  .seo-block__btn.js-read-more-trigger {
+    cursor: pointer;
+}
+</style>
+{% schema %}
+  {
+    "name": "Seo Block",
+    "settings": [],
+    "presets": [
+      {
+        "name": "Seo Block"
+      }
+    ]
+  }
+{% endschema %}

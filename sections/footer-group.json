@@ -1,0 +1,149 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "text-with-icons": {
+      "type": "text-with-icons",
+      "blocks": {
+        "icon-1": {
+          "type": "item",
+          "settings": {
+            "icon": "picto-award-gift",
+            "icon_width": 24,
+            "mobile_icon_width": 24,
+            "title": "Free delivery worldwide",
+            "content": "<p>Short content about your store</p>"
+          }
+        },
+        "icon-2": {
+          "type": "item",
+          "settings": {
+            "icon": "picto-award-gift",
+            "icon_width": 24,
+            "mobile_icon_width": 24,
+            "title": "Satisfied or refunded",
+            "content": "<p>Short content about your store</p>"
+          }
+        },
+        "icon-3": {
+          "type": "item",
+          "settings": {
+            "icon": "picto-award-gift",
+            "icon_width": 24,
+            "mobile_icon_width": 24,
+            "title": "Top-notch support",
+            "content": "<p>Short content about your store</p>"
+          }
+        },
+        "icon-4": {
+          "type": "item",
+          "settings": {
+            "icon": "picto-award-gift",
+            "icon_width": 24,
+            "mobile_icon_width": 24,
+            "title": "Secure payments",
+            "content": "<p>Short content about your store</p>"
+          }
+        }
+      },
+      "block_order": [
+        "icon-1",
+        "icon-2",
+        "icon-3",
+        "icon-4"
+      ],
+      "disabled": true,
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": true,
+        "stack_on_mobile": false,
+        "icon_color": "",
+        "text_color": "",
+        "text_alignment": "center"
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "links_yipqAx": {
+          "type": "links",
+          "settings": {
+            "menu": "company-prestige",
+            "show_menu_title": true,
+            "menu_title": "COMPANY"
+          }
+        },
+        "links_NCPHbC": {
+          "type": "links",
+          "settings": {
+            "menu": "community-1",
+            "show_menu_title": true,
+            "menu_title": "COMMUNITY"
+          }
+        },
+        "links_ww78ka": {
+          "type": "links",
+          "settings": {
+            "menu": "help-prestige",
+            "show_menu_title": true,
+            "menu_title": "HELP"
+          }
+        },
+        "social_media_Yy9yaR": {
+          "type": "social-media",
+          "settings": {
+            "title": "FOLLOW US",
+            "facebook": "https://www.facebook.com/HATCHcollection",
+            "insta": "https://www.instagram.com/hatchgal/",
+            "pinterest": "https://www.pinterest.com/hatchcollection/",
+            "twitter": "",
+            "linkdin": "",
+            "tiktok": "https://www.tiktok.com/@hatchgal"
+          }
+        },
+        "text_mpPnTP": {
+          "type": "text",
+          "settings": {
+            "title": "We Got You",
+            "content": "<p>Sign up to receive updates on exclusive events, product launches and more.</p>",
+            "content_uk": "<p>Sign up to receive updates on exclusive events, product launches and more.</p>",
+            "button_text": "GET 15% OFF",
+            "button_text_uk": "GET 15% OFF",
+            "enable_follow_on_shop": false
+          }
+        }
+      },
+      "block_order": [
+        "links_yipqAx",
+        "links_NCPHbC",
+        "links_ww78ka",
+        "social_media_Yy9yaR",
+        "text_mpPnTP"
+      ],
+      "settings": {
+        "color_scheme": "scheme-d0a75b4e-3b41-4e4b-8dfc-db12cbb72d69",
+        "separate_section_with_border": false,
+        "show_social_media": false,
+        "show_payment_icons": false,
+        "show_country_selector": false,
+        "show_country_name": false,
+        "show_country_flag": false,
+        "show_locale_selector": false,
+        "bottom_menu": "footer-bottom-menu-prestige"
+      }
+    }
+  },
+  "order": [
+    "text-with-icons",
+    "footer"
+  ]
+}

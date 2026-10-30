@@ -1,0 +1,840 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------------------------------------------------
+  THIS SET INCLUDES BLOCK (DESKTOP)
+  ----------------------------------------------------------------------------------------------------------------------
+  Renders the "This Set Includes" product list slider and active product details below.
+{%- endcomment -%}
+
+{%- liquid
+  assign set_products = product.metafields.custom.this_set_includes.value
+  if set_products == blank and block.settings.products_list != blank
+    assign set_products = block.settings.products_list
+  endif
+-%}
+
+{%- if set_products != blank and set_products.size > 0 or request.design_mode -%}
+  <div class="this-set-includes-block this-set-includes-destop" id="this-set-includes-{{ block.id }}">
+    {%- if set_products != blank and set_products.size > 0 -%}
+      {%- comment -%} Header Row with Title and Arrows {%- endcomment -%}
+      <div class="this-set-includes__header">
+        <div class="this-set-includes__header_top">
+          <h3 class="this-set-includes__heading">
+            {{ block.settings.title | default: 'THIS SET INCLUDES' }}
+          </h3>
+        </div>
+        <div class="this-set-includes__nav">
+          <button
+            type="button"
+            class="this-set-includes__arrow this-set-includes__arrow--prev js-set-includes-prev-{{ block.id }}"
+            aria-label="Previous"
+          >
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 1L1 7L7 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="this-set-includes__arrow this-set-includes__arrow--next js-set-includes-next-{{ block.id }}"
+            aria-label="Next"
+          >
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L7 7L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {%- comment -%} Slick Carousel {%- endcomment -%}
+      <div class="this-set-includes__slider-wrap">
+        <div class="this-set-includes__slider js-set-includes-slider-{{ block.id }}">
+          {%- for item in set_products -%}
+            {%- liquid
+              capture item_short_desc
+                if item.metafields.custom.short_description != blank
+                  if item.metafields.custom.short_description.type contains 'rich_text'
+                    echo item.metafields.custom.short_description | metafield_tag
+                  else
+                    echo item.metafields.custom.short_description.value | default: item.metafields.custom.short_description
+                  endif
+                endif
+              endcapture
+
+              capture item_benefits
+                if item.metafields.custom.benefits != blank
+                  if item.metafields.custom.benefits.type contains 'rich_text'
+                    echo item.metafields.custom.benefits | metafield_tag
+                  else
+                    echo item.metafields.custom.benefits.value | default: item.metafields.custom.benefits
+                  endif
+                elsif item.metafields.custom.benefit != blank
+                  if item.metafields.custom.benefit.type contains 'rich_text'
+                    echo item.metafields.custom.benefit | metafield_tag
+                  else
+                    echo item.metafields.custom.benefit.value | default: item.metafields.custom.benefit
+                  endif
+                elsif item.description != blank
+                  echo item.description
+                endif
+              endcapture
+
+              capture item_application
+                if item.metafields.custom.application != blank
+                  if item.metafields.custom.application.type contains 'rich_text'
+                    echo item.metafields.custom.application | metafield_tag
+                  else
+                    echo item.metafields.custom.application.value | default: item.metafields.custom.application
+                  endif
+                elsif item.metafields.custom.applications != blank
+                  if item.metafields.custom.applications.type contains 'rich_text'
+                    echo item.metafields.custom.applications | metafield_tag
+                  else
+                    echo item.metafields.custom.applications.value | default: item.metafields.custom.applications
+                  endif
+                elsif item.metafields.custom.how_to_use != blank
+                  if item.metafields.custom.how_to_use.type contains 'rich_text'
+                    echo item.metafields.custom.how_to_use | metafield_tag
+                  else
+                    echo item.metafields.custom.how_to_use.value | default: item.metafields.custom.how_to_use
+                  endif
+                endif
+              endcapture
+
+              capture item_ingredients
+                if item.metafields.custom.ingredients != blank
+                  if item.metafields.custom.ingredients.type contains 'rich_text'
+                    echo item.metafields.custom.ingredients | metafield_tag
+                  else
+                    echo item.metafields.custom.ingredients.value | default: item.metafields.custom.ingredients
+                  endif
+                elsif item.metafields.custom.ingredient != blank
+                  if item.metafields.custom.ingredient.type contains 'rich_text'
+                    echo item.metafields.custom.ingredient | metafield_tag
+                  else
+                    echo item.metafields.custom.ingredient.value | default: item.metafields.custom.ingredient
+                  endif
+                elsif item.metafields.custom.ingredients_list != blank
+                  if item.metafields.custom.ingredients_list.type contains 'rich_text'
+                    echo item.metafields.custom.ingredients_list | metafield_tag
+                  else
+                    echo item.metafields.custom.ingredients_list.value | default: item.metafields.custom.ingredients_list
+                  endif
+                endif
+              endcapture
+
+              assign item_size = ''
+              if item.variants.first.title != 'Default Title' and item.variants.first.title != blank
+                assign item_size = item.variants.first.title
+              endif
+              if item.metafields.custom.size_weight != blank
+                assign item_size = item.metafields.custom.size_weight
+              endif
+
+              assign is_not_sold_individually = false
+              for tag in item.tags
+                assign downcase_tag = tag | downcase | strip
+                if downcase_tag == 'not sold individually'
+                  assign is_not_sold_individually = true
+                  break
+                endif
+              endfor
+            -%}
+
+            <div class="this-set-includes__slide-item">
+              <div
+                class="this-set-includes__card js-set-includes-card-{{ block.id }} {% if forloop.first %}is-selected{% endif %}"
+                data-index="{{ forloop.index0 }}"
+                data-title="{{ item.title | escape }}"
+                data-url="{{ item.url }}"
+                data-image="{% if item.featured_image %}{{ item.featured_image | image_url: width: 800 }}{% endif %}"
+                data-short-desc="{{ item_short_desc | escape }}"
+                data-benefits="{{ item_benefits | escape }}"
+                data-application="{{ item_application | escape }}"
+                data-ingredients="{{ item_ingredients | escape }}"
+              >
+                <div class="this-set-includes__data-templates" style="display:none;">
+                  <div class="js-data-short-desc">{{ item_short_desc }}</div>
+                  <div class="js-data-benefits">{{ item_benefits }}</div>
+                  <div class="js-data-application">{{ item_application }}</div>
+                  <div class="js-data-ingredients">{{ item_ingredients }}</div>
+                </div>
+
+                <div class="this-set-includes__card-media">
+                  {%- if item.featured_image != blank -%}
+                    <img
+                      src="{{ item.featured_image | image_url: width: 400 }}"
+                      alt="{{ item.title | escape }}"
+                      loading="lazy"
+                      width="400"
+                      height="400"
+                      class="this-set-includes__card-img"
+                    >
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'this-set-includes__card-img placeholder' }}
+                  {%- endif -%}
+                  <div class="this-set-includes__card-indicator"></div>
+                </div>
+                <div class="this-set-includes__card-info">
+                  <h4 class="this-set-includes__card-title">{{ item.title }}</h4>
+                  {%- if item_size != blank -%}
+                    <p class="this-set-includes__card-size">{{ item_size }}</p>
+                  {%- endif -%}
+                  {%- if is_not_sold_individually -%}
+                    <div class="this-set-includes__text">Only available in this kit</div>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- comment -%} Active Item Details Section Below Slider {%- endcomment -%}
+      {%- assign first_item = set_products.first -%}
+      {%- liquid
+        capture first_short_desc
+          if first_item.metafields.custom.short_description != blank
+            if first_item.metafields.custom.short_description.type contains 'rich_text'
+              echo first_item.metafields.custom.short_description | metafield_tag
+            else
+              echo first_item.metafields.custom.short_description.value | default: first_item.metafields.custom.short_description
+            endif
+          endif
+        endcapture
+
+        capture first_benefits
+          if first_item.metafields.custom.benefits != blank
+            if first_item.metafields.custom.benefits.type contains 'rich_text'
+              echo first_item.metafields.custom.benefits | metafield_tag
+            else
+              echo first_item.metafields.custom.benefits.value | default: first_item.metafields.custom.benefits
+            endif
+          elsif first_item.metafields.custom.benefit != blank
+            if first_item.metafields.custom.benefit.type contains 'rich_text'
+              echo first_item.metafields.custom.benefit | metafield_tag
+            else
+              echo first_item.metafields.custom.benefit.value | default: first_item.metafields.custom.benefit
+            endif
+          elsif first_item.description != blank
+            echo first_item.description
+          endif
+        endcapture
+
+        capture first_application
+          if first_item.metafields.custom.application != blank
+            if first_item.metafields.custom.application.type contains 'rich_text'
+              echo first_item.metafields.custom.application | metafield_tag
+            else
+              echo first_item.metafields.custom.application.value | default: first_item.metafields.custom.application
+            endif
+          elsif first_item.metafields.custom.applications != blank
+            if first_item.metafields.custom.applications.type contains 'rich_text'
+              echo first_item.metafields.custom.applications | metafield_tag
+            else
+              echo first_item.metafields.custom.applications.value | default: first_item.metafields.custom.applications
+            endif
+          elsif first_item.metafields.custom.how_to_use != blank
+            if first_item.metafields.custom.how_to_use.type contains 'rich_text'
+              echo first_item.metafields.custom.how_to_use | metafield_tag
+            else
+              echo first_item.metafields.custom.how_to_use.value | default: first_item.metafields.custom.how_to_use
+            endif
+          endif
+        endcapture
+
+        capture first_ingredients
+          if first_item.metafields.custom.ingredients != blank
+            if first_item.metafields.custom.ingredients.type contains 'rich_text'
+              echo first_item.metafields.custom.ingredients | metafield_tag
+            else
+              echo first_item.metafields.custom.ingredients.value | default: first_item.metafields.custom.ingredients
+            endif
+          elsif first_item.metafields.custom.ingredient != blank
+            if first_item.metafields.custom.ingredient.type contains 'rich_text'
+              echo first_item.metafields.custom.ingredient | metafield_tag
+            else
+              echo first_item.metafields.custom.ingredient.value | default: first_item.metafields.custom.ingredient
+            endif
+          elsif first_item.metafields.custom.ingredients_list != blank
+            if first_item.metafields.custom.ingredients_list.type contains 'rich_text'
+              echo first_item.metafields.custom.ingredients_list | metafield_tag
+            else
+              echo first_item.metafields.custom.ingredients_list.value | default: first_item.metafields.custom.ingredients_list
+            endif
+          endif
+        endcapture
+
+        assign first_short_desc_text = first_short_desc | strip_html | strip
+        assign first_benefits_text = first_benefits | strip_html | strip
+        assign first_application_text = first_application | strip_html | strip
+        assign first_ingredients_text = first_ingredients | strip_html | strip
+      -%}
+
+      <div class="this-set-includes__details js-set-includes-details-{{ block.id }}">
+        <h3 class="this-set-includes__details-title js-set-includes-title-{{ block.id }}">
+          {{ first_item.title }}
+        </h3>
+
+        <div
+          class="this-set-includes__short-desc js-set-includes-short-desc-{{ block.id }}"
+          {% if first_short_desc_text == blank %}
+            style="display: none;"
+          {% endif %}
+        >
+          <div class="prose this-set-includes__short-desc-content js-set-includes-short-desc-content-{{ block.id }}">
+            {{ first_short_desc }}
+          </div>
+        </div>
+
+        <div class="this-set-includes__accordions">
+          {%- capture benefits_content -%}
+            <div class="prose this-set-includes__details-content js-set-includes-benefits-content-{{ block.id }}">
+              {{ first_benefits }}
+            </div>
+          {%- endcapture -%}
+          <div
+            class="js-set-includes-benefits-group-{{ block.id }}"
+            {% if first_benefits_text == blank %}
+              style="display: none;"
+            {% endif %}
+          >
+            {%- render 'accordion',
+              title: 'BENEFITS',
+              content: benefits_content,
+            -%}
+          </div>
+
+          {%- capture application_content -%}
+            <div class="prose this-set-includes__details-content js-set-includes-application-content-{{ block.id }}">
+              {{ first_application }}
+            </div>
+          {%- endcapture -%}
+          <div
+            class="js-set-includes-application-group-{{ block.id }}"
+            {% if first_application_text == blank %}
+              style="display: none;"
+            {% endif %}
+          >
+            {%- render 'accordion',
+              title: 'APPLICATION',
+              content: application_content,
+            -%}
+          </div>
+
+          {%- capture ingredients_content -%}
+            <div class="prose this-set-includes__details-content js-set-includes-ingredients-content-{{ block.id }}">
+              {{ first_ingredients }}
+            </div>
+          {%- endcapture -%}
+          <div
+            class="js-set-includes-ingredients-group-{{ block.id }}"
+            {% if first_ingredients_text == blank %}
+              style="display: none;"
+            {% endif %}
+          >
+            {%- render 'accordion',
+              title: 'INGREDIENTS',
+              content: ingredients_content,
+            -%}
+          </div>
+        </div>
+      </div>
+
+    {%- elsif request.design_mode -%}
+      <div class="this-set-includes__placeholder" style="padding: 20px; border: 1px dashed #ccc; text-align: center;">
+        <p style="margin: 0; font-size: 14px; font-weight: 500;">
+          <strong>This Set Includes</strong> block: Add products via the product metafield
+          <code>custom.this_set_includes</code> or block settings to preview.
+        </p>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <style>
+    #this-set-includes-{{ block.id }} {
+      margin-top: 0;
+      margin-bottom: 32px;
+      clear: both;
+      overflow: hidden;
+      max-width: 100% !important; 
+      width: 100% !important;
+    }
+
+    .this-set-includes__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 13px;
+      margin-right: 19px;
+    }
+
+    .this-set-includes__heading {
+      font-family: "Circular Std";
+      font-size: 13px;
+      font-weight: 450;
+      letter-spacing: 1.17px;
+      text-transform: uppercase;
+      color: #000000;
+      margin: 0;
+      line-height: 20px;
+    }
+
+    .this-set-includes__text {
+      font-family: "Circular Std";
+      font-size: 12px;
+      font-weight: 450;
+      color: #000000c7;
+      margin: 0;
+      line-height: 20px;
+    }
+
+    .this-set-includes__nav {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .this-set-includes__arrow {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.2s ease;
+      width: 13px;
+    }
+
+    .this-set-includes__arrow:hover {
+      opacity: 0.6;
+    }
+
+    .this-set-includes__slider-wrap {
+      margin-left: -5px;
+      margin-right: -5px;
+    }
+
+    .this-set-includes__slider .slick-slide {
+      padding: 0 5px;
+    }
+
+    .this-set-includes__card {
+      cursor: pointer;
+      user-select: none;
+      outline: none;
+    }
+
+    .this-set-includes__card-media {
+      position: relative;
+      background-color: #f4f4f4;
+      aspect-ratio: 147/204;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      overflow: hidden;
+      margin-bottom: 6.45px;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.2s ease, opacity 0.2s ease;
+    }
+
+    .this-set-includes__card.is-selected .this-set-includes__card-media {
+      border-bottom-color: #000000;
+    }
+
+    .this-set-includes__card-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      mix-blend-mode: multiply;
+      transition: transform 0.2s ease;
+    }
+
+    .this-set-includes__card-info {
+      text-align: left;
+    }
+
+    .this-set-includes__card-title {
+      font-family: 'Canela';
+      font-size: 20px;
+      font-weight: 300;
+      line-height: 1.4;
+      color: #000000;
+      letter-spacing: 0.2px;
+      margin: 0 0 2.42px 0;
+    }
+
+    .this-set-includes__card-size {
+      font-family: "Circular Std";
+      font-size: 13px;
+      font-weight: 450;
+      letter-spacing: 1.17px;
+      line-height: 1.53;
+      text-transform: uppercase;
+      color: #000000;
+      margin: 0;
+    }
+
+    /* Active Product Details Section Below Slider */
+    .this-set-includes__details {
+      margin-top: 32px;
+      padding-top: 0;
+    }
+
+    .this-set-includes__details-title {
+      font-family: 'Canela';
+      font-size: 36px;
+      font-weight: 100;
+      line-height: normal;
+      color: #000000;
+      margin: 0 0 7px 0;
+    }
+
+    .this-set-includes__short-desc {
+      font-family: 'CircularXX', var(--text-font-family), sans-serif;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #000000;
+      margin-bottom: 24px;
+    }
+
+    .this-set-includes__accordions accordion-disclosure {
+      border-top: 1px solid #d9d9d9;
+      display: block;
+    }
+
+    .this-set-includes__accordions > div:last-child accordion-disclosure {
+      border-bottom: 1px solid #d9d9d9;
+    }
+
+    .this-set-includes__details-content {
+      font-family: 'CircularXX';
+      font-size: 14px;
+      line-height: 1.4;
+      font-weight: 400;
+      color: #000;
+      letter-spacing: 0.14px;
+      margin: 0;
+    }
+    .this-set-includes__slider .slick-list .slick-track {
+    margin: 0 !important;
+}
+
+    @media screen and (max-width: 767px) {
+      .product-info__block-item.this-set-includes { margin-top: 28px !important; }
+      .this-set-includes__header {
+        flex-flow: row wrap;
+        justify-content: flex-start;
+        gap: 16px;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+        margin-bottom: 16px !important;
+      }
+      .this-set-includes__details { margin-top: 25px !important; }
+      #this-set-includes-{{ block.id }} { margin-bottom: 0 !important; }
+      .this-set-includes__arrow svg {
+        width: 100%;
+        height: 12px;
+      }
+      .this-set-includes__header { gap: 14px !important; }
+    }
+  </style>
+
+  <script>
+    (function () {
+      function initThisSetIncludes_{{ block.id | replace: '-', '_' }}() {
+        var $block = $('#this-set-includes-{{ block.id }}');
+        if (!$block.length) return;
+
+        var $slider = $('.js-set-includes-slider-{{ block.id }}');
+        var activeSelectedIndex = 0;
+
+        function isCardVisible(cardIndex, currentSlide, slick) {
+          if (cardIndex < 0) return false;
+          var slidesToShow = (slick && slick.options && slick.options.slidesToShow) ? slick.options.slidesToShow : 1;
+          var minVisible = currentSlide;
+          var maxVisible = currentSlide + Math.ceil(slidesToShow);
+          return cardIndex >= minVisible && cardIndex <= maxVisible;
+        }
+
+        if ($slider.length && typeof $.fn.slick !== 'undefined') {
+          if ($slider.hasClass('slick-initialized')) {
+            $slider.slick('unslick');
+          }
+          $slider.slick({
+            slidesToShow: 3.9,
+            slidesToScroll: 1,
+            speed: 250,
+            cssEase: 'ease-out',
+            waitForAnimate: false,
+            infinite: false,
+            draggable: false,
+            swipe: false,
+            touchMove: false,
+            dots: false,
+            arrows: false,
+            responsive: [
+              {
+                breakpoint: 1024,
+                settings: {
+                  slidesToShow: 3.2,
+                  slidesToScroll: 1,
+                  speed: 250,
+                  cssEase: 'ease-out',
+                  waitForAnimate: false,
+                  infinite: false,
+                  draggable: true,
+                  swipe: true,
+                  touchMove: true
+                }
+              },
+              {
+                breakpoint: 768,
+                settings: {
+                  slidesToShow: 2.3,
+                  slidesToScroll: 1,
+                  speed: 250,
+                  cssEase: 'ease-out',
+                  waitForAnimate: false,
+                  infinite: false,
+                  draggable: true,
+                  swipe: true,
+                  touchMove: true
+                }
+              },
+              {
+                breakpoint: 480,
+                settings: {
+                  slidesToShow: 2.2,
+                  slidesToScroll: 1,
+                  speed: 250,
+                  cssEase: 'ease-out',
+                  waitForAnimate: false,
+                  infinite: false,
+                  draggable: true,
+                  swipe: true,
+                  touchMove: true
+                }
+              }
+            ]
+          });
+
+          $slider
+            .off('afterChange.setinc')
+            .on('afterChange.setinc', function (event, slick, currentSlide) {
+              if (isCardVisible(activeSelectedIndex, currentSlide, slick)) {
+                return;
+              }
+              var $cards = $block.find('.js-set-includes-card-{{ block.id }}');
+              var $slideCard = $cards.filter('[data-index="' + currentSlide + '"]').first();
+              if ($slideCard.length) {
+                selectProductCard($slideCard);
+              }
+            });
+        }
+
+        function scrollToCard(cardIndex) {
+          if (!$slider.length || typeof $.fn.slick === 'undefined' || !$slider.hasClass('slick-initialized')) {
+            return;
+          }
+
+          var slickObj = $slider.slick('getSlick');
+          if (!slickObj) return;
+
+          var currentSlide = slickObj.currentSlide || 0;
+          var slidesToShow = slickObj.options.slidesToShow || 1;
+          var visibleCount = Math.floor(slidesToShow);
+          if (visibleCount < 1) visibleCount = 1;
+
+          var targetSlide = currentSlide;
+
+          if (cardIndex > currentSlide + visibleCount - 1) {
+            targetSlide = cardIndex - visibleCount + 1;
+          } else if (cardIndex < currentSlide) {
+            targetSlide = cardIndex;
+          }
+
+          var totalSlides = slickObj.slideCount || 0;
+          if (targetSlide < 0) targetSlide = 0;
+          if (totalSlides > 0 && targetSlide >= totalSlides) targetSlide = totalSlides - 1;
+
+          $slider.slick('slickGoTo', targetSlide);
+        }
+
+        $('.js-set-includes-prev-{{ block.id }}')
+          .off('click.setinc')
+          .on('click.setinc', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var $cards = $block.find('.js-set-includes-card-{{ block.id }}');
+            var total = $cards.length;
+            if (!total) return;
+
+            var $current = $cards.filter('.is-selected');
+            var currIdx = $current.length ? parseInt($current.attr('data-index'), 10) : activeSelectedIndex;
+
+            if (currIdx > 0) {
+              var prevIdx = currIdx - 1;
+              var $prevCard = $cards.filter('[data-index="' + prevIdx + '"]').first();
+              if ($prevCard.length) {
+                selectProductCard($prevCard);
+                scrollToCard(prevIdx);
+              }
+            }
+          });
+
+        $('.js-set-includes-next-{{ block.id }}')
+          .off('click.setinc')
+          .on('click.setinc', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var $cards = $block.find('.js-set-includes-card-{{ block.id }}');
+            var total = $cards.length;
+            if (!total) return;
+
+            var $current = $cards.filter('.is-selected');
+            var currIdx = $current.length ? parseInt($current.attr('data-index'), 10) : activeSelectedIndex;
+
+            if (currIdx < total - 1) {
+              var nextIdx = currIdx + 1;
+              var $nextCard = $cards.filter('[data-index="' + nextIdx + '"]').first();
+              if ($nextCard.length) {
+                selectProductCard($nextCard);
+                scrollToCard(nextIdx);
+              }
+            }
+          });
+
+        function decodeHtml(html) {
+          if (!html) return '';
+          var txt = document.createElement('textarea');
+          txt.innerHTML = html;
+          return txt.value;
+        }
+
+        function cleanText(htmlStr) {
+          if (!htmlStr) return '';
+          var decoded = decodeHtml(htmlStr);
+          var tmp = document.createElement('div');
+          tmp.innerHTML = decoded;
+          return (tmp.textContent || tmp.innerText || '').trim();
+        }
+
+        function selectProductCard($card) {
+          if (!$card.length) return;
+
+          var cardIndex = $card.attr('data-index');
+          activeSelectedIndex = parseInt(cardIndex, 10) || 0;
+
+          $block.find('.js-set-includes-card-{{ block.id }}').removeClass('is-selected');
+          $block.find('.js-set-includes-card-{{ block.id }}[data-index="' + cardIndex + '"]').addClass('is-selected');
+
+          var title = $card.attr('data-title') || '';
+          var image = $card.attr('data-image') || '';
+
+          var rawShortDesc = $card.find('.js-data-short-desc').html() || $card.attr('data-short-desc') || '';
+          var rawBenefits = $card.find('.js-data-benefits').html() || $card.attr('data-benefits') || '';
+          var rawApplication = $card.find('.js-data-application').html() || $card.attr('data-application') || '';
+          var rawIngredients = $card.find('.js-data-ingredients').html() || $card.attr('data-ingredients') || '';
+
+          var shortDesc = decodeHtml(rawShortDesc);
+          var benefits = decodeHtml(rawBenefits);
+          var application = decodeHtml(rawApplication);
+          var ingredients = decodeHtml(rawIngredients);
+
+          $block.find('.js-set-includes-title-{{ block.id }}').text(title);
+
+          var $shortDescGroup = $block.find('.js-set-includes-short-desc-{{ block.id }}');
+          var $shortDescContent = $block.find('.js-set-includes-short-desc-content-{{ block.id }}');
+          if (cleanText(rawShortDesc) !== '') {
+            $shortDescContent.html(shortDesc);
+            $shortDescGroup.css('display', 'block');
+          } else {
+            $shortDescContent.html('');
+            $shortDescGroup.css('display', 'none');
+          }
+
+          var $benefitsGroup = $block.find('.js-set-includes-benefits-group-{{ block.id }}');
+          var $benefitsContent = $block.find('.js-set-includes-benefits-content-{{ block.id }}');
+          if (cleanText(rawBenefits) !== '') {
+            $benefitsContent.html(benefits);
+            $benefitsGroup.css('display', 'block');
+          } else {
+            $benefitsContent.html('');
+            $benefitsGroup.css('display', 'none');
+          }
+
+          var $appGroup = $block.find('.js-set-includes-application-group-{{ block.id }}');
+          var $appContent = $block.find('.js-set-includes-application-content-{{ block.id }}');
+          if (cleanText(rawApplication) !== '') {
+            $appContent.html(application);
+            $appGroup.css('display', 'block');
+          } else {
+            $appContent.html('');
+            $appGroup.css('display', 'none');
+          }
+
+          var $ingGroup = $block.find('.js-set-includes-ingredients-group-{{ block.id }}');
+          var $ingContent = $block.find('.js-set-includes-ingredients-content-{{ block.id }}');
+          if (cleanText(rawIngredients) !== '') {
+            $ingContent.html(ingredients);
+            $ingGroup.css('display', 'block');
+          } else {
+            $ingContent.html('');
+            $ingGroup.css('display', 'none');
+          }
+
+          if (image) {
+            var cleanUrl = image.split('?')[0];
+            var $galleryImgs = $('product-gallery img, .product-gallery img');
+            if ($galleryImgs.length) {
+              $galleryImgs.each(function() {
+                var src = $(this).attr('src') || $(this).attr('data-src') || '';
+                if (src && src.indexOf(cleanUrl) !== -1) {
+                  var $parentMedia = $(this).closest('.product-gallery__media');
+                  if ($parentMedia.length) {
+                    $parentMedia.trigger('click');
+                  }
+                }
+              });
+            }
+          }
+        }
+
+        var $allCards = $block.find('.js-set-includes-card-{{ block.id }}');
+        if ($allCards.length) {
+          selectProductCard($allCards.eq(0));
+        }
+
+        $block
+          .off('click.setcard', '.js-set-includes-card-{{ block.id }}')
+          .on('click.setcard', '.js-set-includes-card-{{ block.id }}', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var $card = $(this);
+            var idxAttr = $card.attr('data-index');
+            var idx = idxAttr !== undefined ? parseInt(idxAttr, 10) : 0;
+
+            selectProductCard($card);
+            scrollToCard(idx);
+          });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initThisSetIncludes_{{ block.id | replace: '-', '_' }});
+      } else {
+        initThisSetIncludes_{{ block.id | replace: '-', '_' }}();
+      }
+
+      document.addEventListener('shopify:section:load', function(e) {
+        if (e.target.contains(document.getElementById('this-set-includes-{{ block.id }}'))) {
+          initThisSetIncludes_{{ block.id | replace: '-', '_' }}();
+        }
+      });
+    })();
+</script>
+{%- endif -%}

@@ -1,0 +1,235 @@
+
+{% liquid
+  assign desktop_image = section.settings.desktop_image
+  assign mobile_image = section.settings.mobile_image
+%}
+
+<section
+  id="ImageTextOverlay-{{ section.id }}"
+  class="image-text-overlay"
+  style="
+    --padding-top: {{ section.settings.padding_top }}px;
+    --padding-bottom: {{ section.settings.padding_bottom }}px;
+    --heading-size: {{ section.settings.heading_size }}px;
+    --subheading-size: {{ section.settings.subheading_size }}px;
+    --mobile-heading-size: {{ section.settings.mobile_heading_size }}px;
+    --mobile-subheading-size: {{ section.settings.mobile_subheading_size }}px;
+  "
+>
+  <div class="image-text-overlay__inner">
+    {% if desktop_image != blank %}
+      <picture class="image-text-overlay__picture">
+        {% if mobile_image != blank %}
+          <source
+            media="(max-width: 767px)"
+            srcset="{{ mobile_image | image_url: width: 1200 }}"
+          >
+        {% endif %}
+
+        {{
+          desktop_image
+          | image_url: width: 2400
+          | image_tag:
+            class: 'image-text-overlay__image',
+            widths: '375, 550, 750, 1100, 1500, 2000, 2400',
+            sizes: '100vw',
+            loading: 'lazy'
+        }}
+      </picture>
+    {% endif %}
+
+    <div class="image-text-overlay__content">
+      {% if section.settings.subheading != blank %}
+        <p class="image-text-overlay__subheading">
+          {{ section.settings.subheading | escape }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="image-text-overlay__heading">
+          {{ section.settings.heading | escape | newline_to_br }}
+        </h2>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #ImageTextOverlay-{{ section.id }} {
+    padding-top: var(--padding-top);
+    padding-bottom: var(--padding-bottom);
+    width: 100%;
+  }
+
+  #ImageTextOverlay-{{ section.id }} .image-text-overlay__inner {
+    position: relative;
+    width: 100%;
+    min-height: 520px;
+    overflow: hidden;
+    background: #d4dfe0;
+  }
+
+  #ImageTextOverlay-{{ section.id }} .image-text-overlay__picture {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+
+  #ImageTextOverlay-{{ section.id }} .image-text-overlay__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 520px;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  #ImageTextOverlay-{{ section.id }} .image-text-overlay__content {
+    position: absolute;
+    left: 24px;
+    bottom: 0;
+    z-index: 1;
+    max-width: 520px;
+    padding: 0;
+    color: #fff;
+  }
+
+  #ImageTextOverlay-{{ section.id }} .image-text-overlay__subheading {
+    margin: 0 0 8px;
+    font-size: var(--subheading-size);
+    line-height: 1.2;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  #ImageTextOverlay-{{ section.id }} .image-text-overlay__heading {
+    margin: 0;
+    font-size: var(--heading-size);
+    line-height: 1.02;
+    font-weight: 300;
+    letter-spacing: -0.025em;
+    color: inherit;
+  }
+
+  @media screen and (max-width: 767px) {
+    #ImageTextOverlay-{{ section.id }} .image-text-overlay__inner {
+      min-height: 420px;
+    }
+
+    #ImageTextOverlay-{{ section.id }} .image-text-overlay__image {
+      min-height: 420px;
+      object-position: center;
+    }
+
+    #ImageTextOverlay-{{ section.id }} .image-text-overlay__content {
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+      max-width: 100%;
+    }
+
+    #ImageTextOverlay-{{ section.id }} .image-text-overlay__heading {
+      font-size: var(--mobile-heading-size);
+    }
+
+    #ImageTextOverlay-{{ section.id }} .image-text-overlay__subheading {
+      font-size: var(--mobile-subheading-size);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Image text overlay",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Guest in residence / Our denim"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Desktop subheading font size",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "mobile_subheading_size",
+      "label": "Mobile subheading font size",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Denim, in\nresidence."
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Desktop heading font size",
+      "min": 24,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "mobile_heading_size",
+      "label": "Mobile heading font size",
+      "min": 20,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 34
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image text overlay"
+    }
+  ]
+}
+{% endschema %}

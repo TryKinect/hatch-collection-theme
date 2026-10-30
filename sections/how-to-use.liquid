@@ -1,0 +1,553 @@
+{%- liquid
+  assign title = product.metafields.custom.how_to_use_title.value | default: product.metafields.custom.how_to_use_title
+  assign heading = product.metafields.custom.how_to_use_header
+
+  assign media_1 = product.metafields.custom.how_to_use_image_video_1.value | default: product.metafields.custom.how_to_use_image_video_1
+  assign media_2 = product.metafields.custom.how_to_use_image_video_2.value | default: product.metafields.custom.how_to_use_image_video_2
+  assign media_mobile_1 = product.metafields.custom.how_to_use_image_video_mobile_1.value | default: product.metafields.custom.how_to_use_image_video_mobile_1 | default: media_1
+
+  assign step_1 = product.metafields.custom.how_to_use_step_1.value | default: product.metafields.custom.how_to_use_step_1
+  assign step_2 = product.metafields.custom.how_to_use_step_2.value | default: product.metafields.custom.how_to_use_step_2
+  assign step_3 = product.metafields.custom.how_to_use_step_3.value | default: product.metafields.custom.how_to_use_step_3
+  assign step_4 = product.metafields.custom.how_to_use_step_4.value | default: product.metafields.custom.how_to_use_step_4
+  assign step_5 = product.metafields.custom.how_to_use_step_5.value | default: product.metafields.custom.how_to_use_step_5
+
+  assign step_1_lable = product.metafields.custom.how_to_use_step_1_label.value | default: product.metafields.custom.how_to_use_step_1_label
+  assign step_2_lable = product.metafields.custom.how_to_use_step_2_label.value | default: product.metafields.custom.how_to_use_step_2_label
+  assign step_3_lable = product.metafields.custom.how_to_use_step_3_label.value | default: product.metafields.custom.how_to_use_step_3_label
+  assign step_4_lable = product.metafields.custom.how_to_use_step_4_label.value | default: product.metafields.custom.how_to_use_step_4_label
+  assign step_5_lable = product.metafields.custom.how_to_use_step_5_label.value | default: product.metafields.custom.how_to_use_step_5_label
+
+  assign has_media_1 = false
+  if media_1 != blank
+    assign has_media_1 = true
+  endif
+
+  assign has_media_2 = false
+  if media_2 != blank
+    assign has_media_2 = true
+  endif
+
+  assign has_steps = false
+  if step_1 != blank or step_2 != blank or step_3 != blank or step_4 != blank or step_5 != blank
+    assign has_steps = true
+  endif
+
+  assign has_card = false
+  if has_steps or title != blank or heading != blank
+    assign has_card = true
+  endif
+
+  assign visible_count = 0
+  if has_media_1
+    assign visible_count = visible_count | plus: 1
+  endif
+  if has_media_2
+    assign visible_count = visible_count | plus: 1
+  endif
+  if has_card
+    assign visible_count = visible_count | plus: 1
+  endif
+
+  assign show_controls = section.settings.show_video_controls
+-%}
+
+{%- if has_media_1 or has_media_2 or has_card -%}
+<style>
+  #shopify-section-{{ section.id }} {
+    --how-to-use-bg: {{ section.settings.card_bg_color | default: '#d8e2e6' }};
+    --how-to-use-text: {{ section.settings.text_color | default: '#1c2226' }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  .how-to-use__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    width: 100%;
+  }
+
+  @media screen and (min-width: 999px) {
+    .how-to-use__wrapper {
+      display: grid;
+      grid-template-columns: auto auto 35.65%;
+      gap: 13px;
+      align-items: stretch;
+      {% if visible_count == 1 %}
+        max-width: 540px;
+        margin: 0 auto;
+      {% elsif visible_count == 2 %}
+        max-width: 920px;
+        margin: 0 auto;
+      {% endif %}
+    }
+  }
+  .container.container-full:has(.how-to-use__wrapper) {
+    max-width: 100% !important;
+    margin-inline: 60px !important;
+}
+  .how-to-use__media-col {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 480px;
+    border-radius: 0;
+    overflow: hidden;
+    background-color: #f4f4f4;
+  }
+
+  .how-to-use__media-el {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .how-to-use__card-col {
+    background-color: var(--how-to-use-bg);
+    color: var(--how-to-use-text);
+    border-radius: 0;
+    padding: 30px 31px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    width: 100%;
+    row-gap: 24.27px;
+  }
+
+  @media screen and (min-width: 999px) {
+    .how-to-use__card-col {
+      padding: 60px 72px;
+      row-gap: 31px;
+    }
+  }
+
+  .how-to-use__subtitle {
+   color: #000;
+text-align: center;
+font-family: "Circular Std";
+font-size: 13px;
+font-style: normal;
+font-weight: 450;
+line-height: 20px; /* 153.846% */
+letter-spacing: 1.17px;
+text-transform: uppercase;
+margin: 0 !important;
+  }
+
+  .how-to-use__heading {
+    color: #000;
+text-align: center;
+
+/* H1 */
+font-family: Canela;
+font-size: 36px;
+font-style: normal;
+font-weight: 100;
+line-height: normal;
+margin: 0 !important;
+  }
+
+  @media screen and (min-width: 999px) {
+    .how-to-use__heading {
+      font-size: 36px;
+    }
+  }
+
+  .how-to-use__mobile-media {
+    width: 100%;
+    max-width: 320px;
+    {% comment %} height: 380px; {% endcomment %}
+    border-radius: 0;
+    overflow: hidden;
+    margin: 0 auto;
+    display: block;
+  }
+
+  @media screen and (min-width: 999px) {
+    .how-to-use__mobile-media {
+      display: none !important;
+    }
+  }
+
+  .how-to-use__nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 0;
+  }
+
+  .how-to-use__arrow {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
+  }
+
+  {% comment %} .how-to-use__arrow:hover {
+    opacity: 0.6;
+  } {% endcomment %}
+
+  .how-to-use__arrow svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 1.5;
+  }
+
+  .how-to-use__slider-container {
+    width: 100%;
+    max-width:  238px;
+    margin: 0 auto;
+    min-height: 76px;
+    overflow: hidden;
+  }
+
+  .how-to-use__step-item {
+    text-align: center;
+    outline: none;
+  }
+
+  .how-to-use__step-label {
+ color: #000;
+text-align: center;
+
+/* H6 */
+font-family: "Circular Std";
+font-size: 13px;
+font-style: normal;
+font-weight: 450;
+line-height: 20px; /* 153.846% */
+letter-spacing: 1.17px;
+text-transform: uppercase;
+margin-bottom: 9px !important;
+  }
+
+  .how-to-use__step-content {
+  color: #000;
+text-align: center;
+
+font-family: CircularXX;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 114%; /* 15.96px */
+letter-spacing: 0.14px;
+min-height: 80px;
+  }
+
+  @media screen and (max-width: 998px) {
+    .how-to-use__media-col.desktop-only {
+      display: none !important;
+    }
+     .container.container-full:has(.how-to-use__wrapper){margin: 0 !important;}
+     .how-to-use__subtitle{color: #000;
+text-align: center;
+font-family: "Circular Std";
+font-size: 12px;
+font-style: normal;
+font-weight: 450;
+line-height: 15.656px;
+letter-spacing: 0.916px;
+text-transform: uppercase;}
+.how-to-use__heading{
+color: #000;
+text-align: center;
+font-family: Canela;
+font-size: 28.182px;
+font-style: normal;
+font-weight: 100;
+line-height: normal;}
+.how-to-use__step-label{
+color: #000;
+text-align: center;
+font-family: "Circular Std";
+font-size: 12px;
+font-style: normal;
+font-weight: 450;
+line-height: 15.656px; /* 153.846% */
+letter-spacing: 0.916px;
+text-transform: uppercase;margin-bottom: 7.05px;}
+.how-to-use__step-content{
+color: #000;
+text-align: center;
+font-family: CircularXX;
+font-size: 12px;
+font-style: normal;
+font-weight: 400;
+line-height: 114%; /* 12.494px */
+letter-spacing: 0.11px;
+}
+.how-to-use__slider-container{max-width: 187px;}
+ #shopify-section-{{ section.id }} {padding: 0 !important;}
+  }
+</style>
+
+<div class="container {% unless section.settings.container_size == 'full' %}container--{{ section.settings.container_size }}{% endunless %}{% if section.settings.container_size == 'full' %} container-full{% endif %}">
+  <div class="how-to-use__wrapper">
+    
+    {%- comment -%} Column 1: Desktop Media 1 {%- endcomment -%}
+    {%- if has_media_1 -%}
+      <div class="how-to-use__media-col desktop-only">
+        {%- if media_1.media_type == 'video' or media_1.sources != blank -%}
+          {{- media_1 | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: show_controls, class: 'how-to-use__media-el' -}}
+        {%- else -%}
+          {%- assign m1_url = media_1 | image_url: width: 1000 -%}
+          {%- if m1_url contains '.mp4' or m1_url contains '.webm' or m1_url contains '.mov' -%}
+            <video {% if show_controls %}controls{% else %}autoplay loop muted playsinline{% endif %} class="how-to-use__media-el" src="{{ m1_url }}"></video>
+          {%- else -%}
+            {{- media_1 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'how-to-use__media-el' -}}
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Column 2: Desktop Media 2 {%- endcomment -%}
+    {%- if has_media_2 -%}
+      <div class="how-to-use__media-col desktop-only">
+        {%- if media_2.media_type == 'video' or media_2.sources != blank -%}
+          {{- media_2 | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: show_controls, class: 'how-to-use__media-el' -}}
+        {%- else -%}
+          {%- assign m2_url = media_2 | image_url: width: 1000 -%}
+          {%- if m2_url contains '.mp4' or m2_url contains '.webm' or m2_url contains '.mov' -%}
+            <video {% if show_controls %}controls{% else %}autoplay loop muted playsinline{% endif %} class="how-to-use__media-el" src="{{ m2_url }}"></video>
+          {%- else -%}
+            {{- media_2 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'how-to-use__media-el' -}}
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Column 3: Steps Card Container {%- endcomment -%}
+    {%- if has_card -%}
+      <div class="how-to-use__card-col">
+        {%- if title != blank -%}
+          <div class="how-to-use__subtitle">{{ title }}</div>
+        {%- endif -%}
+
+        {%- if heading != blank -%}
+          <h2 class="how-to-use__heading">{{ heading }}</h2>
+        {%- endif -%}
+
+        {%- comment -%} Mobile Inline Media {%- endcomment -%}
+        {%- if media_mobile_1 != blank -%}
+          <div class="how-to-use__mobile-media">
+            {%- if media_mobile_1.media_type == 'video' or media_mobile_1.sources != blank -%}
+              {{- media_mobile_1 | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: show_controls, class: 'how-to-use__media-el' -}}
+            {%- else -%}
+              {%- assign mm_url = media_mobile_1 | image_url: width: 1000 -%}
+              {%- if mm_url contains '.mp4' or mm_url contains '.webm' or mm_url contains '.mov' -%}
+                <video {% if show_controls %}controls{% else %}autoplay loop muted playsinline{% endif %} class="how-to-use__media-el" src="{{ mm_url }}"></video>
+              {%- else -%}
+                {{- media_mobile_1 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'how-to-use__media-el' -}}
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Prev / Next Arrows {%- endcomment -%}
+        {%- if has_steps -%}
+          <div class="how-to-use__nav">
+            <button type="button" class="how-to-use__arrow js-how-to-use-prev-{{ section.id }}" aria-label="Previous step">
+              <svg viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.74583 14.0583L9 12.8042L3.225 7.02917L9 1.25417L7.74583 0L0.716667 7.02917L7.74583 14.0583Z" fill="currentColor"/>
+              </svg>
+            </button>
+            <button type="button" class="how-to-use__arrow js-how-to-use-next-{{ section.id }}" aria-label="Next step">
+              <svg viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1.25417 14.0583L0 12.8042L5.775 7.02917L0 1.25417L1.25417 0L8.28333 7.02917L1.25417 14.0583Z" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Slick Slider Container {%- endcomment -%}
+        {%- if has_steps -%}
+          <div class="how-to-use__slider-container">
+            <div class="how-to-use__slider js-how-to-use-slider-{{ section.id }}">
+
+              {%- if step_1 != blank -%}
+                <div class="how-to-use__step-item">
+                  {% if step_1_lable != blank %}
+                    <div class="how-to-use__step-label">{{ step_1_lable }}</div>
+                  {% endif %}
+                  <div class="how-to-use__step-content">{{ step_1 }}</div>
+                </div>
+              {%- endif -%}
+
+              {%- if step_2 != blank -%}
+                <div class="how-to-use__step-item">
+                  {% if step_2_lable != blank %}
+                    <div class="how-to-use__step-label">{{ step_2_lable }}</div>
+                  {% endif %}
+                  <div class="how-to-use__step-content">{{ step_2 }}</div>
+                </div>
+              {%- endif -%}
+
+              {%- if step_3 != blank -%}
+                <div class="how-to-use__step-item">
+                  {% if step_3_lable != blank %}
+                    <div class="how-to-use__step-label">{{ step_3_lable }}</div>
+                  {% endif %}
+                  <div class="how-to-use__step-content">{{ step_3 }}</div>
+                </div>
+              {%- endif -%}
+
+              {%- if step_4 != blank -%}
+                <div class="how-to-use__step-item">
+                  {% if step_4_lable != blank %}
+                    <div class="how-to-use__step-label">{{ step_4_lable }}</div>
+                  {% endif %}
+                  <div class="how-to-use__step-content">{{ step_4 }}</div>
+                </div>
+              {%- endif -%}
+
+              {%- if step_5 != blank -%}
+                <div class="how-to-use__step-item">
+                  {% if step_5_lable != blank %}
+                  <div class="how-to-use__step-label">{{ step_5_lable }}</div>
+                  {% endif %}
+                  <div class="how-to-use__step-content">{{ step_5 }}</div>
+                </div>
+              {%- endif -%}
+
+            </div>
+          </div>
+        {%- endif -%}
+
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+<script>
+  (function() {
+    function initHowToUseSlider() {
+      var $slider = $('.js-how-to-use-slider-{{ section.id }}');
+      if ($slider.length && typeof $.fn.slick !== 'undefined') {
+        if ($slider.hasClass('slick-initialized')) {
+          $slider.slick('unslick');
+        }
+        $slider.slick({
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          arrows: false,
+          dots: false,
+          infinite: true,
+          fade: false,
+          swipe: false,
+          touchMove: false,
+          draggable: false,
+          speed: 400,
+          adaptiveHeight: true
+        });
+
+        $('.js-how-to-use-prev-{{ section.id }}').off('click.htu').on('click.htu', function(e) {
+          e.preventDefault();
+          $slider.slick('slickPrev');
+        });
+
+        $('.js-how-to-use-next-{{ section.id }}').off('click.htu').on('click.htu', function(e) {
+          e.preventDefault();
+          $slider.slick('slickNext');
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initHowToUseSlider);
+    } else {
+      initHowToUseSlider();
+    }
+
+    document.addEventListener('shopify:section:load', function(e) {
+      if (e.detail.sectionId === '{{ section.id }}') {
+        initHowToUseSlider();
+      }
+    });
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "How to Use (Metafields)",
+  "class": "shopify-section--how-to-use",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "container_size",
+      "label": "t:global.sizes.section_width",
+      "options": [
+        {
+          "value": "lg",
+          "label": "t:global.sizes.large"
+        },
+        {
+          "value": "xl",
+          "label": "t:global.sizes.x_large"
+        },
+        {
+          "value": "full",
+          "label": "t:global.sizes.full_width"
+        }
+      ],
+      "default": "lg"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_video_controls",
+      "label": "Show Video Controls",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#d8e2e6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1c2226"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "How to Use (Metafields)"
+    }
+  ]
+}
+{% endschema %}

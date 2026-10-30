@@ -1,0 +1,633 @@
+{%- liquid
+  assign heading = section.settings.heading
+   assign subheading = section.settings.subheading
+
+  assign d_media_1 = product.metafields.custom.hatch_community_image_video_1.value | default: product.metafields.custom.hatch_community_image_video_1
+  assign d_media_2 = product.metafields.custom.hatch_community_image_video_2.value | default: product.metafields.custom.hatch_community_image_video_2
+  assign d_media_3 = product.metafields.custom.hatch_community_image_video_3.value | default: product.metafields.custom.hatch_community_image_video_3
+
+  assign m_media_1 = product.metafields.custom.hatch_community_image_video_mobile_1.value | default: product.metafields.custom.hatch_community_image_video_mobile_1 | default: d_media_1
+  assign m_media_2 = product.metafields.custom.hatch_community_image_video_mobile_2.value | default: product.metafields.custom.hatch_community_image_video_mobile_2 | default: d_media_2
+  assign m_media_3 = product.metafields.custom.hatch_community_image_video_mobile_3.value | default: product.metafields.custom.hatch_community_image_video_mobile_3 | default: d_media_3
+
+  assign d_is_vid_1 = false
+  if d_media_1 != blank
+    if d_media_1.media_type == 'video' or d_media_1.sources != blank
+      assign d_is_vid_1 = true
+    else
+      assign u1 = d_media_1 | image_url: width: 2000
+      if u1 contains '.mp4' or u1 contains '.webm' or u1 contains '.mov'
+        assign d_is_vid_1 = true
+      endif
+    endif
+  endif
+
+  assign m_is_vid_1 = false
+  if m_media_1 != blank
+    if m_media_1.media_type == 'video' or m_media_1.sources != blank
+      assign m_is_vid_1 = true
+    else
+      assign mu1 = m_media_1 | image_url: width: 2000
+      if mu1 contains '.mp4' or mu1 contains '.webm' or mu1 contains '.mov'
+        assign m_is_vid_1 = true
+      endif
+    endif
+  endif
+
+  assign d_is_vid_2 = false
+  if d_media_2 != blank
+    if d_media_2.media_type == 'video' or d_media_2.sources != blank
+      assign d_is_vid_2 = true
+    else
+      assign u2 = d_media_2 | image_url: width: 2000
+      if u2 contains '.mp4' or u2 contains '.webm' or u2 contains '.mov'
+        assign d_is_vid_2 = true
+      endif
+    endif
+  endif
+
+  assign m_is_vid_2 = false
+  if m_media_2 != blank
+    if m_media_2.media_type == 'video' or m_media_2.sources != blank
+      assign m_is_vid_2 = true
+    else
+      assign mu2 = m_media_2 | image_url: width: 2000
+      if mu2 contains '.mp4' or mu2 contains '.webm' or mu2 contains '.mov'
+        assign m_is_vid_2 = true
+      endif
+    endif
+  endif
+
+  assign d_is_vid_3 = false
+  if d_media_3 != blank
+    if d_media_3.media_type == 'video' or d_media_3.sources != blank
+      assign d_is_vid_3 = true
+    else
+      assign u3 = d_media_3 | image_url: width: 2000
+      if u3 contains '.mp4' or u3 contains '.webm' or u3 contains '.mov'
+        assign d_is_vid_3 = true
+      endif
+    endif
+  endif
+
+  assign m_is_vid_3 = false
+  if m_media_3 != blank
+    if m_media_3.media_type == 'video' or m_media_3.sources != blank
+      assign m_is_vid_3 = true
+    else
+      assign mu3 = m_media_3 | image_url: width: 2000
+      if mu3 contains '.mp4' or mu3 contains '.webm' or mu3 contains '.mov'
+        assign m_is_vid_3 = true
+      endif
+    endif
+  endif
+
+  assign has_1 = false
+  if d_media_1 != blank or m_media_1 != blank
+    assign has_1 = true
+  endif
+
+  assign has_2 = false
+  if d_media_2 != blank or m_media_2 != blank
+    assign has_2 = true
+  endif
+
+  assign has_3 = false
+  if d_media_3 != blank or m_media_3 != blank
+    assign has_3 = true
+  endif
+
+  assign total_items = 0
+  if has_1
+    assign total_items = total_items | plus: 1
+  endif
+  if has_2
+    assign total_items = total_items | plus: 1
+  endif
+  if has_3
+    assign total_items = total_items | plus: 1
+  endif
+
+  assign show_controls = section.settings.show_video_controls
+-%}
+
+{%- if has_1 or has_2 or has_3 -%}
+<style>
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  .hatch-community__heading {
+  color: #000;
+text-align: center;
+
+/* H1 */
+font-family: Canela;
+font-size: 36px;
+font-style: normal;
+font-weight: 100;
+line-height: normal;
+margin-bottom: 18px;
+  }
+
+  @media screen and (min-width: 999px) {
+    .hatch-community__heading {
+      font-size: 36px;
+      margin-bottom: 18px;
+    }
+  }
+  .hatch-subheading{
+  color: #000;
+text-align: center;
+
+/* H6 */
+font-family: "Circular Std";
+font-size: 13px;
+font-style: normal;
+font-weight: 450;
+line-height: 20px; /* 153.846% */
+letter-spacing: 1.17px;
+text-transform: uppercase;
+margin-bottom: 66px;}
+  .hatch-full{max-width: 100%;padding: 0 172.5px;margin: 0 !important;}
+  .hatch-community__grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 54px;
+    {% comment %} padding: 0 16px 16px; {% endcomment %}
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .hatch-community__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hatch-community__card {
+    position: relative;
+    flex: 0 0 61.5vw;
+    max-width: 320px;
+    scroll-snap-align: center;
+    border-radius: 0;
+    overflow: hidden;
+    background-color: #f4f4f4;
+     aspect-ratio: 329 /437; 
+  }
+
+  @media screen and (min-width: 999px) {
+    .hatch-community__grid {
+      display: grid;
+      grid-template-columns: repeat({{ total_items | default: 3 }}, minmax(0, 1fr));
+      gap: 54px;
+      padding: 0;
+      overflow: visible;
+      {% if total_items == 1 %}
+        max-width: 400px;
+        margin: 0 auto;
+      {% elsif total_items == 2 %}
+        max-width: 760px;
+        margin: 0 auto;
+      {% endif %}
+    }
+
+    .hatch-community__card {
+      flex: unset;
+      max-width: 100%;
+      {% comment %} aspect-ratio: 4 / 5; {% endcomment %}
+    }
+  }
+
+  .hatch-community__media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    cursor: pointer;
+  }
+
+  .hatch-community__media--desktop {
+    display: none;
+  }
+
+  .hatch-community__media--mobile {
+    display: block;
+  }
+
+  @media screen and (min-width: 999px) {
+    .hatch-community__media--desktop {
+      display: block;
+    }
+
+    .hatch-community__media--mobile {
+      display: none;
+    }
+  }
+
+  /* Custom Play / Pause Button Overlay */
+  .hatch-community__play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  .hatch-community__play-btn:hover {
+    transform: translate(-50%, -50%) scale(1.08);
+    background-color: #1a1a1a;
+  }
+
+ .hatch-community__play-btn svg {
+
+    fill: currentColor;
+  }
+  .hatch-community__card.is-playing .hatch-community__icon--pause {
+    height: 28px;
+    width: 28px;
+}
+
+
+  .hatch-community__card.is-playing .hatch-community__play-btn {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @media screen and (min-width: 999px) {
+    .hatch-community__card.is-playing:hover .hatch-community__play-btn {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  .hatch-community__card.is-playing .hatch-community__icon--play {
+    display: none;
+  }
+
+  .hatch-community__card.is-playing .hatch-community__icon--pause {
+    display: block;
+  }
+
+  .hatch-community__card:not(.is-playing) .hatch-community__icon--play {
+    display: block;
+  }
+
+  .hatch-community__card:not(.is-playing) .hatch-community__icon--pause {
+    display: none;
+  }
+
+  @media screen and (min-width: 999px) {
+    .hatch-community__play-btn.md-hidden {
+      display: none !important;
+    }
+  }
+@media(max-width: 1200px){
+.hatch-full{padding: 0 100px !important;}
+.hatch-community__grid{gap: 40px !important;}
+}
+  @media screen and (max-width: 998px) {
+    .hatch-community__play-btn.md-max-hidden {
+      display: none !important;
+    }
+    .hatch-full{padding: 0 !important;}
+    .hatch-full .hatch-community__heading{padding: 0 20px !important;}
+      #shopify-section-{{ section.id }}{padding-top: 85px;}
+        .hatch-community__grid{gap: 14px !important;}
+   
+      }
+
+
+</style>
+
+<div class="container {% unless section.settings.container_size == 'full' %}container--{{ section.settings.container_size }}{% endunless %}{% if section.settings.container_size == 'full' %} hatch-full{% endif %}">
+  {%- if heading != blank -%}
+    <h2 class="hatch-community__heading">{{ heading }}</h2>
+  {%- endif -%}
+  {% if subheading != blank %}
+    <p class="hatch-subheading">{{ subheading }}</p>
+  {% endif %}
+
+  <div class="hatch-community__grid">
+    
+    {%- comment -%} Item 1 {%- endcomment -%}
+    {%- if has_1 -%}
+      <div class="hatch-community__card js-hatch-video-card">
+        {%- comment -%} Desktop Media 1 {%- endcomment -%}
+        {%- if d_media_1 != blank -%}
+          {%- if d_is_vid_1 -%}
+            {%- if d_media_1.media_type == 'video' or d_media_1.sources != blank -%}
+              {%- assign poster_d1 = d_media_1.preview_image | image_url: width: 2000 -%}
+              {{- d_media_1 | video_tag: autoplay: false, loop: true, muted: true, playsinline: true, controls: show_controls, image_size: 'master', poster: poster_d1, class: 'hatch-community__media hatch-community__media--desktop' -}}
+            {%- else -%}
+              <video {% if show_controls %}controls{% endif %} loop muted playsinline class="hatch-community__media hatch-community__media--desktop" src="{{ u1 }}"></video>
+            {%- endif -%}
+          {%- else -%}
+            {{- d_media_1 | image_url: width: 2000 | image_tag: loading: 'lazy', class: 'hatch-community__media hatch-community__media--desktop' -}}
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- comment -%} Mobile Media 1 {%- endcomment -%}
+        {%- if m_media_1 != blank -%}
+          {%- if m_is_vid_1 -%}
+            {%- if m_media_1.media_type == 'video' or m_media_1.sources != blank -%}
+              {%- assign poster_m1 = m_media_1.preview_image | image_url: width: 2000 -%}
+              {{- m_media_1 | video_tag: autoplay: false, loop: true, muted: true, playsinline: true, controls: show_controls, image_size: 'master', poster: poster_m1, class: 'hatch-community__media hatch-community__media--mobile' -}}
+            {%- else -%}
+              <video {% if show_controls %}controls{% endif %} loop muted playsinline class="hatch-community__media hatch-community__media--mobile" src="{{ mu1 }}"></video>
+            {%- endif -%}
+          {%- else -%}
+            {{- m_media_1 | image_url: width: 2000 | image_tag: loading: 'lazy', class: 'hatch-community__media hatch-community__media--mobile' -}}
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if d_is_vid_1 or m_is_vid_1 -%}
+          <button type="button" class="hatch-community__play-btn js-hatch-play-btn {% unless d_is_vid_1 %}md-hidden{% endunless %} {% unless m_is_vid_1 %}md-max-hidden{% endunless %}" aria-label="Toggle Play/Pause">
+           <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="hatch-community__icon--play">
+<circle cx="23.8962" cy="23.8962" r="23.8962" fill="black"/>
+<path d="M35.2153 23.8959L18.2365 33.6986L18.2365 14.0931L35.2153 23.8959Z" fill="#D5D7E4"/>
+</svg>
+
+            <svg class="hatch-community__icon--pause" viewBox="0 0 24 24">
+              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+            </svg>
+          </button>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Item 2 {%- endcomment -%}
+    {%- if has_2 -%}
+      <div class="hatch-community__card js-hatch-video-card">
+        {%- comment -%} Desktop Media 2 {%- endcomment -%}
+        {%- if d_media_2 != blank -%}
+          {%- if d_is_vid_2 -%}
+            {%- if d_media_2.media_type == 'video' or d_media_2.sources != blank -%}
+              {%- assign poster_d2 = d_media_2.preview_image | image_url: width: 2000 -%}
+              {{- d_media_2 | video_tag: autoplay: false, loop: true, muted: true, playsinline: true, controls: show_controls, image_size: 'master', poster: poster_d2, class: 'hatch-community__media hatch-community__media--desktop' -}}
+            {%- else -%}
+              <video {% if show_controls %}controls{% endif %} loop muted playsinline class="hatch-community__media hatch-community__media--desktop" src="{{ u2 }}"></video>
+            {%- endif -%}
+          {%- else -%}
+            {{- d_media_2 | image_url: width: 2000 | image_tag: loading: 'lazy', class: 'hatch-community__media hatch-community__media--desktop' -}}
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- comment -%} Mobile Media 2 {%- endcomment -%}
+        {%- if m_media_2 != blank -%}
+          {%- if m_is_vid_2 -%}
+            {%- if m_media_2.media_type == 'video' or m_media_2.sources != blank -%}
+              {%- assign poster_m2 = m_media_2.preview_image | image_url: width: 2000 -%}
+              {{- m_media_2 | video_tag: autoplay: false, loop: true, muted: true, playsinline: true, controls: show_controls, image_size: 'master', poster: poster_m2, class: 'hatch-community__media hatch-community__media--mobile' -}}
+            {%- else -%}
+              <video {% if show_controls %}controls{% endif %} loop muted playsinline class="hatch-community__media hatch-community__media--mobile" src="{{ mu2 }}"></video>
+            {%- endif -%}
+          {%- else -%}
+            {{- m_media_2 | image_url: width: 2000 | image_tag: loading: 'lazy', class: 'hatch-community__media hatch-community__media--mobile' -}}
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if d_is_vid_2 or m_is_vid_2 -%}
+          <button type="button" class="hatch-community__play-btn js-hatch-play-btn {% unless d_is_vid_2 %}md-hidden{% endunless %} {% unless m_is_vid_2 %}md-max-hidden{% endunless %}" aria-label="Toggle Play/Pause">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="hatch-community__icon--play">
+<circle cx="23.8962" cy="23.8962" r="23.8962" fill="black"/>
+<path d="M35.2153 23.8959L18.2365 33.6986L18.2365 14.0931L35.2153 23.8959Z" fill="#D5D7E4"/>
+</svg>
+
+            <svg class="hatch-community__icon--pause" viewBox="0 0 24 24">
+              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+            </svg>
+          </button>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Item 3 {%- endcomment -%}
+    {%- if has_3 -%}
+      <div class="hatch-community__card js-hatch-video-card">
+        {%- comment -%} Desktop Media 3 {%- endcomment -%}
+        {%- if d_media_3 != blank -%}
+          {%- if d_is_vid_3 -%}
+            {%- if d_media_3.media_type == 'video' or d_media_3.sources != blank -%}
+              {%- assign poster_d3 = d_media_3.preview_image | image_url: width: 2000 -%}
+              {{- d_media_3 | video_tag: autoplay: false, loop: true, muted: true, playsinline: true, controls: show_controls, image_size: 'master', poster: poster_d3, class: 'hatch-community__media hatch-community__media--desktop' -}}
+            {%- else -%}
+              <video {% if show_controls %}controls{% endif %} loop muted playsinline class="hatch-community__media hatch-community__media--desktop" src="{{ u3 }}"></video>
+            {%- endif -%}
+          {%- else -%}
+            {{- d_media_3 | image_url: width: 2000 | image_tag: loading: 'lazy', class: 'hatch-community__media hatch-community__media--desktop' -}}
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- comment -%} Mobile Media 3 {%- endcomment -%}
+        {%- if m_media_3 != blank -%}
+          {%- if m_is_vid_3 -%}
+            {%- if m_media_3.media_type == 'video' or m_media_3.sources != blank -%}
+              {%- assign poster_m3 = m_media_3.preview_image | image_url: width: 2000 -%}
+              {{- m_media_3 | video_tag: autoplay: false, loop: true, muted: true, playsinline: true, controls: show_controls, image_size: 'master', poster: poster_m3, class: 'hatch-community__media hatch-community__media--mobile' -}}
+            {%- else -%}
+              <video {% if show_controls %}controls{% endif %} loop muted playsinline class="hatch-community__media hatch-community__media--mobile" src="{{ mu3 }}"></video>
+            {%- endif -%}
+          {%- else -%}
+            {{- m_media_3 | image_url: width: 2000 | image_tag: loading: 'lazy', class: 'hatch-community__media hatch-community__media--mobile' -}}
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if d_is_vid_3 or m_is_vid_3 -%}
+          <button type="button" class="hatch-community__play-btn js-hatch-play-btn {% unless d_is_vid_3 %}md-hidden{% endunless %} {% unless m_is_vid_3 %}md-max-hidden{% endunless %}" aria-label="Toggle Play/Pause">
+         <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="hatch-community__icon--play">
+<circle cx="23.8962" cy="23.8962" r="23.8962" fill="black"/>
+<path d="M35.2153 23.8959L18.2365 33.6986L18.2365 14.0931L35.2153 23.8959Z" fill="#D5D7E4"/>
+</svg>
+
+            <svg class="hatch-community__icon--pause" viewBox="0 0 24 24">
+              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+            </svg>
+          </button>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+<script>
+  (function() {
+    function initHatchCommunity() {
+      var sectionEl = document.getElementById('shopify-section-{{ section.id }}');
+      if (!sectionEl) return;
+
+      var cards = sectionEl.querySelectorAll('.js-hatch-video-card');
+      cards.forEach(function(card) {
+        var playBtn = card.querySelector('.js-hatch-play-btn');
+
+        function getActiveVideo() {
+          var isMobile = window.innerWidth < 999;
+          if (isMobile) {
+            var mobileVid = card.querySelector('video.hatch-community__media--mobile');
+            if (mobileVid) return mobileVid;
+          }
+          var desktopVid = card.querySelector('video.hatch-community__media--desktop');
+          if (desktopVid) return desktopVid;
+          return card.querySelector('video');
+        }
+
+        function togglePlay(e) {
+          if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          var videoEl = getActiveVideo();
+          if (!videoEl) return;
+
+          if (videoEl.paused) {
+            sectionEl.querySelectorAll('video').forEach(function(v) {
+              if (v !== videoEl) {
+                v.pause();
+                var pCard = v.closest('.js-hatch-video-card');
+                if (pCard) pCard.classList.remove('is-playing');
+              }
+            });
+
+            var p = videoEl.play();
+            if (p && typeof p.then === 'function') {
+              p.then(function() {
+                card.classList.add('is-playing');
+              }).catch(function(err) {
+                console.log('Play failed:', err);
+              });
+            } else {
+              card.classList.add('is-playing');
+            }
+          } else {
+            videoEl.pause();
+            card.classList.remove('is-playing');
+          }
+        }
+
+        if (playBtn) {
+          playBtn.addEventListener('click', togglePlay);
+        }
+
+        var videos = card.querySelectorAll('video');
+        videos.forEach(function(vid) {
+          vid.addEventListener('click', togglePlay);
+
+          vid.addEventListener('play', function() {
+            if (vid === getActiveVideo()) {
+              card.classList.add('is-playing');
+            }
+          });
+
+          vid.addEventListener('pause', function() {
+            if (vid === getActiveVideo()) {
+              card.classList.remove('is-playing');
+            }
+          });
+
+          vid.addEventListener('ended', function() {
+            card.classList.remove('is-playing');
+          });
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initHatchCommunity);
+    } else {
+      initHatchCommunity();
+    }
+
+    document.addEventListener('shopify:section:load', function(e) {
+      if (e.detail.sectionId === '{{ section.id }}') {
+        initHatchCommunity();
+      }
+    });
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Hatch Community",
+  "class": "shopify-section--hatch-community",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Hear from the Hatch Community"
+    },
+     {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Sub Heading",
+      "default": "Straight from her bathroom counter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_video_controls",
+      "label": "Show Video Controls",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "container_size",
+      "label": "t:global.sizes.section_width",
+      "options": [
+        {
+          "value": "lg",
+          "label": "t:global.sizes.large"
+        },
+        {
+          "value": "xl",
+          "label": "t:global.sizes.x_large"
+        },
+        {
+          "value": "full",
+          "label": "t:global.sizes.full_width"
+        }
+      ],
+      "default": "lg"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hatch Community"
+    }
+  ]
+}
+{% endschema %}

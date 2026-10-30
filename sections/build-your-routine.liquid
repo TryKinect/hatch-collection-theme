@@ -1,0 +1,592 @@
+{%- liquid
+  assign heading = product.metafields.custom.build_your_routine_heading.value | default: product.metafields.custom.build_your_routine_heading | default: section.settings.heading
+
+  # Step 1 Extraction
+  assign step_1_raw = product.metafields.custom.build_your_routine_step_1.value | default: product.metafields.custom.build_your_routine_step_1
+  assign step_1_img_raw = product.metafields.custom.build_your_routine_step_1_image.value | default: product.metafields.custom.build_your_routine_step_1_image
+
+  assign txt_1 = step_1_raw
+  if step_1_raw.text != blank
+    assign txt_1 = step_1_raw.text
+  elsif step_1_raw.description != blank
+    assign txt_1 = step_1_raw.description
+  elsif step_1_raw.title != blank
+    assign txt_1 = step_1_raw.title
+  endif
+  if txt_1 == blank
+    assign txt_1 = product.metafields.custom.build_your_routine_step_1_text.value | default: product.metafields.custom.build_your_routine_step_1_text
+  endif
+
+  assign img_1 = step_1_img_raw
+  if img_1 == blank
+    assign img_1 = step_1_raw.image | default: step_1_raw.media | default: step_1_raw.picture
+  endif
+  if img_1 == blank
+    if step_1_raw.file_url != blank or step_1_raw.src != blank or step_1_raw.media_type == 'image'
+      assign img_1 = step_1_raw
+    endif
+  endif
+
+  assign has_1 = false
+  if step_1_raw != blank or step_1_img_raw != blank or txt_1 != blank or img_1 != blank
+    assign has_1 = true
+  endif
+
+  # Step 2 Extraction
+  assign step_2_raw = product.metafields.custom.build_your_routine_step_2.value | default: product.metafields.custom.build_your_routine_step_2
+  assign step_2_img_raw = product.metafields.custom.build_your_routine_step_2_image.value | default: product.metafields.custom.build_your_routine_step_2_image
+
+  assign txt_2 = step_2_raw
+  if step_2_raw.text != blank
+    assign txt_2 = step_2_raw.text
+  elsif step_2_raw.description != blank
+    assign txt_2 = step_2_raw.description
+  elsif step_2_raw.title != blank
+    assign txt_2 = step_2_raw.title
+  endif
+  if txt_2 == blank
+    assign txt_2 = product.metafields.custom.build_your_routine_step_2_text.value | default: product.metafields.custom.build_your_routine_step_2_text
+  endif
+
+  assign img_2 = step_2_img_raw
+  if img_2 == blank
+    assign img_2 = step_2_raw.image | default: step_2_raw.media | default: step_2_raw.picture
+  endif
+  if img_2 == blank
+    if step_2_raw.file_url != blank or step_2_raw.src != blank or step_2_raw.media_type == 'image'
+      assign img_2 = step_2_raw
+    endif
+  endif
+
+  assign has_2 = false
+  if step_2_raw != blank or step_2_img_raw != blank or txt_2 != blank or img_2 != blank
+    assign has_2 = true
+  endif
+
+  # Step 3 Extraction
+  assign step_3_raw = product.metafields.custom.build_your_routine_step_3.value | default: product.metafields.custom.build_your_routine_step_3
+  assign step_3_img_raw = product.metafields.custom.build_your_routine_step_3_image.value | default: product.metafields.custom.build_your_routine_step_3_image
+
+  assign txt_3 = step_3_raw
+  if step_3_raw.text != blank
+    assign txt_3 = step_3_raw.text
+  elsif step_3_raw.description != blank
+    assign txt_3 = step_3_raw.description
+  elsif step_3_raw.title != blank
+    assign txt_3 = step_3_raw.title
+  endif
+  if txt_3 == blank
+    assign txt_3 = product.metafields.custom.build_your_routine_step_3_text.value | default: product.metafields.custom.build_your_routine_step_3_text
+  endif
+
+  assign img_3 = step_3_img_raw
+  if img_3 == blank
+    assign img_3 = step_3_raw.image | default: step_3_raw.media | default: step_3_raw.picture
+  endif
+  if img_3 == blank
+    if step_3_raw.file_url != blank or step_3_raw.src != blank or step_3_raw.media_type == 'image'
+      assign img_3 = step_3_raw
+    endif
+  endif
+
+  assign has_3 = false
+  if step_3_raw != blank or step_3_img_raw != blank or txt_3 != blank or img_3 != blank
+    assign has_3 = true
+  endif
+
+  # Step 4 Extraction
+  assign step_4_raw = product.metafields.custom.build_your_routine_step_4.value | default: product.metafields.custom.build_your_routine_step_4
+  assign step_4_img_raw = product.metafields.custom.build_your_routine_step_4_image.value | default: product.metafields.custom.build_your_routine_step_4_image
+
+  assign txt_4 = step_4_raw
+  if step_4_raw.text != blank
+    assign txt_4 = step_4_raw.text
+  elsif step_4_raw.description != blank
+    assign txt_4 = step_4_raw.description
+  elsif step_4_raw.title != blank
+    assign txt_4 = step_4_raw.title
+  endif
+  if txt_4 == blank
+    assign txt_4 = product.metafields.custom.build_your_routine_step_4_text.value | default: product.metafields.custom.build_your_routine_step_4_text
+  endif
+
+  assign img_4 = step_4_img_raw
+  if img_4 == blank
+    assign img_4 = step_4_raw.image | default: step_4_raw.media | default: step_4_raw.picture
+  endif
+  if img_4 == blank
+    if step_4_raw.file_url != blank or step_4_raw.src != blank or step_4_raw.media_type == 'image'
+      assign img_4 = step_4_raw
+    endif
+  endif
+
+  assign has_4 = false
+  if step_4_raw != blank or step_4_img_raw != blank or txt_4 != blank or img_4 != blank
+    assign has_4 = true
+  endif
+
+  # Step 5 Extraction
+  assign step_5_raw = product.metafields.custom.build_your_routine_step_5.value | default: product.metafields.custom.build_your_routine_step_5
+  assign step_5_img_raw = product.metafields.custom.build_your_routine_step_5_image.value | default: product.metafields.custom.build_your_routine_step_5_image
+
+  assign txt_5 = step_5_raw
+  if step_5_raw.text != blank
+    assign txt_5 = step_5_raw.text
+  elsif step_5_raw.description != blank
+    assign txt_5 = step_5_raw.description
+  elsif step_5_raw.title != blank
+    assign txt_5 = step_5_raw.title
+  endif
+  if txt_5 == blank
+    assign txt_5 = product.metafields.custom.build_your_routine_step_5_text.value | default: product.metafields.custom.build_your_routine_step_5_text
+  endif
+
+  assign img_5 = step_5_img_raw
+  if img_5 == blank
+    assign img_5 = step_5_raw.image | default: step_5_raw.media | default: step_5_raw.picture
+  endif
+  if img_5 == blank
+    if step_5_raw.file_url != blank or step_5_raw.src != blank or step_5_raw.media_type == 'image'
+      assign img_5 = step_5_raw
+    endif
+  endif
+
+  assign has_5 = false
+  if step_5_raw != blank or step_5_img_raw != blank or txt_5 != blank or img_5 != blank
+    assign has_5 = true
+  endif
+
+  assign total_steps = 0
+  if has_1
+    assign total_steps = total_steps | plus: 1
+  endif
+  if has_2
+    assign total_steps = total_steps | plus: 1
+  endif
+  if has_3
+    assign total_steps = total_steps | plus: 1
+  endif
+  if has_4
+    assign total_steps = total_steps | plus: 1
+  endif
+  if has_5
+    assign total_steps = total_steps | plus: 1
+  endif
+-%}
+
+{%- if has_1 or has_2 or has_3 or has_4 or has_5 -%}
+<style>
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.bg_color | default: 'transparent' }};
+  }
+
+  .build-routine__heading {
+  color: #000;
+font-family: Canela;
+font-size: 36px;
+font-style: normal;
+font-weight: 100;
+line-height: normal;
+margin-bottom: 25px;
+  }
+
+  @media screen and (min-width: 999px) {
+    .build-routine__heading {
+      font-size: 36px;
+      margin-bottom: 25px;
+    }
+  }
+
+  .build-routine__timeline-wrap {
+    position: relative;
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  /* Desktop timeline bar */
+   .build-routine__timeline-line{display: none !important;}
+  .build-routine__timeline-line,
+  .build-routine__grid > div:before {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #000000;
+    z-index: 1;
+    content: '';
+    width: calc(100% + 15.6px);
+
+  }.build-routine__grid {
+    display: flex !important;
+    flex-flow: row wrap;
+    justify-content: center;
+  }
+    .build-routine__grid > div:last-child:before{content: none !important;}
+.build-routine__grid>div {
+    width: calc(20% - 12.5px);
+}
+
+  .build-routine__grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    padding-bottom: 12px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    z-index: 2;
+  }
+
+  .build-routine__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .build-routine__step-card {
+    position: relative;
+    flex: 0 0 61.5vw;
+    max-width: 230px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+  }
+  .build-full{max-width: 100%;margin-inline: 112px !important; }
+  @media screen and (min-width: 999px) {
+    .build-routine__grid {
+      display: grid;
+      grid-template-columns: repeat({{ total_steps | default: 5 }}, minmax(0, 1fr));
+      gap: 15.6px;
+      overflow: visible;
+      padding-bottom: 0;
+    }
+
+    .build-routine__step-card {
+      flex: unset;
+      max-width: 100%;
+    }
+  }
+
+  .build-routine__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #000000;
+    margin-bottom: 21px;
+    position: relative;
+    z-index: 3;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .build-routine__step-card.is-inactive .build-routine__dot {
+    background-color: #cccccc;
+  }
+
+  .build-routine__step-title {
+  color:#000;
+font-family: Canela;
+font-size: 31.229px;
+font-style: normal;
+font-weight: 300;
+line-height: 43.721px; /* 140% */
+letter-spacing: 0.312px;
+margin-bottom: 3px;
+  }
+
+  .build-routine__step-desc {
+color: #000;
+font-family: CircularXX;
+font-size: 21.86px;
+font-style: normal;
+font-weight: 400;
+line-height: 114%; /* 24.921px */
+letter-spacing: 0.219px;
+margin-bottom: 19px;
+  }
+
+  .build-routine__step-desc a {
+    text-underline-offset: 3px;text-decoration: underline;
+  }
+
+  .build-routine__img-wrap {
+    width: 100%;
+    {% comment %} aspect-ratio: 4 / 5; {% endcomment %}
+    overflow: hidden;
+    background-color: #f4f4f4;
+    border-radius: 0;
+    margin-top: auto;
+  }
+
+  .build-routine__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  @media(max-width: 1000px){
+    #shopify-section-{{ section.id }} {
+     padding-top: 78px  !important;
+     padding-bottom: 78px !important;
+    }
+    .build-full{max-width: 100%;margin-inline: 0 !important;padding: 0 20px;}
+    .build-routine__grid{flex-wrap: nowrap !important;justify-content: flex-start !important;}
+  }
+</style>
+
+<div class="container {% unless section.settings.container_size == 'full' %}container--{{ section.settings.container_size }}{% endunless %}{% if section.settings.container_size == 'full' %} build-full{% endif %}">
+  {%- if heading != blank -%}
+    <h2 class="build-routine__heading">{{ heading }}</h2>
+  {%- endif -%}
+
+  <div class="build-routine__timeline-wrap">
+    <div class="build-routine__timeline-line"></div>
+
+    <div class="build-routine__grid js-build-routine-grid-{{ section.id }}">
+      {%- assign step_count = 0 -%}
+
+      {%- comment -%} Step 1 {%- endcomment -%}
+      {%- if has_1 -%}
+        {%- assign step_count = step_count | plus: 1 -%}
+        <div class="build-routine__step-card js-routine-card" data-step="{{ step_count }}">
+          <div class="build-routine__dot"></div>
+          <h3 class="build-routine__step-title">Step {{ step_count }}</h3>
+          {%- if txt_1 != blank -%}
+            <div class="build-routine__step-desc">
+              {{ txt_1 }}
+            </div>
+          {%- endif -%}
+          {%- if img_1 != blank -%}
+            <div class="build-routine__img-wrap">
+              {%- if img_1.cloudinary_src != blank -%}
+                <img src="{{ img_1.cloudinary_src }}" alt="{{ heading | default: 'Step image' | escape }}" class="build-routine__img" loading="lazy" width="1000">
+              {%- elsif img_1.src != blank -%}
+                <img src="{{ img_1.src | image_url: width: 1000 }}" alt="{{ heading | default: 'Step image' | escape }}" class="build-routine__img" loading="lazy" width="1000">
+              {%- else -%}
+                {{- img_1 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'build-routine__img' -}}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Step 2 {%- endcomment -%}
+      {%- if has_2 -%}
+        {%- assign step_count = step_count | plus: 1 -%}
+        <div class="build-routine__step-card js-routine-card" data-step="{{ step_count }}">
+          <div class="build-routine__dot"></div>
+          <h3 class="build-routine__step-title">Step {{ step_count }}</h3>
+          {%- if txt_2 != blank -%}
+            <div class="build-routine__step-desc">
+              {{ txt_2 }}
+            </div>
+          {%- endif -%}
+          {%- if img_2 != blank -%}
+            <div class="build-routine__img-wrap">
+              {%- if img_2.cloudinary_src != blank -%}
+                <img src="{{ img_2.cloudinary_src }}" alt="{{ heading | default: 'Step image' | escape }}" class="build-routine__img" loading="lazy" width="1000">
+              {%- elsif img_2.src != blank -%}
+                <img src="{{ img_2.src | image_url: width: 1000 }}" alt="{{ heading | default: 'Step image' | escape }}" class="build-routine__img" loading="lazy" width="1000">
+              {%- else -%}
+                {{- img_2 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'build-routine__img' -}}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Step 3 {%- endcomment -%}
+      {%- if has_3 -%}
+        {%- assign step_count = step_count | plus: 1 -%}
+        <div class="build-routine__step-card js-routine-card" data-step="{{ step_count }}">
+          <div class="build-routine__dot"></div>
+          <h3 class="build-routine__step-title">Step {{ step_count }}</h3>
+          {%- if txt_3 != blank -%}
+            <div class="build-routine__step-desc">
+              {{ txt_3 }}
+            </div>
+          {%- endif -%}
+          {%- if img_3 != blank -%}
+            <div class="build-routine__img-wrap">
+              {%- if img_3.cloudinary_src != blank -%}
+                <img src="{{ img_3.cloudinary_src }}" alt="{{ heading | default: 'Step image' | escape }}" class="build-routine__img" loading="lazy" width="1000">
+              {%- elsif img_3.src != blank -%}
+                <img src="{{ img_3.src | image_url: width: 1000 }}" alt="{{ heading | default: 'Step image' | escape }}" class="build-routine__img" loading="lazy" width="1000">
+              {%- else -%}
+                {{- img_3 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'build-routine__img' -}}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Step 4 {%- endcomment -%}
+      {%- if has_4 -%}
+        {%- assign step_count = step_count | plus: 1 -%}
+        <div class="build-routine__step-card js-routine-card" data-step="{{ step_count }}">
+          <div class="build-routine__dot"></div>
+          <h3 class="build-routine__step-title">Step {{ step_count }}</h3>
+          {%- if txt_4 != blank -%}
+            <div class="build-routine__step-desc">
+              {{ txt_4 }}
+            </div>
+          {%- endif -%}
+          {%- if img_4 != blank -%}
+            <div class="build-routine__img-wrap">
+              {%- if img_4.cloudinary_src != blank -%}
+                <img src="{{ img_4.cloudinary_src }}" alt="{{ heading | default: 'Step image' | escape }}" class="build-routine__img" loading="lazy" width="1000">
+              {%- elsif img_4.src != blank -%}
+                <img src="{{ img_4.src | image_url: width: 1000 }}" alt="{{ heading | default: 'Step image' | escape }}" class="build-routine__img" loading="lazy" width="1000">
+              {%- else -%}
+                {{- img_4 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'build-routine__img' -}}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Step 5 {%- endcomment -%}
+      {%- if has_5 -%}
+        {%- assign step_count = step_count | plus: 1 -%}
+        <div class="build-routine__step-card js-routine-card" data-step="{{ step_count }}">
+          <div class="build-routine__dot"></div>
+          <h3 class="build-routine__step-title">Step {{ step_count }}</h3>
+          {%- if txt_5 != blank -%}
+            <div class="build-routine__step-desc">
+              {{ txt_5 }}
+            </div>
+          {%- endif -%}
+          {%- if img_5 != blank -%}
+            <div class="build-routine__img-wrap">
+              {%- if img_5.cloudinary_src != blank -%}
+                <img src="{{ img_5.cloudinary_src }}" alt="{{ heading | default: 'Step image' | escape }}" class="build-routine__img" loading="lazy" width="1000">
+              {%- elsif img_5.src != blank -%}
+                <img src="{{ img_5.src | image_url: width: 1000 }}" alt="{{ heading | default: 'Step image' | escape }}" class="build-routine__img" loading="lazy" width="1000">
+              {%- else -%}
+                {{- img_5 | image_url: width: 1000 | image_tag: loading: 'lazy', class: 'build-routine__img' -}}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    function initBuildRoutine() {
+      var gridEl = document.querySelector('.js-build-routine-grid-{{ section.id }}');
+      if (!gridEl) return;
+
+      var cards = gridEl.querySelectorAll('.js-routine-card');
+
+      function updateActiveDotOnScroll() {
+        if (window.innerWidth >= 999) {
+          cards.forEach(function(card) {
+            card.classList.remove('is-inactive');
+          });
+          return;
+        }
+
+        var scrollLeft = gridEl.scrollLeft;
+        var gridWidth = gridEl.offsetWidth;
+
+        cards.forEach(function(card) {
+          var cardLeft = card.offsetLeft - gridEl.offsetLeft;
+          if (cardLeft <= scrollLeft + gridWidth * 0.4) {
+            card.classList.remove('is-inactive');
+          } else {
+            card.classList.add('is-inactive');
+          }
+        });
+      }
+
+      gridEl.addEventListener('scroll', updateActiveDotOnScroll, { passive: true });
+      window.addEventListener('resize', updateActiveDotOnScroll, { passive: true });
+      updateActiveDotOnScroll();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBuildRoutine);
+    } else {
+      initBuildRoutine();
+    }
+
+    document.addEventListener('shopify:section:load', function(e) {
+      if (e.detail.sectionId === '{{ section.id }}') {
+        initBuildRoutine();
+      }
+    });
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Build Your Routine",
+  "class": "shopify-section--build-your-routine",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Build your pregnancy routine"
+    },
+    {
+      "type": "select",
+      "id": "container_size",
+      "label": "t:global.sizes.section_width",
+      "options": [
+        {
+          "value": "lg",
+          "label": "t:global.sizes.large"
+        },
+        {
+          "value": "xl",
+          "label": "t:global.sizes.x_large"
+        },
+        {
+          "value": "full",
+          "label": "t:global.sizes.full_width"
+        }
+      ],
+      "default": "lg"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Build Your Routine"
+    }
+  ]
+}
+{% endschema %}

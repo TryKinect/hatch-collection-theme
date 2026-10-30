@@ -1,0 +1,567 @@
+
+{% doc %}
+  @prompt
+    A block of 5 modules on desktop, 2 on mobile, where you can choose if it's an image, a product, or a video, Change to 4 modules on desktop and make it so that it's always centered
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-module-grid-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .ai-module-grid__container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: {{ block.settings.gap }}px;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-module-grid__container-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_mobile }}, 1fr);
+    }
+  }
+
+  .ai-module-grid__item-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ block.settings.aspect_ratio }};
+    overflow: hidden;
+    border-radius: {{ block.settings.border_radius }}px;
+    background-color: {{ block.settings.placeholder_bg_color }};
+  }
+
+  .ai-module-grid__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-module-grid__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ block.settings.placeholder_bg_color }};
+  }
+
+  .ai-module-grid__placeholder-{{ ai_gen_id }} svg {
+    width: 50%;
+    height: 50%;
+    opacity: 0.3;
+  }
+
+  .ai-module-grid__video-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-module-grid__product-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: {{ block.settings.product_bg_color }};
+    padding: {{ block.settings.product_padding }}px;
+    text-decoration: none;
+    color: {{ block.settings.product_text_color }};
+  }
+
+  .ai-module-grid__product-image-{{ ai_gen_id }} {
+    width: 100%;
+    flex: 1;
+    object-fit: cover;
+    margin-bottom: 12px;
+  }
+
+  .ai-module-grid__product-info-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ai-module-grid__product-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.product_title_size }}px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .ai-module-grid__product-price-{{ ai_gen_id }} {
+    font-size: {{ block.settings.product_price_size }}px;
+    margin: 0;
+  }
+
+  .ai-module-grid__link-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ai-module-grid__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+{% endstyle %}
+
+<module-grid-{{ ai_gen_id }} class="ai-module-grid-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-module-grid__container-{{ ai_gen_id }}">
+    {% for i in (1..4) %}
+      {% liquid
+        assign type_key = 'module_' | append: i | append: '_type'
+        assign image_key = 'module_' | append: i | append: '_image'
+        assign product_key = 'module_' | append: i | append: '_product'
+        assign video_key = 'module_' | append: i | append: '_video'
+        assign link_key = 'module_' | append: i | append: '_link'
+
+        assign module_type = block.settings[type_key]
+        assign module_image = block.settings[image_key]
+        assign module_product = block.settings[product_key]
+        assign module_video = block.settings[video_key]
+        assign module_link = block.settings[link_key]
+      %}
+
+      <div class="ai-module-grid__item-{{ ai_gen_id }}">
+        {% if module_type == 'image' %}
+          {% if module_link != blank %}
+            <a href="{{ module_link }}" class="ai-module-grid__link-{{ ai_gen_id }}">
+          {% endif %}
+            {% if module_image %}
+              <img
+                src="{{ module_image | image_url: width: 800 }}"
+                alt="{{ module_image.alt | escape }}"
+                loading="lazy"
+                width="{{ module_image.width }}"
+                height="{{ module_image.height }}"
+                class="ai-module-grid__image-{{ ai_gen_id }}"
+              >
+            {% else %}
+              <div class="ai-module-grid__placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+                <div class="ai-module-grid__empty-state-{{ ai_gen_id }}">
+                  Add image
+                </div>
+              </div>
+            {% endif %}
+          {% if module_link != blank %}
+            </a>
+          {% endif %}
+
+        {% elsif module_type == 'product' %}
+          {% if module_product %}
+            <a href="{{ module_product.url }}" class="ai-module-grid__product-{{ ai_gen_id }}">
+              {% if module_product.featured_image %}
+                <img
+                  src="{{ module_product.featured_image | image_url: width: 600 }}"
+                  alt="{{ module_product.featured_image.alt | escape }}"
+                  loading="lazy"
+                  width="{{ module_product.featured_image.width }}"
+                  height="{{ module_product.featured_image.height }}"
+                  class="ai-module-grid__product-image-{{ ai_gen_id }}"
+                >
+              {% endif %}
+              <div class="ai-module-grid__product-info-{{ ai_gen_id }}">
+                <h3 class="ai-module-grid__product-title-{{ ai_gen_id }}">{{ module_product.title }}</h3>
+                <p class="ai-module-grid__product-price-{{ ai_gen_id }}">{{ module_product.price | money }}</p>
+              </div>
+            </a>
+          {% else %}
+            <div class="ai-module-grid__placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+              <div class="ai-module-grid__empty-state-{{ ai_gen_id }}">
+                Add product
+              </div>
+            </div>
+          {% endif %}
+
+        {% elsif module_type == 'video' %}
+          {% if module_link != blank %}
+            <a href="{{ module_link }}" class="ai-module-grid__link-{{ ai_gen_id }}">
+          {% endif %}
+            {% if module_video %}
+              <video
+                class="ai-module-grid__video-{{ ai_gen_id }}"
+                autoplay
+                muted
+                loop
+                playsinline
+              >
+                <source src="{{ module_video }}" type="video/mp4">
+              </video>
+            {% else %}
+              <div class="ai-module-grid__placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+                <div class="ai-module-grid__empty-state-{{ ai_gen_id }}">
+                  Add video URL
+                </div>
+              </div>
+            {% endif %}
+          {% if module_link != blank %}
+            </a>
+          {% endif %}
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</module-grid-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ModuleGrid{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.videos = this.querySelectorAll('.ai-module-grid__video-{{ ai_gen_id }}');
+        this.setupVideoPlayback();
+      }
+
+      setupVideoPlayback() {
+        this.videos.forEach((video) => {
+          video.addEventListener('loadedmetadata', () => {
+            video.play().catch(() => {});
+          });
+        });
+      }
+    }
+
+    customElements.define('module-grid-{{ ai_gen_id }}', ModuleGrid{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Module grid",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between modules",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Module aspect ratio",
+      "options": [
+        {
+          "value": "1/1",
+          "label": "Square"
+        },
+        {
+          "value": "4/3",
+          "label": "Landscape"
+        },
+        {
+          "value": "3/4",
+          "label": "Portrait"
+        },
+        {
+          "value": "16/9",
+          "label": "Wide"
+        }
+      ],
+      "default": "1/1"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Product style"
+    },
+    {
+      "type": "color",
+      "id": "product_bg_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "product_text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "product_padding",
+      "label": "Padding",
+      "min": 0,
+      "max": 24,
+      "step": 4,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "product_title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "product_price_size",
+      "label": "Price size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Placeholder"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_bg_color",
+      "label": "Background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "header",
+      "content": "Module 1"
+    },
+    {
+      "type": "select",
+      "id": "module_1_type",
+      "label": "Type",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "product",
+          "label": "Product"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "module_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "product",
+      "id": "module_1_product",
+      "label": "Product"
+    },
+    {
+      "type": "url",
+      "id": "module_1_video",
+      "label": "Video URL"
+    },
+    {
+      "type": "url",
+      "id": "module_1_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Module 2"
+    },
+    {
+      "type": "select",
+      "id": "module_2_type",
+      "label": "Type",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "product",
+          "label": "Product"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "module_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "product",
+      "id": "module_2_product",
+      "label": "Product"
+    },
+    {
+      "type": "url",
+      "id": "module_2_video",
+      "label": "Video URL"
+    },
+    {
+      "type": "url",
+      "id": "module_2_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Module 3"
+    },
+    {
+      "type": "select",
+      "id": "module_3_type",
+      "label": "Type",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "product",
+          "label": "Product"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "module_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "product",
+      "id": "module_3_product",
+      "label": "Product"
+    },
+    {
+      "type": "url",
+      "id": "module_3_video",
+      "label": "Video URL"
+    },
+    {
+      "type": "url",
+      "id": "module_3_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Module 4"
+    },
+    {
+      "type": "select",
+      "id": "module_4_type",
+      "label": "Type",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "product",
+          "label": "Product"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "module_4_image",
+      "label": "Image"
+    },
+    {
+      "type": "product",
+      "id": "module_4_product",
+      "label": "Product"
+    },
+    {
+      "type": "url",
+      "id": "module_4_video",
+      "label": "Video URL"
+    },
+    {
+      "type": "url",
+      "id": "module_4_link",
+      "label": "Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Module grid"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,470 @@
+{%- comment -%}
+----------------------------------------------------------------------------------------------------------------------
+PRODUCT CARD COMPONENT
+----------------------------------------------------------------------------------------------------------------------
+
+This component is used in collection and featured collection to render a single product as a card
+
+********************************************
+Supported variables
+********************************************
+
+* product: the product to render
+* stacked: define if the product is stacked or not on mobile
+* reveal: if set to true, the card will be revealed on scroll through animation
+* position: the position of the card in the list. If specified, the theme will eagerly load the first 3 cards images
+* show_badges: show or not the badges (default to true if nothing is set).
+* show_rating: show or not the rating. If nothing is set, the theme uses the default product card setting
+* show_vendor: show or not the vendor. If nothing is set, the theme uses the default product card setting
+* show_quick_buy: show or not the quick buy (which open a modal if the product contains more than 1 choice)
+* show_secondary_image: show or not the secondary media on hover. If nothing is set, the theme uses the default product card setting
+* show_swatches: show or not the swatches. The swatch type is inferred from setting, and will default to true if nothing is set.
+* hide_product_information: if set to true, all content (vendor, badge, title...) are not rendered, to create image-based grid
+* quick_buy_context: a unique text to dissociate quick buy if the same product is embedded multiple times
+{%- endcomment -%}
+
+{%- liquid
+  if hide_product_information
+    assign show_badges = false
+    assign show_rating = false
+    assign show_vendor = false
+    assign show_title = false
+    assign show_prices = false
+    assign show_swatches = false
+    assign show_quick_buy = show_quick_buy | default: settings.show_quick_buy, allow_false: true
+    assign show_secondary_image = show_secondary_image | default: settings.show_secondary_image, allow_false: true
+  else
+    assign show_badges = show_badges | default: true, allow_false: true
+    assign show_rating = show_rating | default: settings.show_product_rating, allow_false: true
+    assign show_vendor = show_vendor | default: settings.show_vendor, allow_false: true
+    assign show_quick_buy = show_quick_buy | default: settings.show_quick_buy, allow_false: true
+    assign show_title = true
+    assign show_prices = true
+    assign show_secondary_image = show_secondary_image | default: settings.show_secondary_image, allow_false: true
+    assign show_swatches = show_swatches | default: true, allow_false: true
+  endif
+-%}
+{% assign all_unavailable = true %}
+
+{% for variant in product.variants %}
+  {% if variant.available %}
+    {% assign all_unavailable = false %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+{% assign iscommingsoon = false %}
+{% if product.tags contains "plp-coming-soon" %}
+{% assign iscommingsoon = true %}
+{% endif %}
+
+
+<product-card class="product-card {% if all_unavailable %}card-sold-out{% endif %} {% if iscommingsoon %}iscommingsoon{% endif %}" {% if reveal %}reveal-on-scroll="true"{% endif %} handle="{{ product.handle | escape }}" data-product-id="{{ product.id }}" data-id="{{ product.id }}">
+  {%- comment -%}
+  --------------------------------------------------------------------------------------------------------------------
+  PRODUCT MEDIA
+  --------------------------------------------------------------------------------------------------------------------
+  {%- endcomment -%}
+
+  {%- if product.media.size > 0 -%}
+    <div class="product-card__figure" >
+      {%- if show_badges -%}
+        {%- render 'product-badges', product: product, vertical: true, context: 'card' -%}
+      {%- endif -%}
+     
+
+      <a href="{{ product.url }}" class="product-card__media" draggable="false" data-instant>
+        {%- capture sizes -%}
+          {%- if stacked -%}
+            (max-width: 699px) calc(100vw / {{ section.settings.products_per_row_mobile }}), (max-width: 999px) calc(100vw / {{ 3 | at_most: section.settings.products_per_row_desktop | default: 3 }} - 64px), calc((100vw - 96px) / {{ section.settings.products_per_row_desktop | default: 3 }} - (24px / {{ section.settings.products_per_row_desktop | default: 3 }} * {{ section.settings.products_per_row_desktop | default: 3 | minus: 1 }}))
+          {%- else -%}
+            (max-width: 699px) 74vw, (max-width: 999px) 38vw, calc((100vw - 96px) / {{ section.settings.products_per_row_desktop | default: 3 }} - (24px / {{ section.settings.products_per_row_desktop | default: 3 }} * {{ section.settings.products_per_row_desktop | default: 3 | minus: 1 }}))
+          {%- endif -%}
+        {%- endcapture -%}
+
+        {%- liquid
+          assign main_media_loading_strategy = nil
+          
+          if section.index > 3 or position > 3
+            assign main_media_loading_strategy = 'lazy'
+          endif
+        -%}
+
+      {%- assign main_media = product.featured_media -%}
+      {%- capture main_image_classes -%}
+        product-card__image product-card__image--primary 
+        {% unless settings.product_image_aspect_ratio contains 'portrait' %}
+            {% if settings.product_image_aspect_ratio contains 'crop' %}object-cover{% endif %} 
+            aspect-{{ settings.product_image_aspect_ratio | split: '_' | first }}
+        {% endunless %}
+      {%- endcapture -%}
+      
+      {%- case main_media.media_type -%}
+        {%- when 'image' -%}
+          {{- main_media | image_url: width: main_media.width | image_tag:
+  loading: main_media_loading_strategy,
+  sizes: sizes,
+  widths: '200,300,400,500,600,700,800,1000,1200,1400,1600,1800',
+  draggable: 'false',
+  class: main_image_classes,
+  width: main_media.width,
+  height: main_media.height
+-}}
+      
+        {%- when 'video', 'external_video' -%}
+          <video-media
+            class="{{ main_image_classes }}"
+            type="{{ main_media.media_type }}"
+            {% if main_media.host %}host="{{ main_media.host }}"{% endif %}
+            autoplay
+            muted
+            loop
+            playsinline
+            style="--aspect-ratio: {{ main_media.aspect_ratio }};"
+          >
+            {%- unless autoplay -%}
+              {{ main_media | image_url: width: main_media.preview_image.width | image_tag: loading: main_media_loading_strategy, fetchpriority: 'high', sizes: sizes }}
+            {%- endunless -%}
+      
+            {%- if main_media.media_type == 'video' -%}
+              {{ main_media | video_tag: controls: false, playsinline: true, muted: true, loop: true, preload: 'metadata', image_size: '400x' }}
+            {%- else -%}
+              <template>
+                {%- if main_media.host == 'youtube' -%}
+                  {{ main_media | external_video_url: enablejsapi: true, loop: true, mute: true, autoplay: true | external_video_tag }}
+                {%- elsif main_media.host == 'vimeo' -%}
+                  {{ main_media | external_video_url: autopause: true, loop: true, background: true, muted: true, autoplay: true | external_video_tag }}
+                {%- else -%}
+                  {{ main_media | external_video_tag: image_size: '2048x' }}
+                {%- endif -%}
+              </template>
+            {%- endif -%}
+          </video-media>
+      {%- endcase -%}
+
+        {%- assign secondary_media = null -%}
+
+        {%- if show_secondary_image and product.media.size > 1 -%}
+          {%- for media in product.media -%}
+            {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+              {%- assign secondary_media = media -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+        
+          {%- if secondary_media == null -%}
+            {%- assign secondary_media = product.media[product.featured_media.position] | default: product.media[1] -%}
+          {%- endif -%}
+        {%- endif -%}
+        
+        {%- if secondary_media != blank -%}
+          {%- case secondary_media.media_type -%}
+            {%- when 'image' -%}
+              {{ secondary_media | image_url: width: secondary_media.width | image_tag: class: 'product-card__image product-card__image--secondary', loading: 'lazy', fetchpriority: 'low', sizes: sizes, widths: '200,300,400,500,600,700,800,1000,1200,1400,1600,1800', draggable: 'false' }}
+        
+            {%- when 'video', 'external_video' -%}
+              <video-media
+                class="product-card__image product-card__image--secondary"
+                type="{{ secondary_media.media_type }}"
+                {% if secondary_media.host %}host="{{ secondary_media.host }}"{% endif %}
+                autoplay
+                muted
+                loop
+                playsinline
+                style="--aspect-ratio: {{ secondary_media.aspect_ratio }};"
+              >
+                {%- unless autoplay -%}
+                  {{ secondary_media | image_url: width: secondary_media.preview_image.width | image_tag: loading: 'lazy', fetchpriority: 'low', sizes: sizes }}
+                {%- endunless -%}
+        
+                {%- if secondary_media.media_type == 'video' -%}
+                  {{ secondary_media | video_tag: controls: false, playsinline: true, muted: true, loop: true, preload: 'metadata', image_size: '400x' }}
+                {%- else -%}
+                  <template>
+                    {%- if secondary_media.host == 'youtube' -%}
+                      {{ secondary_media | external_video_url: enablejsapi: true, loop: true, mute: true, autoplay: true | external_video_tag }}
+                    {%- elsif secondary_media.host == 'vimeo' -%}
+                      {{ secondary_media | external_video_url: autopause: true, loop: true, background: true, muted: true, autoplay: true | external_video_tag }}
+                    {%- else -%}
+                      {{ secondary_media | external_video_tag: image_size: '2048x' }}
+                    {%- endif -%}
+                  </template>
+                {%- endif -%}
+              </video-media>
+          {%- endcase -%}
+        {%- endif -%}
+
+      </a>
+      <div class="mobile-image-custom" style="display:none;">
+
+            <a href="{{ product.url }}">
+              {%- if product.media.size > 0 -%}
+                {%- assign deferred_slides = '' -%}
+                {%- for media in product.media -%}
+                  {%- capture media_html -%}
+                    <div class="product-gallery__media snap-center"
+                        role="group"
+                        data-index="{{ forloop.index }}"
+                        data-loaded="{% if forloop.first %}true{% else %}false{% endif %}"
+                        aria-label="{{ 'general.accessibility.item_nth_of_count' | t: index: media.position, count: product.media.size }}"
+                        {% if filtered_indexes contains media.position %}hidden{% endif %}>
+                      {%- if forloop.first -%}
+                        {%- assign preload = true -%}
+                        {%- render 'media',
+                          media: media,
+                          preload: preload,
+                          controls: true,
+                          playsinline: true,
+                          muted: enable_media_autoplay,
+                          loop: enable_video_looping,
+                          group: 'product',
+                          product: product,
+                          autoplay: false
+                        -%}
+                      {%- else -%}
+                        <img
+                          src="{{ media.preview_image | image_url: width: 400 }}"
+                          loading="lazy"
+                          class="lazy-placeholder"
+                        />
+
+                      {%- endif -%}
+                    </div>
+                  {%- endcapture -%}
+                  {%- if forloop.index <= 2 -%}
+                    {{ media_html }}
+                  {%- else -%}
+                    {%- assign deferred_slides = deferred_slides | append: media_html -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+            </a>
+
+            <script type="application/json" class="deferred-slider-data">
+              {
+                "product_id": {{ product.id }},
+                "total_slides": {{ product.media.size }},
+                "slides": {{ deferred_slides | json }}
+              }
+            </script>
+
+        </div>
+      {% comment %} {% assign hideuk-PDPTAG2 = false %}
+      {% if localization.country.iso_code == 'GB' %}
+        {% for tag in product.tags %}
+          {% if tag == 'hideuk-PDPTAG2' %}
+            {% assign hideuk-PDPTAG2 = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endif %} {% endcomment %}
+      {% assign show_taglist = false %}
+      {% for tag in product.tags %}
+        {% if tag contains "PDPTAG2-" %}
+          {% assign show_taglist = true %}
+        {% endif %}
+      {% endfor %}
+      {% if show_taglist and request.page_type == "collection" or request.page_type == "search" or request.page_type == "product" and show_taglist %}
+        <div class="media-taglist-main tag2" >
+        {% for tag in product.tags %}
+          {% if tag contains "PDPTAG2-" %}
+            {% assign tag_parts = tag | split: "-" %}
+            {% assign hascode = tag_parts[1] %}
+            {% assign tag_label = tag_parts[2] %}
+            <div class="tg2-tag-custom" style="--tag2color:#{{ hascode }};">
+              {{ tag_label }}
+            </div>
+            {% break %}
+          {% endif %}
+        {% endfor %}
+        </div>
+      {% endif %}
+      {% assign tagline = product.metafields.custom.tagline %}
+
+
+      {% if tagline %}
+        <div class="tag-container">
+          <h6 class="cProductCard-tagline product-item__tagline">
+            {{ tagline }}
+          </h6>
+        </div>
+      {% endif %}
+
+
+      {%- if show_quick_buy and product.available -%}
+        {%- if product.variants.size == 1 and product.selling_plan_groups.size == 0 -%}
+          <product-form>
+            {%- form 'product', product -%}
+              <input type="hidden" name="on_success" value="force_open_drawer">
+              <input type="hidden" name="quantity" value="1">
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <button type="submit" class="product-card__quick-add-button">
+                <span class="sr-only">{{ 'product.general.add_to_cart_button' | t }}</span>
+                {%- render 'icon' with 'plus' -%}
+              </button>
+            {%- endform -%}
+          </product-form>
+        {%- else -%}
+          {%- capture quick_buy_id -%}product-quick-buy-{{ section.id }}-{{ block.id }}-{{ quick_buy_context }}-{{ product.id }}{%- endcapture -%}
+
+          <button type="button" aria-controls="{{ quick_buy_id }}" class="product-card__quick-add-button">
+            <span class="sr-only">{{ 'product.general.choose_options' | t }}</span>
+            {%- render 'icon' with 'plus' -%}
+          </button>
+
+
+        {%- endif -%}
+      {%- endif -%}
+      {% if iscommingsoon %}<div class="text-soldout coming-soon">{% if all_unavailable%}Coming Soon{% endif %}</div>{% endif %}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%}
+  --------------------------------------------------------------------------------------------------------------------
+  PRODUCT INFO
+  --------------------------------------------------------------------------------------------------------------------
+  {%- endcomment -%}
+
+  <div class="product-card__info empty:hidden">
+    {%- assign text_class = '' -%}
+
+    {%- if settings.product_card_text_font == 'heading' -%}
+      {%- assign text_class = 'h6' -%}
+    {%- endif -%}
+
+    {%- if show_title or show_prices or show_vendor and product.vendor != blank -%}
+      <div class="v-stack gap-2 title-price">
+        {%- if show_vendor and product.vendor != blank -%}
+          {%- capture vendor_class -%}smallcaps {% if settings.product_card_text_font == 'heading' %}heading{% endif %}{% endcapture %}
+          {%- render 'vendor' with product.vendor, class: vendor_class -%}
+        {%- endif -%}
+
+        {%- if show_title or show_prices -%}
+          <div class="v-stack">
+            {%- if show_title -%}
+              <a href="{{ product.url }}" class="product-title {% if text_class != blank %}{{ text_class }}{% endif %} {% if settings.product_title_max_lines > 0 %}line-clamp{% endif %}" {% if settings.product_title_max_lines > 0 %}style="--line-clamp-count: {{ settings.product_title_max_lines }}"{% endif %} data-instant>
+                {{- product.title -}}
+              </a>
+            {%- endif -%}
+            {% if product.metafields.accentuate.beauty_product_subtitle %}
+            <div class="product-item__subtitle subtitle">{{ product.metafields.accentuate.beauty_product_subtitle }}</div>
+            {% endif %}
+            {% comment %} {% if product.metafields.custom.short_description and request.page_type == "collection" or request.page_type == "product" %}
+              <div class="tg3-taglist-main tag3">
+                  <div class="tg3-tag-custom" style="--tag3color:#000000;">
+                    {{ product.metafields.custom.short_description }}
+                  </div>
+              </div>
+            {% endif %} {% endcomment %}
+            {%- if show_prices -%}
+              {%- render 'price-list', product: product, context: 'card' -%}
+            {%- endif -%}
+            {% comment %} {% assign hideuk-PDPTAG4 = false %}
+            {% if localization.country.iso_code == 'GB' %}
+              {% for tag in product.tags %}
+                {% if tag == 'hideuk-PDPTAG4' %}
+                  {% assign hideuk-PDPTAG4 = true %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+            {% endif %} {% endcomment %}
+            {% assign show_taglist = false %}
+            {% for tag in product.tags %}
+              {% if tag contains "PDPTAG4-" %}
+                {% assign show_taglist = true %}
+              {% endif %}
+            {% endfor %}
+            {% if show_taglist and request.page_type == "collection" or request.page_type == "search" or request.page_type == "product" and show_taglist %}
+              <div class="tg4-taglist-main tag4">
+              {% for tag in product.tags %}
+                {% if tag contains "PDPTAG4-" %}
+                  {% assign tag_parts = tag | split: "-" %}
+                  {% assign hascode = tag_parts[1] %}
+                  {% assign tag_label = tag_parts[2] %}
+                  <div class="tg4-tag-custom" style="--tag4color:#{{ hascode }};">
+                    {{ tag_label }}
+                  </div>
+                {% break %}
+                {% endif %}
+              {% endfor %}
+              </div>
+            {% endif %}
+            {%- if show_swatches and settings.product_color_display != 'hide' -%}
+                {%- liquid
+                  assign matched_product_option = nil
+                  assign color_label_list = 'general.label.color' | t | replace: ', ', ',' | downcase | split: ','
+                  
+                  # First, we try to find an option named explicitly "color" in the store's language
+                  for color_label in color_label_list
+                    if product.options_by_name[color_label] != blank
+                      assign matched_product_option = product.options_by_name[color_label]
+                      break
+                    endif
+                  endfor
+          
+                  # If we didn't find an option named "color", we try to find an option that has swatches, as this is probably
+                  # the color option that the merchant want to use for swatches
+                  if matched_product_option == blank
+                    for product_option in product.options_with_values
+                      assign values_with_swatch = product_option.values | where: 'swatch'
+          
+                      if values_with_swatch.size > 0
+                        assign matched_product_option = product_option
+                        break
+                      endif
+                    endfor
+                  endif
+                -%}
+          
+                {%- if matched_product_option != blank -%}
+                  {%- case settings.product_color_display -%}
+                    {%- when 'count' -%}
+                      <p class="smallcaps text-subdued">{{- 'product.general.available_colors_count' | t: count: matched_product_option.values.size -}}</p>
+          
+                    {%- when 'swatch' -%}
+                   {% assign values_count = matched_product_option.values | size %}
+                    {% if values_count < 2 %}
+                      {% assign hideclass = true %}
+                    {% else %}
+                       {% assign hideclass = false %}
+                    {% endif %}
+
+                    <div class="color-swatches-plp {% if hideclass %}hide{% endif %}">
+                      <p class="smallcaps text-subdued custom-more {% if hideclass %}hide{% endif %}"  onclick="showColorSwatches(this)"><a href="{{ product.url }}">More Colors +</a></p>                      
+                      <fieldset class="h-stack wrap justify-center gap-1 color-swatch {{ request.page_type }}" {% if request.page_type == "collection" or request.page_type == "search" %} style="display:none"{% endif %}>
+                        <legend class="sr-only">{{ matched_product_option.name }}</legend>
+                        
+                        {%- capture param_name -%}swatch-{{ quick_buy_context }}-{{ section.id }}-{{ block.id }}-{{ product.id }}-{{ matched_product_option.position }}{%- endcapture -%}
+          
+                        {%- liquid
+                          for option_value in matched_product_option.values
+                            render 'option-value', type: 'swatch', option_value: option_value, param_name: param_name, option_position: matched_product_option.position, output_variant_media: true, size: 'sm'
+                          endfor
+                        -%}
+                      </fieldset>
+                    </div>
+                    {% unless iscommingsoon %}<div class="text-soldout">{% if all_unavailable%}Sold Out{% endif %}</div>{% endunless %}
+                  {%- endcase -%}
+                {%- endif -%}
+              {%- endif -%}
+            {% assign badge_bg = product.metafields.accentuate.badge_background_color | default: '#2d2d2d' %}
+            {% assign badge_text_color = product.metafields.accentuate.badge_text_color | default: '#ffffff' %}
+            {% assign tag_text = product.metafields.custom.product_subtitle_in_collection %}
+            
+            {% if tag_text %}
+              <span class="product-item__subtitle promo">
+                {{ tag_text }}
+              </span>
+            {% endif %}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if show_rating -%}
+      {%- render 'product-rating', product: product, show_empty: settings.show_product_rating_if_empty, display_mode: settings.product_rating_mode -%}
+    {%- endif -%}
+  </div>
+</product-card>
+          <quick-buy-modal handle="{{ product.handle }}?variant={{ product.selected_or_first_available_variant.id }}" class="quick-buy-modal modal" id="{{ quick_buy_id }}">
+          </quick-buy-modal>
+

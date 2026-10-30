@@ -1,0 +1,129 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------------------------------------------------
+  MEGA MENU COMPONENT
+  ----------------------------------------------------------------------------------------------------------------------
+
+  Render the mega-menu. The mega-menu is a kind of menu optimized for showing a large number of items into several
+  columns.
+
+  ********************************************
+  Supported variables
+  ********************************************
+
+  * link: the link from which we need to render the mega-menu. The link must always be a second level link, but it can
+          also be empty (no links), which is the case if the merchant only want to show images, for instance.
+  * block: the block containing all the information about the menu to render
+{%- endcomment -%}
+
+<div
+  class="mega-menu {% if block.settings.images_position == 'left' %}mega-menu--reverse{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  {%- if link.levels > 0 -%}
+    {% assign stack_option = block.settings.stack_submenus %}
+
+    <ul class="mega-menu__linklist unstyled-list {% if stack_option != 'none' %}stack-{{ stack_option | remove: 'stack_' | replace: '_', '--' }}{% endif %} {{ forloop.length }}">
+      {%- for sub_link in link.links -%}
+        {% assign menu_index = forloop.index %}
+
+        {% case menu_index %}
+          {% when 1 -%}
+            {%- assign menu_class = 'menu-a' %}
+          {% when 2 -%}
+            {%- assign menu_class = 'menu-b' %}
+          {% when 3 -%}
+            {%- assign menu_class = 'menu-c' %}
+          {% when 4 -%}
+            {%- assign menu_class = 'menu-d' %}
+          {% when 5 -%}
+            {%- assign menu_class = 'menu-e' %}
+          {% else -%}
+            {%- assign menu_class = '' %}
+        {% endcase %}
+
+        {% assign stack_first = 0 %}
+        {% assign stack_second = 0 %}
+
+        {% case stack_option %}
+          {% when 'stack_a_b' %}
+            {% assign stack_first = 1 %}
+            {% assign stack_second = 2 %}
+          {% when 'stack_b_c' %}
+            {% assign stack_first = 2 %}
+            {% assign stack_second = 3 %}
+          {% when 'stack_c_d' %}
+            {% assign stack_first = 3 %}
+            {% assign stack_second = 4 %}
+          {% when 'stack_d_e' %}
+            {% assign stack_first = 4 %}
+            {% assign stack_second = 5 %}
+        {% endcase %}
+
+        {% if stack_option != 'none' and menu_index == stack_first %}
+          <li class="menu-stack-wrapper v-stack justify-items-start {{ stack_option }}">
+            {% assign stack_offset = stack_first | minus: 1 %}
+
+            {% for stacked_link in link.links offset: stack_offset limit: 2 %}
+              {% assign stacked_index = forloop.index | plus: stack_first | minus: 1 %}
+
+              {% case stacked_index %}
+                {% when 1 -%}
+                  {%- assign stacked_class = 'menu-a' %}
+                {% when 2 -%}
+                  {%- assign stacked_class = 'menu-b' %}
+                {% when 3 -%}
+                  {%- assign stacked_class = 'menu-c' %}
+                {% when 4 -%}
+                  {%- assign stacked_class = 'menu-d' %}
+                {% when 5 -%}
+                  {%- assign stacked_class = 'menu-e' %}
+              {% endcase %}
+
+              <div class="v-stack justify-items-start gap-5 {{ stacked_class }}">
+                <a href="{{ stacked_link.url }}" class="h6">{{ stacked_link.title }}</a>
+
+                {% if stacked_link.links.size > 0 %}
+                  <ul class="v-stack gap-2.5 unstyled-list">
+                    {% for child_link in stacked_link.links %}
+                      <li>
+                        <a href="{{ child_link.url }}">{{ child_link.title }}</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </li>
+
+        {% elsif stack_option != 'none' and menu_index == stack_second %}
+          {% comment %} Rendered inside the stack wrapper above {% endcomment %}
+
+        {% else %}
+          <li class="v-stack justify-items-start gap-5 {{ menu_class }}">
+            <a href="{{ sub_link.url }}" class="h6">{{ sub_link.title }}</a>
+
+            {% if sub_link.links.size > 0 %}
+              <ul class="v-stack gap-2.5 unstyled-list">
+                {% for child_link in sub_link.links %}
+                  <li>
+                    <a href="{{ child_link.url }}">{{ child_link.title }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+        {% endif %}
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  {%- capture mega_menu_content -%}
+    {%- render 'mega-menu-images', context: 'menu', block: block -%}
+  {%- endcapture -%}
+
+  {%- if mega_menu_content != blank -%}
+    <div class="mega-menu__promo">
+      {{- mega_menu_content -}}
+    </div>
+  {%- endif -%}
+</div>

@@ -1,0 +1,378 @@
+<script>
+/**
+ * AMPLIFY — bundle size-guide trigger (THEME build)
+ * For each bundle card: fetch the product's real PDP, lift its native size-guide modal into the
+ * page, and add a "Size Guide" trigger. Modals/triggers are cached and re-applied on Amplify
+ * widget events (color/variant changes) — no MutationObserver. No theme/backend changes.
+ *
+ * THEME build: JSON/instance read lazily + start gated on DOMContentLoaded + listens to widget
+ * lifecycle events, so it's safe to load from the theme regardless of script order. Add with defer.
+ */
+(function () {
+  'use strict';
+
+  const CARD = '.picky-product-card';
+  const TRIGGER = 'amplify-size-guide-new';
+  // change + lifecycle events — cover both swatch switches and the initial widget render.
+  const AMPLIFY_EVENTS = ['amplifyWidget:updateData', 'amplifyAppBlock:emitEvent', 'amplifyWidget:loaded', 'amplifyWidget:renderBundle'];
+
+  // The product JSON is a server-rendered app snippet, so it's in the DOM by DOMContentLoaded.
+  // Parse it lazily (handles theme-loaded scripts that may run before it).
+  const idToHandle = {};
+  let productsLoaded = false;
+  function ensureProducts() {
+    if (productsLoaded) return;
+    const el = document.querySelector('script[data-amplify="bundle-products-json-data"]');
+    if (!el) return;
+    try {
+      (JSON.parse(el.textContent).products || []).forEach((p) => { idToHandle[String(p.id)] = p.handle; });
+      productsLoaded = true;
+    } catch (e) {}
+  }
+
+  const fetched = {};   // handle -> Promise<modalId|null>
+  const modalId = {};   // handle -> resolved modalId|null (for instant re-apply)
+  let themeScriptDone = false;
+
+  // Copy + run the theme's inline size-guide script once (sets up the in/cm switcher); it's
+  // idempotent so re-running on later injections is safe.
+  function runThemeScript(doc) {
+    if (window.initSizeGuideModalLogic) { try { window.initSizeGuideModalLogic(); } catch (e) {} return; }
+    if (themeScriptDone) return;
+    // Find the THEME's size-guide script. CRITICAL: exclude OUR own script — it's also inline on the
+    // page and mentions these names, so without this filter .find matches us (an IIFE that defines
+    // nothing globally) and initSizeGuideModalLogic never appears. TRIGGER ('amplify-size-guide-new')
+    // is unique to our script and absent from the theme's.
+    const src = [...doc.querySelectorAll('script:not([src])')]
+      .filter((s) => s.textContent.indexOf(TRIGGER) === -1)
+      .find((s) => s.textContent.includes('initSwitcherSections'));
+    if (!src) return;
+    themeScriptDone = true;
+    const s = document.createElement('script');
+    s.textContent = src.textContent;
+    document.body.appendChild(s);
+    if (window.initSizeGuideModalLogic) try { window.initSizeGuideModalLogic(); } catch (e) {}
+  }
+
+  function resolve(handle) {
+    if (fetched[handle]) return fetched[handle];
+    fetched[handle] = fetch(`/products/${handle}`, { credentials: 'same-origin' })
+      .then((r) => (r.ok ? r.text() : ''))
+      .then((html) => {
+        const modal = new DOMParser().parseFromString(html, 'text/html').querySelector('.modal-alt[id^="modal-size-"]');
+        if (!modal) return null;
+        if (!document.getElementById(modal.id)) {
+          document.body.appendChild(document.importNode(modal, true));
+          runThemeScript(modal.ownerDocument);
+        }
+        return modal.id;
+      })
+      .catch(() => null);
+    return fetched[handle];
+  }
+
+  // The theme wires tab-switching only inside its own trigger click, which we bypass — so do it
+  // here for nav links and in-tab jump buttons (e.g. "Read our style guide").
+  function wireTabs(modal) {
+    if (modal._amplifyTabs) return;
+    modal._amplifyTabs = true;
+    modal.addEventListener('click', (e) => {
+      const link = e.target.closest('.tabs__nav a, a.js-tab-trigger');
+      if (!link) return;
+      const href = link.getAttribute('href') || '';
+      if (href[0] !== '#') return;
+      const target = modal.querySelector(href);
+      if (!target || !target.classList.contains('tab')) return;
+      e.preventDefault();
+
+      const navLink = link.closest('.tabs__nav li') ? link : modal.querySelector(`.tabs__nav a[href="${href}"]`);
+      const navLi = navLink && navLink.closest('li');
+      if (navLi) {
+        modal.querySelectorAll('.tabs__nav li').forEach((li) => li.classList.remove('is-current'));
+        navLi.classList.add('is-current');
+      }
+      (modal.querySelector('.tabs__body-inner') || modal).querySelectorAll('.tab').forEach((t) => t.classList.remove('is-current'));
+      target.classList.add('is-current');
+    });
+  }
+
+  function openModal(id) {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modal.classList.add('is-open');
+    wireTabs(modal);
+    // Run the theme's size-guide init now that the modal is in the DOM — this wraps the table with
+    // the in/cm switcher. runThemeScript's own call can miss (the injected script runs async), so
+    // we call it here where the function is defined. Idempotent: initSwitcherSections guards on
+    // .table-container.
+    if (window.initSizeGuideModalLogic) try { window.initSizeGuideModalLogic(); } catch (e) {}
+  }
+
+  function buildTrigger(id) {
+    const a = document.createElement('a');
+    a.className = TRIGGER;
+    a.href = '#' + id;
+    a.textContent = 'Size Guide';
+    a.style.textDecoration = 'underline';
+    a.style.cursor = 'pointer';
+    a.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); openModal(id); });
+    return a;
+  }
+
+  // Make the card's trigger match its current product (a color swatch swaps in a different product).
+  function applyTrigger(card, handle, id) {
+    const existing = card.querySelector('.' + TRIGGER);
+    if (existing && existing.getAttribute('data-handle') === handle) return;
+    if (existing) existing.remove();
+    if (!id || !document.getElementById(id)) return;
+    const trigger = buildTrigger(id);
+    trigger.setAttribute('data-handle', handle);
+    const anchor = card.querySelector('.picky-option__wrapper') || card.querySelector('.picky-product-card__title');
+    if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(trigger, anchor.nextSibling);
+    else card.appendChild(trigger);
+  }
+
+  function processCard(card) {
+    const handle = idToHandle[String(card.getAttribute('data-product-id'))];
+    const existing = card.querySelector('.' + TRIGGER);
+    if (!handle) { if (existing) existing.remove(); return; }
+
+    if (handle in modalId) { applyTrigger(card, handle, modalId[handle]); return; }
+    if (existing && existing.getAttribute('data-handle') !== handle) existing.remove();
+    resolve(handle).then((id) => { modalId[handle] = id; scheduleScan(); });
+  }
+
+  // Resolve every bundle product up front so swatch switches are instant (runs once products load).
+  let prefetched = false;
+  function prefetch() {
+    ensureProducts();
+    if (prefetched || !productsLoaded) return;
+    prefetched = true;
+    Array.from(new Set(Object.values(idToHandle))).forEach((h) => resolve(h).then((id) => { modalId[h] = id; scheduleScan(); }));
+  }
+
+  function scan() {
+    prefetch();
+    document.querySelectorAll(CARD).forEach(processCard);
+  }
+
+  let queued = false;
+  function scheduleScan() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; scan(); });
+  }
+
+  // Close on the theme's X / backdrop.
+  document.addEventListener('click', (e) => {
+    const closer = e.target.closest('.modal-alt.is-open .js-modal-close');
+    if (closer) closer.closest('.modal-alt').classList.remove('is-open');
+  });
+
+  AMPLIFY_EVENTS.forEach((t) => window.addEventListener(t, scheduleScan));
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scan);
+  else scan();
+})();</script>
+<script>
+/**
+ * AMPLIFY — bundle Yotpo reviews (THEME build)
+ * Renders the native Yotpo star rating in each bundle card. One instance per product is pre-rendered
+ * in a hidden holder and MOVED into the card (no rebuild → no blink); the slot reserves height (no
+ * jump). Clicking opens that product's PDP at the reviews anchor in a new tab.
+ *
+ * THEME build: JSON/instance read lazily + start gated on DOMContentLoaded + listens to widget
+ * lifecycle events, so it's safe to load from the theme regardless of script order. Add with defer.
+ */
+(function () {
+  'use strict';
+  if (window.__AMPLIFY_BUNDLE_YOTPO__) return;
+  window.__AMPLIFY_BUNDLE_YOTPO__ = true;
+
+  const CARD = '.picky-product-card[data-product-id]';
+  const SLOT = 'amplify-bundle-yotpo-slot';
+  const WRAP = 'amplify-bundle-title-row';
+  const INST = 'amplify-bundle-yotpo';
+  const ANCHOR = 'yotpo-app';
+
+  // Lay title + rating side by side, and hide the star span (keep just the "N Reviews" text).
+  (function injectCSS() {
+    const css =
+      '.' + INST + ' .yotpo-widget-clear .yotpo-sr-bottom-line-button > :first-child' +
+      '{display:none !important;}' +
+      '.' + INST + ' .yotpo-sr-bottom-line-text{padding-top:0 !important;}' +
+      '.' + INST + ' .yotpo-reviews-star-ratings-widget{margin-bottom:0 !important;}';
+    const st = document.createElement('style');
+    st.textContent = css;
+    document.head.appendChild(st);
+  })();
+  // change + lifecycle events — cover swatch switches and the initial widget render.
+  const AMPLIFY_EVENTS = ['amplifyWidget:updateData', 'amplifyAppBlock:emitEvent', 'amplifyWidget:loaded', 'amplifyWidget:renderBundle'];
+
+  // Star-rating widget instance id. Auto-detect a real one on the page; else Hatch's PDP id.
+  let INSTANCE_ID = '1038759';
+  let instanceResolved = false;
+  function detectInstance() {
+    if (instanceResolved) return;
+    const found = document.querySelector('.yotpo-widget-instance:not(.' + INST + ')[data-yotpo-instance-id]');
+    if (found) INSTANCE_ID = found.getAttribute('data-yotpo-instance-id');
+    instanceResolved = true;
+  }
+
+  // Product JSON is a server-rendered app snippet → present by DOMContentLoaded. Parse it lazily.
+  const idToHandle = {};
+  let productsLoaded = false;
+  function ensureProducts() {
+    if (productsLoaded) return;
+    const el = document.querySelector('script[data-amplify="bundle-products-json-data"]');
+    if (!el) return;
+    try {
+      (JSON.parse(el.textContent).products || []).forEach((p) => { idToHandle[String(p.id)] = p.handle; });
+      productsLoaded = true;
+    } catch (e) {}
+  }
+
+  let waiting = false;
+  function refresh() {
+    const c = window.yotpoWidgetsContainer;
+    if (c && c.initWidgets) { c.initWidgets(); return; }
+    if (waiting) return;
+    waiting = true;
+    setTimeout(() => { waiting = false; refresh(); }, 300);
+  }
+
+  let _holder;
+  function holder() {
+    if (_holder) return _holder;
+    _holder = document.createElement('div');
+    _holder.style.cssText = 'position:fixed;left:0;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;z-index:-1';
+    document.body.appendChild(_holder);
+    return _holder;
+  }
+
+  const nodes = {};
+  function node(id) {
+    if (nodes[id]) return nodes[id];
+    const n = document.createElement('div');
+    n.className = 'yotpo-widget-instance ' + INST;
+    n.setAttribute('data-yotpo-instance-id', INSTANCE_ID);
+    n.setAttribute('data-yotpo-product-id', id);
+    n.setAttribute('data-yotpo-section-id', 'product');
+    holder().appendChild(n);
+    nodes[id] = n;
+    refresh();
+    return n;
+  }
+
+  function slot(card) {
+    let s = card.querySelector('.' + SLOT);
+    if (s) return s;
+    s = document.createElement('div');
+    s.className = SLOT;
+    s.style.padding = '2px 0 2px 4px';
+    const t = card.querySelector('.picky-product-card__title');
+    if (t && t.parentNode) {
+      // Wrap the title in a flex row (once), then add the slot as its sibling.
+      let wrap = t.closest('.' + WRAP);
+      if (!wrap) {
+        wrap = document.createElement('div');
+        wrap.className = WRAP;
+        wrap.style.cssText = 'display:flex;flex-direction:row;align-items:center;justify-content:space-between;';
+        t.parentNode.insertBefore(wrap, t);
+        wrap.appendChild(t);
+      }
+      wrap.appendChild(s);
+    } else {
+      card.appendChild(s);
+    }
+    return s;
+  }
+
+  // Pre-render every bundle product in the holder once products are known.
+  let prefetched = false;
+  function prefetch() {
+    ensureProducts();
+    if (prefetched || !productsLoaded) return;
+    prefetched = true;
+    detectInstance();
+    Object.keys(idToHandle).forEach(node);
+  }
+
+  function scan() {
+    prefetch();
+    document.querySelectorAll(CARD).forEach((card) => {
+      const s = slot(card);
+      const n = node(card.getAttribute('data-product-id'));
+      if (s.firstChild === n) return;
+      if (s.firstChild) holder().appendChild(s.firstChild);
+      s.appendChild(n);
+    });
+  }
+
+  let raf;
+  function schedule() { cancelAnimationFrame(raf); raf = requestAnimationFrame(scan); }
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.yotpo-sr-bottom-line-button')) return; // only the rating button
+    const inst = e.target.closest('.' + INST);
+    ensureProducts();
+    const handle = inst && idToHandle[inst.getAttribute('data-yotpo-product-id')];
+    if (!handle) return;
+    e.preventDefault();
+    e.stopPropagation();
+    window.open('/products/' + handle + '#' + ANCHOR, '_blank', 'noopener');
+  }, true);
+
+  AMPLIFY_EVENTS.forEach((t) => window.addEventListener(t, schedule));
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scan);
+  else scan();
+})();</script>
+<script>
+(() => {
+  'use strict';
+
+  const PREFIX = 'pickystory-custom-option-label';
+  const AMPLIFY_EVENTS = ['amplifyWidget:updateData', 'amplifyAppBlock:emitEvent', 'amplifyWidget:loaded', 'amplifyWidget:renderBundle'];
+
+  const st = document.createElement('style');
+  st.textContent = `
+    .picky-option__label:not(:has(.${PREFIX}__value)) { font-family: CircularXX; font-weight: 400; font-size: 14px; }
+    .${PREFIX}__name { font-family: CircularXX; font-weight: 400; }
+    .${PREFIX}__separator { font-family: CircularXX; font-weight: 400; margin-right: 2px; }
+    .${PREFIX}__value { font-weight: 400; text-transform: capitalize; }
+  `;
+  document.head.append(st);
+
+  const part = (name, text) => {
+    const span = document.createElement('span');
+    span.className = `${PREFIX}__${name}`;
+    span.textContent = text;
+    return span;
+  };
+
+  const split = (label) => {
+    const value = label.closest('.picky-option')?.querySelector('[data-option-value-is-selected="true"]')?.dataset.optionValueName;
+    if (!value) return;
+    const text = label.textContent;
+    const tail = `: ${value}`;
+    if (!text.endsWith(tail)) return;
+    label.textContent = '';
+    label.append(part('name', text.slice(0, -tail.length)), part('separator', ':'), part('value', value));
+  };
+
+  let queued = false;
+  const scan = () => {
+    queued = false;
+    for (const label of document.querySelectorAll('.picky-option__label')) split(label);
+  };
+
+  const schedule = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(scan);
+  };
+
+  for (const type of AMPLIFY_EVENTS) window.addEventListener(type, schedule);
+  schedule();
+})();</script>

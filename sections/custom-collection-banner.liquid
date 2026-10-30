@@ -1,0 +1,26 @@
+{% render 'header-module' %}
+{% schema %}
+{
+  "name": "Custom Collection Banner",
+  "settings": [
+    {
+    "type": "checkbox",
+    "id": "show_breadcrumb",
+    "label": "t:sections.collection_banner.show_breadcrumb",
+    "default": true
+    },
+    {
+    "type": "checkbox",
+    "id": "allow_transparent_header",
+    "label": "t:global.section.allow_transparent_header",
+    "info": "t:global.section.allow_transparent_header_info",
+    "default": true
+  }
+  ],
+  "presets": [
+    {
+      "name": "Custom Collection Banner"
+    }
+  ]
+}
+{% endschema %}

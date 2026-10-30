@@ -1,0 +1,420 @@
+{% doc %}
+  @prompt
+    Generate a two column section. Allow customization of the height of the section. First column is image. second column is video. Text is overlaid and centered on the entire module. Allow customization of font, color, and size of text. Optional button below text.
+    
+    On mobile, only the video appears, with the text overlaid., For the video input, allow a CDN link, Customization for maximum width for text. Customization for font style. Customization for leading.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-media-split-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: {{ block.settings.section_height }}px;
+    overflow: hidden;
+    display: block;
+  }
+
+  .ai-media-split__container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ai-media-split__column-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .ai-media-split__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-media-split__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-media-split__image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    max-height: 300px;
+  }
+
+  .ai-media-split__video-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-media-split__video-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-media-split__video-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    max-height: 300px;
+  }
+
+  .ai-media-split__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .ai-media-split__text-{{ ai_gen_id }} {
+    font-family: {{ block.settings.text_font }};
+    font-size: {{ block.settings.text_size }}px;
+    font-weight: {{ block.settings.text_weight }};
+    font-style: {{ block.settings.text_style }};
+    color: {{ block.settings.text_color }};
+    text-align: center;
+    line-height: {{ block.settings.text_line_height }};
+    margin: 0;
+    max-width: {{ block.settings.text_max_width }}px;
+  }
+
+  .ai-media-split__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 12px 32px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: 14px;
+    font-family: 'Circular Std', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    pointer-events: auto;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-media-split__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-media-split__container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+
+    .ai-media-split__column-{{ ai_gen_id }}--image {
+      display: none;
+    }
+
+    .ai-media-split__text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size | times: 0.7 }}px;
+      max-width: 100%;
+    }
+
+    .ai-media-split__overlay-{{ ai_gen_id }} {
+      padding: 20px;
+    }
+  }
+{% endstyle %}
+
+<media-split-{{ ai_gen_id }}
+  class="ai-media-split-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-media-split__container-{{ ai_gen_id }}">
+    <div class="ai-media-split__column-{{ ai_gen_id }} ai-media-split__column-{{ ai_gen_id }}--image">
+      {% if block.settings.image %}
+        <img
+          src="{{ block.settings.image | image_url: width: 2000 }}"
+          alt="{{ block.settings.image.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.image.width }}"
+          height="{{ block.settings.image.height }}"
+          class="ai-media-split__image-{{ ai_gen_id }}"
+        >
+      {% else %}
+        <div class="ai-media-split__image-placeholder-{{ ai_gen_id }}">
+          {{ 'image' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-media-split__column-{{ ai_gen_id }} ai-media-split__column-{{ ai_gen_id }}--video">
+      {% if block.settings.video_url != blank %}
+        <video
+          class="ai-media-split__video-{{ ai_gen_id }}"
+          autoplay
+          muted
+          loop
+          playsinline
+        >
+          <source src="{{ block.settings.video_url }}" type="video/mp4">
+        </video>
+      {% else %}
+        <div class="ai-media-split__video-placeholder-{{ ai_gen_id }}">
+          {{ 'image' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-media-split__overlay-{{ ai_gen_id }}">
+      {% if block.settings.overlay_text != blank %}
+        <div class="ai-media-split__text-{{ ai_gen_id }}">
+          {{ block.settings.overlay_text }}
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_button and block.settings.button_text != blank %}
+        <a
+          href="{{ block.settings.button_link }}"
+          class="ai-media-split__button-{{ ai_gen_id }}"
+        >
+          {{ block.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</media-split-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class MediaSplit{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        const video = this.querySelector('.ai-media-split__video-{{ ai_gen_id }}');
+        if (video) {
+          video.play().catch(() => {});
+        }
+      }
+    }
+
+    customElements.define('media-split-{{ ai_gen_id }}', MediaSplit{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Media split with overlay",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "Section height",
+      "min": 300,
+      "max": 900,
+      "step": 50,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "header",
+      "content": "Overlay text"
+    },
+    {
+      "type": "richtext",
+      "id": "overlay_text",
+      "label": "Text",
+      "default": "<p>Your overlay text here</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_font",
+      "label": "Font family",
+      "options": [
+        {
+          "value": "Canela, serif",
+          "label": "Canela"
+        },
+        {
+          "value": "'Circular Std', sans-serif",
+          "label": "Circular Std"
+        },
+        {
+          "value": "CircularXX, sans-serif",
+          "label": "CircularXX"
+        }
+      ],
+      "default": "Canela, serif"
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "select",
+      "id": "text_style",
+      "label": "Font style",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "italic",
+          "label": "Italic"
+        }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "text_line_height",
+      "label": "Line height",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.4
+    },
+    {
+      "type": "range",
+      "id": "text_max_width",
+      "label": "Maximum width",
+      "min": 300,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "default": 800
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Button hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Media split with overlay"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,178 @@
+{%- liquid
+  assign _section = section.settings
+  assign _blocks = section.blocks
+  assign categories_items = ''
+-%}
+
+{%- for block in _blocks -%}
+  {%- liquid
+    assign _block = block.settings
+
+    if _block.image == blank or _block.link == blank or _block.title == blank
+      continue
+    endif
+  -%}
+
+  {%- capture categories_items -%}
+    {{ categories_items }}
+    <div class="section-categories__item">
+      <div class="category">
+        <div class="category__inner">
+          <div class="category__image {% if _block.mobile_image != blank and _block.image != _block.mobile_image %}mobile-hidden{% endif %}">
+            <img src="{{- _block.image | image_url: width: 684 -}}" alt="{{- _block.image.alt -}}" loading="lazy">
+          </div><!-- /.category__image -->
+
+          {%- if _block.mobile_image != blank and _block.image != _block.mobile_image -%}
+            <div class="category__image category__image--mobile">
+              <img src="{{- _block.mobile_image | image_url: width: 522 -}}" alt="{{- _block.mobile_image.alt -}}" loading="lazy">
+            </div><!-- /.category__image -->
+          {%- endif -%}
+
+          <div class="category__content">
+            <h5 class="category__title {% if _block.mobile_title != blank %}mobile-hidden{% endif %}">{{- _block.title -}}</h5>
+
+            {%- if _block.mobile_title != blank -%}
+              <h5 class="category__title category__title--mobile">{{- _block.mobile_title -}}</h5>
+            {%- endif -%}
+          </div><!-- /.category__content -->
+
+          <a href="{{- _block.link -}}" class="category__link {% if _block.mobile_link != blank %}mobile-hidden{% endif %}"></a>
+
+          {%- if _block.mobile_link != blank -%}
+            <a href="{{- _block.mobile_link -}}" class="category__link category__link--mobile"></a>
+          {%- endif %}
+        </div>
+      </div><!-- /.category -->
+    </div><!-- /.section-categories__item -->
+  {%- endcapture -%}
+{%- endfor -%}
+
+{%- if categories_items != '' -%}
+  <section class="section-categories {% if _section.enable_fade_background == true %}js-background-animation{% endif %}" {% if _section.enable_fade_background == true %}data-background-color="{{- _section.background -}}"{% else %}style="background-color: {{ _section.background -}};"{% endif %} data-background-top-offset="1.2">
+    <div class="section-categories__inner">
+      <header class="section-categories__header">
+        {%- if _section.image_title != blank -%}
+          {%- assign image_title_size = _section.image_title.width | divided_by: 2 -%}
+
+          <div class="section-categories__title {% if _section.mobile_image_title != blank %}mobile-hidden{% endif %}" style="width: {{ image_title_size -}}px;">
+            <img src="{{- _section.image_title | image_url: width: _section.image_title.width -}}" alt="{{- _section.image_title.alt -}}" loading="lazy">
+          </div><!-- /.section-categories__title -->
+        {%- endif -%}
+
+        {%- if _section.mobile_image_title != blank -%}
+          {%- assign mobile_image_title_size = _section.mobile_image_title.width | divided_by: 2 | plus: 2 -%}
+
+          <div class="section-categories__title section-categories__title--mobile" style="width: {{ mobile_image_title_size -}}px;">
+            <img src="{{- _section.mobile_image_title | image_url: width: _section.mobile_image_title.width -}}" alt="{{- _section.mobile_image_title.alt -}}" loading="lazy">
+          </div><!-- /.section-categories__title -->
+        {%- endif -%}
+
+        {%- if _section.subtitle != blank -%}
+          <h4 class="section-categories__subtitle {% if _section.mobile_subtitle != blank %}mobile-hidden{% endif %}">{{- _section.subtitle -}}</h4><!-- /.section-categories__subtitle -->
+        {%- endif -%}
+
+        {%- if _section.mobile_subtitle != blank -%}
+          <h4 class="section-categories__subtitle">{{- _section.mobile_subtitle -}}</h4><!-- /.section-categories__subtitle -->
+        {%- endif -%}
+      </header><!-- /.section-categories__header -->
+
+      <div class="section-categories__body">
+        <div class="section-categories__items">
+          {{- categories_items -}}
+        </div><!-- /.section-categories__items -->
+      </div><!-- /.section-categories__body -->
+    </div><!-- /.section-categories__inner -->
+  </section><!-- /.section-categories -->
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Categories",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image_title",
+      "label": "Image Title"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background Color",
+      "default": "#FFEEEE"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_fade_background",
+      "label": "Enable Background Fade Animation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image_title",
+      "label": "Mobile Image Title"
+    },
+    {
+      "type": "text",
+      "id": "mobile_subtitle",
+      "label": "Mobile Subtitle"
+    }
+  ],
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Mobile"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "mobile_title",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "mobile_link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Categories"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,218 @@
+<script>
+      (function () {
+        var restrictedRegions = ['AT','AX','BE','BG','CA-QC','CY','CZ','DE','DK','EE','ES','FI','FR','GB','GF','GP','GR','HR','HU','IE','IS','IT','LI','LT','LU','LV','MC','MF','MQ','MT','NL','NO','PL','PT','RE','RO','SE','SI','SK','SM','US-CA','YT'];
+        var gpcRegions = ['US-CA','US-CO','US-CT','US-DE','US-FL','US-IA','US-MD','US-MN','US-MT','US-NE','US-NH','US-NJ','US-OR','US-TX','US-UT','US-VA'];
+
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = window.gtag || function () {
+          window.dataLayer.push(arguments);
+        };
+
+        gtag('consent', 'default', {
+          ad_storage: 'granted',
+          analytics_storage: 'granted',
+          ad_user_data: 'granted',
+          ad_personalization: 'granted',
+          personalization_storage: 'granted',
+          functionality_storage: 'granted',
+          security_storage: 'granted'
+        });
+
+        gtag('consent', 'default', {
+          ad_storage: 'denied',
+          analytics_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied',
+          personalization_storage: 'denied',
+          functionality_storage: 'granted',
+          security_storage: 'granted',
+          wait_for_update: 500,
+          region: restrictedRegions
+        });
+
+        if (navigator.globalPrivacyControl === true) {
+          gtag('consent', 'default', {
+            ad_storage: 'denied',
+            analytics_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            personalization_storage: 'denied',
+            functionality_storage: 'granted',
+            security_storage: 'granted',
+            region: gpcRegions
+          });
+        }
+
+        function loadHotjar() {
+          if (window.__hjLoaded) return;
+          window.__hjLoaded = true;
+
+          (function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:2966363,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+          })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+        }
+
+        function loadB2CAnalytics() {
+          if (window.__b2cAnalyticsLoaded) return;
+          window.__b2cAnalyticsLoaded = true;
+
+          var s = document.createElement('script');
+          s.async = true;
+          s.setAttribute('data-cfasync', 'false');
+          s.src = 'https://eu.b2c.com/api/init-25641bv5bpe6edfsrald.js';
+          document.head.appendChild(s);
+        }
+
+        function loadGoogleAds() {
+          if (window.__gadsLoaded) return;
+          window.__gadsLoaded = true;
+
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=AW-871076975';
+          document.head.appendChild(s);
+
+          gtag('js', new Date());
+          gtag('config', 'AW-871076975');
+        }
+
+        function loadBingAds() {
+          if (window.__bingLoaded) return;
+          window.__bingLoaded = true;
+
+          (function(w,d,t,r,u){
+            var f,n,i;
+            w[u]=w[u]||[];
+            f=function(){
+              var o={ti:"5683136"};
+              o.q=w[u];
+              w[u]=new UET(o);
+              w[u].push("pageLoad");
+            };
+            n=d.createElement(t);
+            n.src=r;
+            n.async=1;
+            n.onload=n.onreadystatechange=function(){
+              var s=this.readyState;
+              if (!s || s==="loaded" || s==="complete") {
+                f();
+                n.onload=n.onreadystatechange=null;
+              }
+            };
+            i=d.getElementsByTagName(t)[0];
+            i.parentNode.insertBefore(n,i);
+          })(window,document,"script","https://bat.bing.com/bat.js","uetq");
+        }
+
+        function loadBasisRevenuePixel() {
+          if (window.__basisRevenueLoaded) return;
+          window.__basisRevenueLoaded = true;
+
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://cdn01.basis.net/assets/up.js?um=1';
+          s.onload = function () {
+            if (window.cntrUpTag && typeof window.cntrUpTag.track === 'function') {
+              window.cntrUpTag.track('cntrData', '8126630b56602e3a');
+            }
+          };
+          document.head.appendChild(s);
+        }
+
+        function loadFacebookPixel() {
+          if (window.__fbPixelLoaded) return;
+          window.__fbPixelLoaded = true;
+
+          !function(f,b,e,v,n,t,s){
+            if(f.fbq)return;
+            n=f.fbq=function(){n.callMethod ?
+              n.callMethod.apply(n,arguments) : n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;
+            n.push=n;
+            n.loaded=!0;
+            n.version='2.0';
+            n.queue=[];
+            t=b.createElement(e);
+            t.async=!0;
+            t.src=v;
+            s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s);
+          }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+          fbq('init', '228835597538248');
+          fbq('track', 'PageView');
+        }
+
+
+        function pushShopifyConsentToDataLayer(cp) {
+          window.dataLayer.push({
+            event: 'shopify_consent_update',
+            analyticsAllowed: cp.analyticsProcessingAllowed(),
+            marketingAllowed: cp.marketingAllowed(),
+            preferencesAllowed: cp.preferencesProcessingAllowed(),
+            saleOfDataAllowed: typeof cp.saleOfDataAllowed === 'function' ? cp.saleOfDataAllowed() : false
+          });
+        }
+
+        function updateGoogleConsentMode(cp) {
+          var analyticsAllowed = cp.analyticsProcessingAllowed();
+          var marketingAllowed = cp.marketingAllowed();
+          var preferencesAllowed = cp.preferencesProcessingAllowed();
+
+          gtag('consent', 'update', {
+            analytics_storage: analyticsAllowed ? 'granted' : 'denied',
+            functionality_storage: preferencesAllowed ? 'granted' : 'denied',
+            personalization_storage: preferencesAllowed ? 'granted' : 'denied',
+            ad_storage: marketingAllowed ? 'granted' : 'denied',
+            ad_user_data: marketingAllowed ? 'granted' : 'denied',
+            ad_personalization: marketingAllowed ? 'granted' : 'denied',
+            security_storage: 'granted'
+          });
+        }
+
+        function evaluateConsent() {
+          var cp = window.Shopify && window.Shopify.customerPrivacy;
+          if (!cp) return;
+
+          pushShopifyConsentToDataLayer(cp);
+          updateGoogleConsentMode(cp);
+
+          if (cp.analyticsProcessingAllowed()) {
+            loadHotjar();
+            loadB2CAnalytics();
+          }
+
+          if (cp.marketingAllowed()) {
+            loadGoogleAds();
+            loadBingAds();
+            loadBasisRevenuePixel();
+            loadFacebookPixel();
+          }
+        }
+
+        function waitForShopifyCustomerPrivacy() {
+          var tries = 0;
+          var interval = setInterval(function () {
+            tries++;
+
+            if (window.Shopify && window.Shopify.customerPrivacy) {
+              clearInterval(interval);
+              evaluateConsent();
+            }
+
+            if (tries >= 40) clearInterval(interval);
+          }, 250);
+        }
+
+        evaluateConsent();
+        waitForShopifyCustomerPrivacy();
+
+        document.addEventListener('shopifyCustomerPrivacyApiLoaded', evaluateConsent);
+        document.addEventListener('visitorConsentCollected', evaluateConsent);
+      })();
+    </script>

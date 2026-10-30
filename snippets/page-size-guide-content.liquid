@@ -1,0 +1,565 @@
+{%- assign _metafields = page.metafields.custom -%}
+{%- assign _collection_all_products = collections['all-products'] -%}
+
+{%- assign card_image = _metafields.size_guide_card_image.value -%}
+{%- assign slider_images = _metafields.slider_product_image.value -%}
+
+{% comment %}START Card{% endcomment %}
+{% assign card = '' %}
+
+{%- if card_image != blank and card_image[0] != blank -%}
+  {%- capture card -%}
+    <div class="card-size-guide">
+      <div class="card-size-guide__image">
+        <img 
+          src="{{ card_image[0].src }}" 
+          alt="{{ card_image[0].alt }}" 
+          loading="lazy">
+      </div><!-- /.card-size-guide__image -->
+
+      {%- if _metafields.size_guide_card_title.value[0] != blank -%}
+        <h4>{{ _metafields.size_guide_card_title.value[0] }}</h4>
+      {%- endif -%}
+
+      {%- if _metafields.size_guide_card_button_label.value[0] != blank and _metafields.size_guide_card_button_url != blank -%}
+        <a href="{% if _metafields.size_guide_card_button_url contains 'tab:' %}{{ _metafields.size_guide_card_button_url | replace: 'tab:', '' | strip | handle | prepend: '&&tab-id:' | append: '&&' }}{% else %}{{ _metafields.size_guide_card_button_url }}{% endif %}" class="btn {% if _metafields.size_guide_card_button_url contains 'tab:' %}js-tab-trigger{% endif %}">
+          {{ _metafields.size_guide_card_button_label.value[0] }}
+        </a>
+      {%- endif -%}
+    </div>
+  {%- endcapture -%}
+{%- endif -%}
+{% comment %}END Card{% endcomment %}
+
+
+{% comment %}START Slider Products{% endcomment %}
+{%- assign slider = '' -%}
+{%- assign slider_items = '' -%}
+
+{%- assign slider_products = _metafields.slider_product.value -%}
+{%- assign slider_images = _metafields.slider_product_image.value -%}
+{%- assign slider_subtitles = _metafields.slider_product_subtitle.value -%}
+
+{%- if slider_products.size > 0 -%}
+  {%- for slider_item_product in slider_products -%}
+    {%- assign index = forloop.index0 -%}
+
+    {%- capture slider_item -%}
+      {%- assign _product = '' -%}
+
+      {%- paginate _collection_all_products.products by 9999 -%}
+        {%- for collection_product in collections['all-products'].products -%}
+          {%- if collection_product.handle == slider_item_product -%}
+            {%- assign _product = collection_product -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endpaginate -%}
+
+      {%- if slider_images != blank and slider_images[index] != blank and slider_images[index][0] != blank -%}
+        <div class="slider__slide">
+          <div class="product-item-alt">
+            <div class="product-item-alt__inner">
+              <header class="product-item-alt__header">
+                {%- if slider_subtitles[index] != blank -%}
+                  <h5>{{ slider_subtitles[index] }}</h5>
+                {%- endif -%}
+
+                <h3>{{ _product.title }}</h3>
+              </header>
+
+              <div class="product-item-alt__body">
+                <div class="product-item-alt__image">
+                  <a href="{{ _product.url }}">
+                    <img 
+                      src="{{ slider_images[index][0].src }}" 
+                      alt="{{ slider_images[index][0].alt }}" 
+                      loading="lazy">
+
+                    {%- if _metafields.enable_product_tag.value[index] == 'true' -%}
+                      <div class="product-item-alt__badge">
+                        <img src="{{ 'new-new-new-tag.svg' | asset_url }}" loading="lazy">
+                      </div>
+                    {%- endif -%}
+                  </a>
+                </div>
+
+                <div class="product-item-alt__content">
+                  <ul class="product-item-alt__features">
+                    <li {% if _metafields.slider_item_checkbox_1.value[index] == 'true' %}class="is-checked"{% endif %}>{{ 'size_guide.slider_product_items.features.feature_1' | t }}</li>
+                    <li {% if _metafields.slider_item_checkbox_2.value[index] == 'true' %}class="is-checked"{% endif %}>{{ 'size_guide.slider_product_items.features.feature_2' | t }}</li>
+                    <li {% if _metafields.slider_item_checkbox_3.value[index] == 'true' %}class="is-checked"{% endif %}>{{ 'size_guide.slider_product_items.features.feature_3' | t }}</li>
+                    <li {% if _metafields.slider_item_checkbox_4.value[index] == 'true' %}class="is-checked"{% endif %}>{{ 'size_guide.slider_product_items.features.feature_4' | t }}</li>
+                    <li {% if _metafields.slider_item_checkbox_5.value[index] == 'true' %}class="is-checked"{% endif %}>{{ 'size_guide.slider_product_items.features.feature_5' | t }}</li>
+                    <li {% if _metafields.slider_item_checkbox_6.value[index] == 'true' %}class="is-checked"{% endif %}>{{ 'size_guide.slider_product_items.features.feature_6' | t }}</li>
+                    <li {% if _metafields.slider_item_checkbox_7.value[index] == 'true' %}class="is-checked"{% endif %}>{{ 'size_guide.slider_product_items.features.feature_7' | t }}</li>
+                    <li {% if _metafields.slider_item_checkbox_8.value[index] == 'true' %}class="is-checked"{% endif %}>{{ 'size_guide.slider_product_items.features.feature_8' | t }}</li>
+                    <li {% if _metafields.slider_item_checkbox_9.value[index] == 'true' %}class="is-checked"{% endif %}>{{ 'size_guide.slider_product_items.features.feature_9' | t }}</li>
+                  </ul>
+
+                  <div class="product-item-alt__actions">
+                    <a href="{{ _product.url }}" class="btn">Shop now</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endcapture -%}
+
+    {%- assign slider_items = slider_items | append: slider_item -%}
+  {%- endfor -%}
+
+  {%- capture slider -%}
+    <div class="slider-style-guide js-slider-style-guide">
+      <div class="slider__clip">
+        <div class="slider__slides js-slides">
+          {{ slider_items }}
+        </div>
+      </div>
+    </div>
+  {%- endcapture -%}
+{%- endif -%}
+{% comment %}END Slider Products{% endcomment %}
+ {%- liquid
+  assign index = 1
+  assign tabs_ids = ''
+  assign tabs_body = ''
+  assign tabs_nav = ''
+  assign additional_content = ''
+  assign _idx = 1
+  assign _tag = 'h6'
+  assign start_tag = _tag | prepend: '<' | append: '>'
+  assign end_tag = _tag | prepend: '</' | append: '>'
+  assign parts = page.content | split: start_tag
+-%}
+
+{%- for part in parts -%}
+  {%- if part contains end_tag -%}
+    {%- liquid
+      assign tab_title = part | split: end_tag | first
+      assign tab_title_handle = tab_title | replace: '@@', '' | handle
+      assign tab_content = part | split: end_tag | last
+
+      if modal == true
+        assign tab_id = 'size-guide-tab-' | append: page.id | append: '-' | append: forloop.index | append: '-' | append: _idx
+      else
+        assign tab_id = tab_title_handle
+      endif
+
+      assign tabs_ids_separate = ''
+
+      if tabs_ids != ''
+        assign tabs_ids_separate = ','
+      endif
+
+      assign tabs_ids = tabs_ids | append: tabs_ids_separate | append: tab_title_handle | append: '@@' | append: tab_id
+    -%}
+
+    {%- capture tab_nav_item_markup -%}
+      <li {% if index == 1 %} class="is-current" {% endif %}>
+        <a href="#{{- tab_id -}}">{{ tab_title | replace: '@@', '' }}</a>
+      </li>
+    {%- endcapture -%}
+
+    {%- capture tab_body_markup -%}
+      <div class="tab {% if index == 1 %} is-current {% endif %} {% if tab_title contains '@@' %}has-table-toggle-button{% endif %} {% if card != '' and tab_content contains '[[card]]' %}tab--has-card {% if _metafields.size_guide_card_button_label == blank or _metafields.size_guide_card_button_url == blank %}tab--small-card{% endif %}{% endif %}" id="{{- tab_id -}}" data-card-size="{{card.size}}">
+        {{ tab_content }}
+      </div>
+    {%- endcapture -%}
+
+    {%- liquid
+      assign tabs_body = tabs_body | append: tab_body_markup
+      assign tabs_nav = tabs_nav | append: tab_nav_item_markup
+      assign index = index | plus: 1
+    -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if page.content -%}
+  <div class="size-guide js-size-guide {% unless modal == true %}js-size-guide-inline{% endunless %}" data-page-id="{%- if modal == true -%}modal-{%- endif -%}{{- page.id -}}">
+    <div class="tabs tabs--size-guide js-tabs">
+      <div class="tabs__head">
+        <h2 class="tabs__title">Size Guide</h2>
+       {% unless localization.country.iso_code == 'GB' %}
+        <nav class="tabs__nav">
+          <ul>
+            {{ tabs_nav }}
+          </ul>
+        </nav>
+      {% endunless %}
+      </div>
+      {% if localization.country.iso_code == 'GB' %}
+        <nav class="tabs__nav">
+          <ul>
+            {{ tabs_nav }}
+          </ul>
+        </nav>
+      {% endif %}
+
+      <div class="tabs__body">
+        <div class="tabs__body-inner">
+          {% if tabs_body contains "[[card]]" and card contains "&&tab-id:" %}
+            {% capture card %}
+              {% assign target_tab = card | split: '&&tab-id:' | last | split: '&&' | first %}
+              {% assign target_tab_separate = target_tab | handle | append: '@@' %}
+              {% assign tabs_ids_array = tabs_ids | split: ',' %}
+              {% assign target_tab_id = '' %}
+              {% assign card_btn_href = '&&tab-id:' | append: target_tab | append: '&&' %}
+
+              {% for tab_id in tabs_ids_array %}
+                {% if tab_id contains target_tab_separate %}
+                  {% assign tab_id_href = tab_id | split: '@@' | last %}
+                  {% assign target_tab_id = '#' | append: tab_id_href %}
+                {% endif %}
+              {% endfor %}
+
+              {{ card | replace: card_btn_href, target_tab_id }}
+            {% endcapture %}
+          {% endif %}
+
+          {{ tabs_body | replace: '[[card]]', card | replace: '[[slider-products]]', slider }}
+        </div>
+
+        <footer class="tabs__body-footer">
+          <div class="tabs__body-footer-inner">
+            Use a soft tape measure for most accurate measurements. Still have questions? <a href="/pages/faq#contact-us">Contact us here</a>.
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  {% unless modal == true %}
+    <script type="text/javascript">
+      const hash = window.location.hash;
+      const inlineSizeGuide = document.querySelector('.js-size-guide-inline');
+      const nav = inlineSizeGuide.querySelector(`.tabs__nav a[href="${hash}"]`);
+      const tab = inlineSizeGuide.querySelector(`.tabs__body .tab[id="${hash.replaceAll('#', '')}"]`);
+
+      if (nav) {
+        inlineSizeGuide.querySelector(`.tabs__nav li`).classList.remove('is-current');
+
+        nav.closest('li').classList.add('is-current');
+      }
+
+      if (tab) {
+        inlineSizeGuide.querySelector('.tabs__body .tab').classList.remove('is-current');
+
+        tab.classList.add('is-current');
+      }
+    </script>
+  {% endunless %}
+{%- endif -%}
+<script>
+function initSizeGuideModalLogic() {
+  function parseInchValue(str) {
+    if (!str) return null;
+    str = str.trim();
+
+    // 1. Mixed fraction: e.g. "36 1/4", "20 5/8"
+    const mixedMatch = str.match(/^(\d+)\s+(\d+)\/(\d+)$/);
+    if (mixedMatch) {
+      const whole = parseFloat(mixedMatch[1]);
+      const num = parseFloat(mixedMatch[2]);
+      const den = parseFloat(mixedMatch[3]);
+      if (den !== 0) return whole + (num / den);
+    }
+
+    // 2. Simple fraction: e.g. "1/2", "5/8"
+    const fracMatch = str.match(/^(\d+)\/(\d+)$/);
+    if (fracMatch) {
+      const num = parseFloat(fracMatch[1]);
+      const den = parseFloat(fracMatch[2]);
+      if (den !== 0) return num / den;
+    }
+
+    // 3. Decimal or Integer: e.g. "42.5", "37", "39.50"
+    const decimalMatch = str.match(/^(\d+(?:\.\d+)?)$/);
+    if (decimalMatch) {
+      return parseFloat(decimalMatch[1]);
+    }
+
+    return null;
+  }
+
+  function convertInchToCm(inchText) {
+    if (!inchText) return null;
+    const cleanText = inchText.trim().replace(/[\u2013\u2014]/g, '-').replace(/\s+to\s+/gi, ' - ');
+
+    if (cleanText.includes('-')) {
+      const parts = cleanText.split('-');
+      if (parts.length === 2) {
+        const val1 = parseInchValue(parts[0]);
+        const val2 = parseInchValue(parts[1]);
+        if (val1 !== null && val2 !== null) {
+          const cm1 = (val1 * 2.54).toFixed(1);
+          const cm2 = (val2 * 2.54).toFixed(1);
+          return `${cm1} - ${cm2}`;
+        }
+      }
+    } else {
+      const val = parseInchValue(cleanText);
+      if (val !== null) {
+        return (val * 2.54).toFixed(1);
+      }
+    }
+
+    return null;
+  }
+
+  function updateSizeGuideTableWithInchCm(target) {
+    let containers = [];
+    if (typeof target === 'string' && target) {
+      const el = document.querySelector(target);
+      if (el) containers.push(el);
+    } else if (target && target.nodeType) {
+      containers.push(target);
+    }
+
+    if (containers.length === 0) {
+      containers = Array.from(document.querySelectorAll(".modal-alt, .size-guide, .has-table-toggle-button"));
+    }
+
+    if (containers.length === 0) {
+      containers = [document];
+    }
+
+    containers.forEach(container => {
+      const tabs = container.classList && container.classList.contains("has-table-toggle-button") 
+        ? [container] 
+        : container.querySelectorAll(".tab.has-table-toggle-button, .has-table-toggle-button");
+
+      tabs.forEach(tab => {
+        const table = tab.querySelector("table");
+        if (!table) return;
+
+        const headerCells = table.querySelectorAll("tr:first-of-type td, tr:first-of-type th");
+        const skipColumnIndices = new Set();
+
+        headerCells.forEach((cell, index) => {
+          const text = cell.innerText.trim().toLowerCase();
+          if (
+            text === "size" ||
+            text.includes("denim size") ||
+            text.includes("hatch size") ||
+            text.includes("pant size") ||
+            text.includes("item size") ||
+            text.includes("before pregnant") ||
+            text.includes("pre-pregnancy") ||
+            text.includes("uk numeric") ||
+            text.includes("us numeric") ||
+            text.includes("us size") ||
+            text.includes("uk size") ||
+            text.includes("eu size") ||
+            text.includes("numeric")
+          ) {
+            skipColumnIndices.add(index);
+          }
+        });
+
+        const rows = table.querySelectorAll("tr");
+        rows.forEach((row, rowIndex) => {
+          if (rowIndex === 0) return;
+
+          const cells = row.querySelectorAll("td, th");
+          cells.forEach((cell, cellIndex) => {
+            if (skipColumnIndices.has(cellIndex)) return;
+            if (cell.querySelector('.inches') || cell.querySelector('.centimeters')) return;
+
+            const rawText = cell.innerText.trim();
+            const cmValue = convertInchToCm(rawText);
+
+            if (cmValue !== null) {
+              const inchContent = cell.innerHTML.trim();
+              const inchSpan = `<span class="inches">${inchContent}</span>`;
+              const cmSpan = `<span class="centimeters" style="display: none;">${cmValue}</span>`;
+              cell.innerHTML = `${inchSpan}${cmSpan}`;
+            }
+          });
+        });
+      });
+    });
+  }
+
+  function initSwitcherSections() {
+    const sections = document.querySelectorAll(".has-table-toggle-button");
+
+    sections.forEach((section, index) => {
+      const table = section.querySelector("table");
+      if (!table) return;
+      if (table.closest(".table-container")) return;
+
+      const uniqueId = `switcher-sizes-modal-${index}-${Math.floor(Math.random() * 10000)}`;
+      const switcher = document.createElement("div");
+      switcher.className = "switcher";
+      switcher.innerHTML = `
+        <input type="radio" name="${uniqueId}" value="in" id="${uniqueId}-in" class="switcher__input switcher__input--in" checked>
+        <label for="${uniqueId}-in" class="switcher__label">in</label>
+        <span class="switcher__toggle"></span>
+        <input type="radio" name="${uniqueId}" value="cm" id="${uniqueId}-cm" class="switcher__input switcher__input--cent">
+        <label for="${uniqueId}-cm" class="switcher__label">cm</label>
+      `;
+
+      const container = document.createElement("div");
+      container.className = "table-container";
+      
+      const tableWrapper = document.createElement("div");
+      tableWrapper.className = "table-wrapper";
+      
+      table.parentNode.insertBefore(container, table);
+      container.appendChild(switcher);
+      container.appendChild(tableWrapper);
+      tableWrapper.appendChild(table);
+
+      const inputIn = switcher.querySelector(`#${uniqueId}-in`);
+      const inputCm = switcher.querySelector(`#${uniqueId}-cm`);
+      const toggleBtn = switcher.querySelector(".switcher__toggle");
+
+      const updateUnitDisplay = () => {
+        const showCm = inputCm.checked;
+        section.querySelectorAll(".centimeters").forEach(el => {
+          el.style.display = showCm ? "inline" : "none";
+        });
+        section.querySelectorAll(".inches").forEach(el => {
+          el.style.display = showCm ? "none" : "inline";
+        });
+      };
+
+      toggleBtn.addEventListener("click", () => {
+        if (inputIn.checked) {
+          inputCm.click();
+        } else {
+          inputIn.click();
+        }
+      });
+      inputIn.checked = true;
+      inputCm.checked = false;
+
+      inputIn.addEventListener("change", updateUnitDisplay);
+      inputCm.addEventListener("change", updateUnitDisplay);
+
+      updateUnitDisplay();
+    });
+  }
+
+  updateSizeGuideTableWithInchCm();
+  initSwitcherSections();
+  initTriggers();
+}
+
+function initTriggers() {
+  const triggers = document.querySelectorAll(".size-guide-new");
+
+  triggers.forEach(trigger => {
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      const targetHash = trigger.hash || trigger.getAttribute("href");
+      if (!targetHash) return;
+      const modalElement = document.querySelector(targetHash);
+      if (modalElement && !modalElement.classList.contains("is-open")) {
+        modalElement.classList.add("is-open");
+      }
+
+      const handleOutsideClick = (e) => {
+        if (modalElement) {
+          const innerModal = modalElement.querySelector(".modal-alt__inner");
+          if (innerModal && !innerModal.contains(e.target) && e.target !== trigger) {
+            modalElement.classList.remove("is-open");
+            document.removeEventListener("click", handleOutsideClick);
+          }
+        }
+      };
+      document.addEventListener("click", handleOutsideClick);
+
+      if (modalElement) {
+        const navLinks = modalElement.querySelectorAll(".tabs__nav a");
+        navLinks.forEach(link => {
+          link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const navItems = link.closest("ul").querySelectorAll("li");
+            navItems.forEach(item => item.classList.remove("is-current"));
+            link.parentElement.classList.add("is-current");
+
+            const tabsWrapper = modalElement.querySelector(".tabs__body-inner");
+            if (tabsWrapper) {
+              const tabs = tabsWrapper.querySelectorAll(".tab");
+              tabs.forEach(tab => tab.classList.remove("is-current"));
+
+              const targetTabId = link.getAttribute("href");
+              const targetTab = tabsWrapper.querySelector(targetTabId);
+              if (targetTab) {
+                targetTab.classList.add("is-current");
+              }
+            }
+          });
+        });
+      }
+
+      setTimeout(() => {
+        if (typeof initSizeGuideModalLogic === 'function') {
+          initSizeGuideModalLogic();
+        }
+      }, 700);
+    });
+  });
+
+  const closeBtn = document.querySelector(".modal-alt__close.js-modal-close");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", (event) => {
+      const modal = event.target.closest(".modal-alt.is-open");
+      if (modal) {
+        modal.classList.remove("is-open");
+      }
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", initSizeGuideModalLogic);
+document.querySelectorAll("fieldset").forEach(fieldset => {
+  fieldset.addEventListener("click", () => {
+    setTimeout(() => {
+      initSizeGuideModalLogic();
+    }, 500);
+  });
+});
+/* UK default unit switcher – additive only */
+(function () {
+  var IS_UK = {{ localization.country.iso_code | json }} === 'GB';
+
+  if (!IS_UK) return;
+
+  function forceCmDefault(scope = document) {
+    scope.querySelectorAll('.switcher').forEach(switcher => {
+      const cmInput = switcher.querySelector('.switcher__input--cent');
+      const inInput = switcher.querySelector('.switcher__input--in');
+
+      if (cmInput && inInput && !cmInput.checked) {
+        cmInput.checked = true;
+        inInput.checked = false;
+
+        // trigger existing listeners
+        cmInput.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+  }
+
+  // on initial load
+  document.addEventListener('DOMContentLoaded', () => {
+    forceCmDefault();
+  });
+
+  // on size guide open (covers modal + tab switches)
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('.size-guide-new');
+    if (!trigger) return;
+
+    setTimeout(() => {
+      const modal = document.querySelector(trigger.hash);
+      if (modal) {
+        forceCmDefault(modal);
+      }
+    }, 800);
+  });
+})();
+</script>

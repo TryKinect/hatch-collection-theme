@@ -1,0 +1,177 @@
+{% doc %}
+  @prompt
+    A section with two inputs for text that run vertically. Text customization options include font, font style, size and color, left aligned or center aligned. Color can be chosen for background of banner. Padding is adjustable., Fonts are theme fonts, Circular, canela, or roboto. , add selection for font kerning. Add font size selector for mobile.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-text-banner-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: {{ block.settings.padding_vertical }}px {{ block.settings.padding_horizontal }}px;
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    text-align: {{ block.settings.text_alignment }};
+    font-family: {{ block.settings.text_font | json }};
+    font-style: {{ block.settings.text_style }};
+    letter-spacing: {{ block.settings.letter_spacing }}px;
+  }
+
+  .ai-text-banner-{{ ai_gen_id }}__line {
+    margin: 0;
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .ai-text-banner-{{ ai_gen_id }}__line + .ai-text-banner-{{ ai_gen_id }}__line {
+    margin-top: 8px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-text-banner-{{ ai_gen_id }}__line {
+      font-size: {{ block.settings.mobile_text_size }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-text-banner-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.first_text != blank %}
+    <p class="ai-text-banner-{{ ai_gen_id }}__line">{{ block.settings.first_text | escape }}</p>
+  {% endif %}
+  {% if block.settings.second_text != blank %}
+    <p class="ai-text-banner-{{ ai_gen_id }}__line">{{ block.settings.second_text | escape }}</p>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Two-line text banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "first_text",
+      "label": "First line",
+      "default": "A thoughtful first message"
+    },
+    {
+      "type": "text",
+      "id": "second_text",
+      "label": "Second line",
+      "default": "Add a supporting line here"
+    },
+    {
+      "type": "select",
+      "id": "text_font",
+      "label": "Font",
+      "options": [
+        { "value": "Circular Std", "label": "Circular" },
+        { "value": "Canela", "label": "Canela" },
+        { "value": "Roboto", "label": "Roboto" }
+      ],
+      "default": "Circular Std"
+    },
+    {
+      "type": "select",
+      "id": "text_style",
+      "label": "Font style",
+      "options": [
+        { "value": "normal", "label": "Normal" },
+        { "value": "italic", "label": "Italic" }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Desktop text size",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_size",
+      "label": "Mobile text size",
+      "min": 10,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Font kerning",
+      "min": -2,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1C1C1C"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FAEFE9"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Vertical padding",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Two-line text banner"
+    }
+  ],
+  "tag": null,
+  "class": "two-line-text-banner"
+}
+{% endschema %}

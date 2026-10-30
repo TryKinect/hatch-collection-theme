@@ -1,0 +1,584 @@
+{% doc %}
+  @prompt
+    Create a container that is 4 module across on desktop. 2 across on mobile. Each spot you should be able to select if it's product, image, or video. Make centered on desktop and mobile.  Add customization for product title font and padding. product info should be left justified below the image. Add override image for product. All modules should be the same size and ratio. All modules should be portrait orientation. All modules should have a clickable link., Hide video controls. video should autoplay and loop.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-grid-container-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.container_padding }}px 0;
+  }
+
+  .ai-grid-wrapper-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-grid-wrapper-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .ai-grid-item-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  .ai-grid-item-link-{{ ai_gen_id }} {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .ai-grid-media-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: 133.33%;
+    overflow: hidden;
+    background-color: #f4f4f4;
+  }
+
+  .ai-grid-media-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-grid-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-grid-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-grid-video-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-grid-video-{{ ai_gen_id }} iframe,
+  .ai-grid-video-{{ ai_gen_id }} video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-grid-info-{{ ai_gen_id }} {
+    text-align: left;
+    padding: {{ block.settings.info_padding }}px 0 0;
+  }
+
+  .ai-grid-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.title_font }};
+    font-size: {{ block.settings.title_size }}px;
+    margin: 0 0 8px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-grid-price-{{ ai_gen_id }} {
+    font-size: {{ block.settings.price_size }}px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-grid-custom-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.custom_text_size }}px;
+    color: {{ block.settings.text_color }};
+    margin-top: 4px;
+  }
+{% endstyle %}
+
+<ai-grid-module-{{ ai_gen_id }} class="ai-grid-container-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-grid-wrapper-{{ ai_gen_id }}">
+    {% for i in (1..4) %}
+      {% liquid
+        assign type_key = 'module_' | append: i | append: '_type'
+        assign product_key = 'module_' | append: i | append: '_product'
+        assign image_key = 'module_' | append: i | append: '_image'
+        assign override_image_key = 'module_' | append: i | append: '_override_image'
+        assign video_key = 'module_' | append: i | append: '_video_url'
+        assign link_key = 'module_' | append: i | append: '_link'
+        assign custom_text_key = 'module_' | append: i | append: '_custom_text'
+
+        assign module_type = block.settings[type_key]
+        assign module_product = block.settings[product_key]
+        assign module_image = block.settings[image_key]
+        assign override_image = block.settings[override_image_key]
+        assign module_video = block.settings[video_key]
+        assign module_link = block.settings[link_key]
+        assign custom_text = block.settings[custom_text_key]
+
+        assign display_image = nil
+        assign display_link = module_link
+        assign display_title = ''
+        assign display_price = ''
+
+        if module_type == 'product' and module_product != blank
+          if override_image != blank
+            assign display_image = override_image
+          elsif module_product.featured_image
+            assign display_image = module_product.featured_image
+          endif
+          assign display_title = module_product.title
+          assign display_price = module_product.price | money
+          if display_link == blank
+            assign display_link = module_product.url
+          endif
+        elsif module_type == 'image'
+          assign display_image = module_image
+        endif
+      %}
+
+      <div class="ai-grid-item-{{ ai_gen_id }}">
+        {% if display_link != blank %}
+          <a href="{{ display_link }}" class="ai-grid-item-link-{{ ai_gen_id }}">
+        {% endif %}
+
+        <div class="ai-grid-media-wrapper-{{ ai_gen_id }}">
+          {% if module_type == 'video' and module_video != blank %}
+            <div class="ai-grid-video-{{ ai_gen_id }}">
+              {% if module_video contains 'youtube.com' or module_video contains 'youtu.be' %}
+                {% assign video_id = module_video | split: 'v=' | last | split: '/' | last | split: '&' | first %}
+                <iframe
+                  src="https://www.youtube.com/embed/{{ video_id }}?autoplay=1&loop=1&playlist={{ video_id }}&controls=0&mute=1&modestbranding=1&rel=0&playsinline=1"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              {% elsif module_video contains 'vimeo.com' %}
+                {% assign video_id = module_video | split: '/' | last %}
+                <iframe
+                  src="https://player.vimeo.com/video/{{ video_id }}?autoplay=1&loop=1&autopause=0&muted=1&controls=0&background=1"
+                  frameborder="0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              {% else %}
+                <video autoplay loop muted playsinline>
+                  <source src="{{ module_video }}" type="video/mp4">
+                </video>
+              {% endif %}
+            </div>
+          {% elsif display_image != blank %}
+            <img
+              src="{{ display_image | image_url: width: 800 }}"
+              alt="{{ display_image.alt | escape }}"
+              loading="lazy"
+              width="{{ display_image.width }}"
+              height="{{ display_image.height }}"
+              class="ai-grid-media-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <div class="ai-grid-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+
+        {% if module_type == 'product' and module_product != blank %}
+          <div class="ai-grid-info-{{ ai_gen_id }}">
+            {% if display_title != blank %}
+              <h3 class="ai-grid-title-{{ ai_gen_id }}">{{ display_title }}</h3>
+            {% endif %}
+            {% if display_price != blank %}
+              <div class="ai-grid-price-{{ ai_gen_id }}">{{ display_price }}</div>
+            {% endif %}
+          </div>
+        {% elsif custom_text != blank %}
+          <div class="ai-grid-info-{{ ai_gen_id }}">
+            <div class="ai-grid-custom-text-{{ ai_gen_id }}">{{ custom_text }}</div>
+          </div>
+        {% endif %}
+
+        {% if display_link != blank %}
+          </a>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</ai-grid-module-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AiGridModule{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.videos = this.querySelectorAll('.ai-grid-video-{{ ai_gen_id }} iframe, .ai-grid-video-{{ ai_gen_id }} video');
+        this.setupVideoInteraction();
+      }
+
+      setupVideoInteraction() {
+        this.videos.forEach((video) => {
+          const wrapper = video.closest('.ai-grid-item-link-{{ ai_gen_id }}');
+          if (wrapper) {
+            wrapper.addEventListener('click', (e) => {
+              if (e.target.tagName === 'IFRAME' || e.target.tagName === 'VIDEO') {
+                e.preventDefault();
+              }
+            });
+          }
+        });
+      }
+    }
+
+    customElements.define('ai-grid-module-{{ ai_gen_id }}', AiGridModule{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Grid modules",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Gap between modules",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "container_padding",
+      "label": "Top and bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Product info style"
+    },
+    {
+      "type": "select",
+      "id": "title_font",
+      "label": "Title font",
+      "options": [
+        {
+          "value": "Canela",
+          "label": "Canela"
+        },
+        {
+          "value": "Circular Std",
+          "label": "Circular Std"
+        },
+        {
+          "value": "CircularXX",
+          "label": "CircularXX"
+        }
+      ],
+      "default": "Canela"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "custom_text_size",
+      "label": "Custom text size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "info_padding",
+      "label": "Info top padding",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Module 1"
+    },
+    {
+      "type": "select",
+      "id": "module_1_type",
+      "label": "Type",
+      "options": [
+        {
+          "value": "product",
+          "label": "Product"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "product"
+    },
+    {
+      "type": "product",
+      "id": "module_1_product",
+      "label": "Product"
+    },
+    {
+      "type": "image_picker",
+      "id": "module_1_override_image",
+      "label": "Override product image"
+    },
+    {
+      "type": "image_picker",
+      "id": "module_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "module_1_video_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "url",
+      "id": "module_1_link",
+      "label": "Custom link"
+    },
+    {
+      "type": "text",
+      "id": "module_1_custom_text",
+      "label": "Custom text"
+    },
+    {
+      "type": "header",
+      "content": "Module 2"
+    },
+    {
+      "type": "select",
+      "id": "module_2_type",
+      "label": "Type",
+      "options": [
+        {
+          "value": "product",
+          "label": "Product"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "product"
+    },
+    {
+      "type": "product",
+      "id": "module_2_product",
+      "label": "Product"
+    },
+    {
+      "type": "image_picker",
+      "id": "module_2_override_image",
+      "label": "Override product image"
+    },
+    {
+      "type": "image_picker",
+      "id": "module_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "module_2_video_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "url",
+      "id": "module_2_link",
+      "label": "Custom link"
+    },
+    {
+      "type": "text",
+      "id": "module_2_custom_text",
+      "label": "Custom text"
+    },
+    {
+      "type": "header",
+      "content": "Module 3"
+    },
+    {
+      "type": "select",
+      "id": "module_3_type",
+      "label": "Type",
+      "options": [
+        {
+          "value": "product",
+          "label": "Product"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "product"
+    },
+    {
+      "type": "product",
+      "id": "module_3_product",
+      "label": "Product"
+    },
+    {
+      "type": "image_picker",
+      "id": "module_3_override_image",
+      "label": "Override product image"
+    },
+    {
+      "type": "image_picker",
+      "id": "module_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "module_3_video_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "url",
+      "id": "module_3_link",
+      "label": "Custom link"
+    },
+    {
+      "type": "text",
+      "id": "module_3_custom_text",
+      "label": "Custom text"
+    },
+    {
+      "type": "header",
+      "content": "Module 4"
+    },
+    {
+      "type": "select",
+      "id": "module_4_type",
+      "label": "Type",
+      "options": [
+        {
+          "value": "product",
+          "label": "Product"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "product"
+    },
+    {
+      "type": "product",
+      "id": "module_4_product",
+      "label": "Product"
+    },
+    {
+      "type": "image_picker",
+      "id": "module_4_override_image",
+      "label": "Override product image"
+    },
+    {
+      "type": "image_picker",
+      "id": "module_4_image",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "module_4_video_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "url",
+      "id": "module_4_link",
+      "label": "Custom link"
+    },
+    {
+      "type": "text",
+      "id": "module_4_custom_text",
+      "label": "Custom text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Grid modules"
+    }
+  ]
+}
+{% endschema %}

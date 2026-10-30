@@ -1,0 +1,117 @@
+<!-- Header Module Metafield -->
+{% assign _metafield = collection.metafields.custom %}
+{% assign has_gated_sale_popup = collection.metafields.accentuate.show_gated_page_popup %}
+{% assign _pagination = collection.metafields.pagination %}
+
+{%- assign products_per_page = 48  -%}
+
+{%- if _pagination.remove_pagination -%}
+  {%- assign products_per_page = 70  -%}
+{%- else -%}
+  {%- if _pagination.pagination_override != blank -%}
+    {%- assign products_per_page = _pagination.pagination_override | plus: 0 -%}
+
+    {%- if products_per_page > 70 -%}
+      {%- assign products_per_page = 70  -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+
+{% if _metafield.header_module == 'true' %}
+
+  <div class="header-module header-module--{{- _metafield.layout | handle -}} {% if _metafield.mobile_header_module == 'true' %} hidden-xs{% endif %}" style="{% if _metafield.color %}background-color: {{ _metafield.color }};{% endif %}{% if _metafield.text_color %}color: {{ _metafield.text_color }};{% endif %}">
+
+    {% if _metafield.header_image_1 and _metafield.layout != 'Color background' %}
+      <div class="header-module__image">
+        {%- if _metafield.autoscroll == 'true' and _metafield.hyperlink == nil -%}
+          <a href="#boost-sd__collection-header" class="js-anchor">
+        {%- endif -%}
+
+        {%- if _metafield.hyperlink != nil -%}
+          <a href="{{- _metafield.hyperlink -}}">
+        {%- endif -%}
+            <img src="{{- _metafield.header_image_1 -}}" alt="{{- _metafield.banner_alt_text -}}">
+        {%- if _metafield.autoscroll == 'true' and _metafield.hyperlink == nil -%}
+          </a>
+        {%- endif -%}
+
+        {%- if _metafield.hyperlink != nil -%}
+          </a>
+        {%- endif -%}
+      </div><!-- /.header-module__image -->
+    {% endif %}
+
+
+
+    {% unless _metafield.header_image_1 and _metafield.layout == 'Split Screen' %}
+      {% if _metafield.header_image_2 and _metafield.layout != 'Full bleed image' and _metafield.layout != 'Color background' %}
+        <div class="header-module__image">
+          {%- if _metafield.autoscroll == 'true' and _metafield.hyperlink == nil -%}
+            <a href="#shopify-section-collection-filtered" class="js-anchor">
+          {%- endif -%}
+
+          {%- if _metafield.hyperlink != nil -%}
+            <a href="{{- _metafield.hyperlink -}}">
+          {%- endif -%}
+              <img src="{{- _metafield.header_image_2 -}}" alt="{{- _metafield.banner_alt_text -}}" loading="lazy">
+          {%- if _metafield.autoscroll == 'true' and _metafield.hyperlink == nil -%}
+            </a>
+          {%- endif -%}
+
+          {%- if _metafield.hyperlink != nil -%}
+            </a>
+          {%- endif -%}
+        </div><!-- /.header-module__image -->
+      {% endif %}
+    {% endunless %}
+  </div><!-- /.header-module -->
+{% endif %}
+
+{% if _metafield.mobile_header_module == 'true' %}
+  <div class="hidden-sm hidden-md hidden-lg header-module header-module--{{- _metafield.mobile_layout | handle -}}" style="{% if _metafield.mobile_color %}background-color: {{ _metafield.mobile_color }};{% endif %}{% if _metafield.mobile_text_color %}color: {{ _metafield.mobile_text_color }};{% endif %}">
+
+    {% if _metafield.mobile_header_image_1 and _metafield.mobile_layout != 'Color background' %}
+      <div class="header-module__image">
+        {%- if _metafield.autoscroll == 'true' and _metafield.hyperlink == nil -%}
+          <a href="#shopify-section-collection-filtered" class="js-anchor">
+        {%- endif -%}
+
+        {%- if _metafield.hyperlink != nil -%}
+          <a href="{{- _metafield.hyperlink -}}">
+        {%- endif -%}
+            <img src="{{- _metafield.mobile_header_image_1 -}}" alt="{{- _metafield.banner_alt_text -}}" loading="lazy">
+        {%- if _metafield.autoscroll == 'true' and _metafield.hyperlink == nil -%}
+          </a>
+        {%- endif -%}
+
+        {%- if _metafield.hyperlink != nil -%}
+          </a>
+        {%- endif -%}
+      </div><!-- /.header-module__image -->
+    {% endif %}
+
+
+
+    {% unless _metafield.mobile_header_image_1 and _metafield.mobile_layout == 'Split Screen' %}
+      {% if _metafield.mobile_header_image_2 and _metafield.mobile_layout != 'Full bleed image' and _metafield.mobile_layout != 'Color background' %}
+        <div class="header-module__image">
+          {%- if _metafield.autoscroll == 'true' and _metafield.hyperlink == nil -%}
+            <a href="#shopify-section-collection-filtered" class="js-anchor">
+          {%- endif -%}
+
+          {%- if _metafield.hyperlink != nil -%}
+            <a href="{{- _metafield.hyperlink -}}">
+          {%- endif -%}
+              <img src="{{- _metafield.mobile_header_image_2 -}}" alt="{{- _metafield.banner_alt_text -}}" loading="lazy">
+          {%- if _metafield.autoscroll == 'true' and _metafield.hyperlink == nil -%}
+            </a>
+          {%- endif -%}
+
+          {%- if _metafield.hyperlink != nil -%}
+            </a>
+          {%- endif -%}
+        </div><!-- /.header-module__image -->
+      {% endif %}
+    {% endunless %}
+  </div><!-- /.header-module -->
+{% endif %}

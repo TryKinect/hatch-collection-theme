@@ -1,0 +1,16 @@
+{% if collection.description %}
+<div class="collection-description" style="text-align:center;">
+{{ collection.description }}
+</div>
+{% endif %}
+{% schema %}
+  {
+    "name": "Collection Description",
+    "settings": [],
+    "presets": [
+      {
+        "name": "Collection Description"
+      }
+    ]
+  }
+{% endschema %}

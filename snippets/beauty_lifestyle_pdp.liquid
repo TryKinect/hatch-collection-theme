@@ -1,0 +1,51 @@
+{% if product.metafields.custom.beauty_lifestyle_enable %}
+  <div class="container-fluid py-3 py-lg-0 tBg-- mt-6">
+      <div class="container">
+        <div class="row align-items-center flex-row-reverse">
+          {% if product.metafields.custom.beauty_lifestyle_image or product.metafields.accentuate.video_channel or product.metafields.custom.mp4_file %}
+            {% if product.metafields.custom.mp4_file %}
+              <div class="col-md-7 flex-sm-last mb-2 mb-sm-0 cLego-aB--1">
+                <div class="embed-container">
+                  <video controls class="btn-block">
+                    <source src="{{product.metafields.custom.mp4_file}}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              </div>
+          	{% elsif product.metafields.accentuate.video_channel %}
+              <div class="col-md-7 flex-sm-last mb-2 mb-sm-0 cLego-aB--1">
+                <div class="embed-container">
+                  <iframe src="https://www.youtube.com/embed/{{ product.metafields.accentuate.video_channel }}" frameborder='0' allowfullscreen>
+                  </iframe>
+                </div>
+              </div>
+          	{% else %}
+              <div class="col-md-7 flex-sm-last mb-2 mb-sm-0">
+                <img class="cLego-aB--1"src="{{ product.metafields.custom.beauty_lifestyle_image }}">
+              </div>
+          	{% endif %}
+          {% endif %}
+
+          <
+            {%- if product.metafields.custom.beauty_lifestyle_url_link -%}
+              a href="{{ product.metafields.custom.beauty_lifestyle_url_link }}"
+            {% else %}
+              div
+            {% endif %}
+            class="col-md-5 text-center"
+          >
+            {% if product.metafields.custom.beauty_lifestyle_subheadline %}
+              <h5 class="mb-1">{{ product.metafields.custom.beauty_lifestyle_subheadline }}</h5>
+            {% endif %}
+            {% if product.metafields.custom.beauty_lifestyle_headline %}
+              <h3 class="">{{ product.metafields.custom.beauty_lifestyle_headline }}</h3>
+            {% endif %}
+            {% if product.metafields.custom.beauty_lifestyle_cta %}
+              <button class="btn btn-outline-success mt-1 mt-md-0">{{ product.metafields.custom.beauty_lifestyle_cta }}</button>
+            {% endif %}
+
+          </{% if product.metafields.custom.beauty_lifestyle_url_link %}a{% else %}div{% endif %}>
+        </div>
+      </div>
+    </div>
+{% endif %}

@@ -1,0 +1,208 @@
+{% doc %}
+  @prompt
+    Generate a block where the background is video. On desktop, the copy is center justified on the left half of the frame. The headline has a spot for image instead of text. Headline Image width is adjustable. Body copy is circular, CTA option is outlined button, solid button or link. 
+    
+    On mobile the text is centered vertically and horizontally., there seems to be a bug where the text is not overlaying on top of the video, There is a separate input for mobile background video, Body copy color is adjustable like CTA color. They can share the same input.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-video-hero-{{ ai_gen_id }} {
+    position: relative;
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    min-height: {{ block.settings.desktop_height }}px;
+    overflow: hidden;
+    background: #292929;
+    isolation: isolate;
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__media,
+  .ai-video-hero-{{ ai_gen_id }}__shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__media {
+    z-index: 0;
+    object-fit: cover;
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__media--mobile {
+    display: none;
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__shade {
+    z-index: 1;
+    background: {{ block.settings.overlay_color }};
+    opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};
+    pointer-events: none;
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__content {
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: 2;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 50%;
+    min-height: 100%;
+    padding: 48px 6%;
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__headline-image {
+    display: block;
+    width: {{ block.settings.headline_image_width }}%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto 20px;
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__headline-placeholder {
+    width: {{ block.settings.headline_image_width }}%;
+    max-width: 100%;
+    aspect-ratio: 3 / 1;
+    margin: 0 auto 20px;
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__headline-placeholder svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: currentColor;
+    background: rgba(255,255,255,.12);
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__body {
+    max-width: 460px;
+    color: {{ block.settings.copy_cta_color }};
+    font-size: {{ block.settings.body_size }}px;
+    line-height: 1.5;
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__body p {
+    margin: 0;
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+    padding: 12px 24px;
+    min-height: 44px;
+    color: {{ block.settings.copy_cta_color }};
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-size: 12px;
+    border: 1px solid {{ block.settings.copy_cta_color }};
+    box-sizing: border-box;
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__cta--solid {
+    background: {{ block.settings.copy_cta_color }};
+    color: {{ block.settings.button_text_color }};
+    border-color: {{ block.settings.copy_cta_color }};
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__cta--link {
+    border: 0;
+    padding-right: 0;
+    padding-left: 0;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .ai-video-hero-{{ ai_gen_id }}__cta:focus-visible {
+    outline: 2px solid {{ block.settings.copy_cta_color }};
+    outline-offset: 4px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-video-hero-{{ ai_gen_id }} {
+      min-height: {{ block.settings.mobile_height }}px;
+    }
+
+    .ai-video-hero-{{ ai_gen_id }}__content {
+      inset: 0;
+      width: 100%;
+      padding: 32px 24px;
+    }
+
+    .ai-video-hero-{{ ai_gen_id }}__headline-image,
+    .ai-video-hero-{{ ai_gen_id }}__headline-placeholder {
+      width: min({{ block.settings.headline_image_width }}%, 100%);
+    }
+
+    {% if block.settings.mobile_video != blank %}
+      .ai-video-hero-{{ ai_gen_id }}__media--desktop { display: none; }
+      .ai-video-hero-{{ ai_gen_id }}__media--mobile { display: block; }
+    {% endif %}
+  }
+{% endstyle %}
+
+<div class="ai-video-hero-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.video != blank %}
+    {% assign desktop_video_class = 'ai-video-hero-' | append: ai_gen_id | append: '__media ai-video-hero-' | append: ai_gen_id | append: '__media--desktop' %}
+    {{ block.settings.video | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, class: desktop_video_class }}
+  {% endif %}
+  {% if block.settings.mobile_video != blank %}
+    {% assign mobile_video_class = 'ai-video-hero-' | append: ai_gen_id | append: '__media ai-video-hero-' | append: ai_gen_id | append: '__media--mobile' %}
+    {{ block.settings.mobile_video | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, class: mobile_video_class }}
+  {% endif %}
+  <div class="ai-video-hero-{{ ai_gen_id }}__shade" aria-hidden="true"></div>
+  <div class="ai-video-hero-{{ ai_gen_id }}__content">
+    {% if block.settings.headline_image != blank %}
+      <img class="ai-video-hero-{{ ai_gen_id }}__headline-image" src="{{ block.settings.headline_image | image_url: width: 1400 }}" alt="{{ block.settings.headline_image.alt | escape }}" loading="lazy" width="{{ block.settings.headline_image.width }}" height="{{ block.settings.headline_image.height }}">
+    {% else %}
+      <div class="ai-video-hero-{{ ai_gen_id }}__headline-placeholder" aria-label="Add a headline image in block settings">{{ 'image' | placeholder_svg_tag }}</div>
+    {% endif %}
+    {% if block.settings.body_copy != blank %}
+      <div class="ai-video-hero-{{ ai_gen_id }}__body">{{ block.settings.body_copy }}</div>
+    {% endif %}
+    {% if block.settings.cta_label != blank and block.settings.cta_link != blank %}
+      {% assign cta_class = 'ai-video-hero-' | append: ai_gen_id | append: '__cta' %}
+      {% if block.settings.cta_style == 'solid' %}
+        {% assign cta_class = cta_class | append: ' ai-video-hero-' | append: ai_gen_id | append: '__cta--solid' %}
+      {% elsif block.settings.cta_style == 'link' %}
+        {% assign cta_class = cta_class | append: ' ai-video-hero-' | append: ai_gen_id | append: '__cta--link' %}
+      {% endif %}
+      <a class="{{ cta_class }}" href="{{ block.settings.cta_link }}">{{ block.settings.cta_label | escape }}</a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Video background hero",
+  "settings": [
+    { "type": "video", "id": "video", "label": "Desktop background video" },
+    { "type": "video", "id": "mobile_video", "label": "Mobile background video" },
+    { "type": "image_picker", "id": "headline_image", "label": "Headline image" },
+    { "type": "range", "id": "headline_image_width", "label": "Headline image width", "min": 20, "max": 100, "step": 5, "unit": "%", "default": 70 },
+    { "type": "richtext", "id": "body_copy", "label": "Body copy", "default": "<p>Share a little about your collection.</p>" },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Discover more" },
+    { "type": "url", "id": "cta_link", "label": "CTA link" },
+    { "type": "select", "id": "cta_style", "label": "CTA style", "options": [{ "value": "outline", "label": "Outlined button" }, { "value": "solid", "label": "Solid button" }, { "value": "link", "label": "Link" }], "default": "outline" },
+    { "type": "range", "id": "desktop_width_percent", "label": "Desktop width", "min": 50, "max": 100, "step": 5, "unit": "%", "default": 100 },
+    { "type": "range", "id": "desktop_height", "label": "Desktop height", "min": 300, "max": 900, "step": 50, "unit": "px", "default": 600 },
+    { "type": "range", "id": "mobile_height", "label": "Mobile height", "min": 300, "max": 800, "step": 50, "unit": "px", "default": 500 },
+    { "type": "range", "id": "body_size", "label": "Body text size", "min": 12, "max": 24, "step": 1, "unit": "px", "default": 16 },
+    { "type": "color", "id": "copy_cta_color", "label": "Body and CTA color", "default": "#ffffff" },
+    { "type": "color", "id": "button_text_color", "label": "Solid CTA text", "default": "#1c1c1c" },
+    { "type": "color", "id": "overlay_color", "label": "Video overlay", "default": "#000000" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay strength", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 35 }
+  ],
+  "presets": [{ "name": "Video background hero" }],
+  "tag": null,
+  "class": "video-background-hero"
+}
+{% endschema %}

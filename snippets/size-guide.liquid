@@ -1,0 +1,79 @@
+{% for tag in product.tags %}
+  {% if tag contains 'size_chart:' %}
+      {% assign current_tag = tag | replace: 'size_chart:', '' | strip | handle %}
+  {% endif %}
+{% endfor %}
+{%- assign found_size_guide = false -%}
+
+{% unless localization.country.iso_code == 'GB' %}
+{%- for size_guide_page in shop.metafields.globals.size_guide_page -%}
+  {%- assign index = forloop.index0 -%}
+  {%- assign size_guide_tag = shop.metafields.globals.size_guide_tag[index] 
+    | replace: 'size_chart:', '' | strip | handle -%}
+
+  {%- if current_tag == size_guide_tag and size_guide_page != blank -%}
+    {%- assign found_size_guide = true -%}
+    <div class="modal-alt" id="modal-size-{{ size_guide_tag }}">
+      <div class="modal-alt__inner">
+        <span class="modal-alt__close js-modal-close"></span>
+        {%- render 'page-size-guide-content', page: pages[size_guide_page], modal: true -%}
+      </div>
+      <div class="modal-alt__background js-modal-close"></div>
+    </div>
+  {%- endif -%}
+{%- endfor -%}
+
+{%- unless found_size_guide -%}
+  {%- if current_tag == 'janie-and-jack' -%}
+    <div class="modal-alt" id="modal-size-janie-and-jack">
+      <div class="modal-alt__inner">
+        <span class="modal-alt__close js-modal-close"></span>
+        {%- render 'page-size-guide-content', page: pages['janie-size-guide'], modal: true -%}
+      </div>
+      <div class="modal-alt__background js-modal-close"></div>
+    </div>
+  {%- endif -%}
+{%- endunless -%}
+{% endunless %}
+
+{% if localization.country.iso_code == 'GB' %}
+ {%- if current_tag == 'general' -%}
+    <div class="modal-alt uk-class-inner" id="modal-size-general">
+      <div class="modal-alt__inner">
+        <span class="modal-alt__close js-modal-close"></span>
+        {%- render 'page-size-guide-content', page: pages['general-size-guide-uk'], modal: true -%}
+      </div>
+      <div class="modal-alt__background js-modal-close"></div>
+    </div>
+  {%- endif -%}
+   {%- if current_tag == 'denim' -%}
+    <div class="modal-alt uk-class-inner" id="modal-size-denim">
+      <div class="modal-alt__inner">
+        <span class="modal-alt__close js-modal-close"></span>
+        {%- render 'page-size-guide-content', page: pages['denim-size-guide-uk'], modal: true -%}
+      </div>
+      <div class="modal-alt__background js-modal-close"></div>
+    </div>
+  {%- endif -%}
+  {%- if current_tag == 'bra' -%}
+    <div class="modal-alt uk-class-inner" id="modal-size-bra">
+      <div class="modal-alt__inner">
+        <span class="modal-alt__close js-modal-close"></span>
+        {%- render 'page-size-guide-content', page: pages['bra-size-guide-uk'], modal: true -%}
+      </div>
+      <div class="modal-alt__background js-modal-close"></div>
+    </div>
+  {%- endif -%}
+  {%- if current_tag == 'janie-and-jack' -%}
+    <div class="modal-alt uk-class-inner" id="modal-size-janie-and-jack">
+      <div class="modal-alt__inner">
+        <span class="modal-alt__close js-modal-close"></span>
+        {%- render 'page-size-guide-content', page: pages['janie-and-jack-guide-uk'], modal: true -%}
+      </div>
+      <div class="modal-alt__background js-modal-close"></div>
+    </div>
+  {%- endif -%}
+{% endif %}
+
+
+
