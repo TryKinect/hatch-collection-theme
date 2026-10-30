@@ -1,7 +1,7 @@
 {% doc %}
   Renders a HATCH Hotline entry point for the existing Kinect assistant.
 
-  @param {string} [placement] - Use 'navigation' for the mobile menu entry.
+  @param {string} [placement] - Use 'navigation' for the mobile menu or 'desktop' for the header.
   @param {product} [product] - The product shown beside the suggested questions.
   @param {string} [section_id] - A unique section identifier for the question row.
 {% enddoc %}
@@ -24,6 +24,18 @@
     >
       <span>{{ 'hatch_hotline.title' | t }}</span>
       {{ hotline_icon }}
+    </button>
+  </li>
+{%- elsif placement == 'desktop' -%}
+  <li class="hatch-hotline-desktop">
+    <button
+      type="button"
+      class="hatch-hotline-desktop__button"
+      data-kinect-open="top_nav"
+      aria-label="{{ 'hatch_hotline.open_assistant' | t | escape }}"
+    >
+      {{ hotline_icon }}
+      <span>{{ 'hatch_hotline.nav_label' | t }}</span>
     </button>
   </li>
 {%- else -%}

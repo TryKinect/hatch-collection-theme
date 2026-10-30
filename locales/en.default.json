@@ -527,6 +527,7 @@
   },
   "hatch_hotline": {
     "title": "The HATCH Hotline",
+    "nav_label": "Ask HATCH",
     "description": "Your direct line to a little HATCH expertise.",
     "open_assistant": "Ask HATCH: open the shopping assistant",
     "suggested_questions": "Questions to ask HATCH",
