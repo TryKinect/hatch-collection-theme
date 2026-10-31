@@ -15,7 +15,9 @@
   --hatch-hotline-chip-border: #e3ddd7;
   --hatch-hotline-text: #1c1c1c;
   --hatch-hotline-muted: #6b6560;
-  --hatch-hotline-body-font: "Circular Std", var(--text-font-family, sans-serif);
+  /* Hatch's --text-font-family resolves to "," on this theme, which would make
+     the whole declaration invalid; use the same stack as Hatch's own CSS. */
+  --hatch-hotline-body-font: "Circular Std", sans-serif;
 }
 
 /* --------------------------------------------------------------------------
@@ -47,29 +49,29 @@
     align-items: center;
   }
 
-  .header:has(.header__kinect-link > a:not([hidden])) {
+  .header:has(.header__kinect-link > .kinect-hotline-nav:not([hidden])) {
     grid-template-columns: 150px minmax(0, 1fr) max-content !important;
     column-gap: 24px !important;
   }
 
-  .header:has(.header__kinect-link > a:not([hidden])) .header__primary-nav {
+  .header:has(.header__kinect-link > .kinect-hotline-nav:not([hidden])) .header__primary-nav {
     column-gap: 16px !important;
   }
 
-  .header:has(.header__kinect-link > a:not([hidden])) .header__secondary-nav {
+  .header:has(.header__kinect-link > .kinect-hotline-nav:not([hidden])) .header__secondary-nav {
     flex-wrap: nowrap;
   }
 }
 
 @media screen and (min-width: 1150px) {
-  .header:has(.header__kinect-link > a:not([hidden])) {
+  .header:has(.header__kinect-link > .kinect-hotline-nav:not([hidden])) {
     grid-template-columns: 196px minmax(0, 1fr) max-content !important;
     column-gap: 32px !important;
   }
 }
 
 @media screen and (min-width: 1400px) {
-  .header:has(.header__kinect-link > a:not([hidden])) {
+  .header:has(.header__kinect-link > .kinect-hotline-nav:not([hidden])) {
     column-gap: 64px !important;
   }
 }
@@ -79,18 +81,18 @@
    stay on one row at 1440px and never take more rows than the theme already
    does without the pill. min-height keeps the header from jumping on open. */
 @media screen and (min-width: 1150px) {
-  body.kinect-page-shift .header:has(.header__kinect-link > a:not([hidden])) {
+  body.kinect-page-shift .header:has(.header__kinect-link > .kinect-hotline-nav:not([hidden])) {
     grid-template-columns: 150px minmax(0, 1fr) max-content !important;
     column-gap: 24px !important;
     min-height: 98px;
   }
 
-  body.kinect-page-shift .header:has(.header__kinect-link > a:not([hidden])) .header__primary-nav {
+  body.kinect-page-shift .header:has(.header__kinect-link > .kinect-hotline-nav:not([hidden])) .header__primary-nav {
     column-gap: 12px !important;
     row-gap: 0;
   }
 
-  body.kinect-page-shift .header:has(.header__kinect-link > a:not([hidden])) .header__primary-nav--center > ul > li {
+  body.kinect-page-shift .header:has(.header__kinect-link > .kinect-hotline-nav:not([hidden])) .header__primary-nav--center > ul > li {
     padding: 28px 0 !important;
   }
 }
@@ -111,34 +113,44 @@
   }
 }
 
-/* Cream filled pill, "ASK HATCH" + chat icon (30 Oct mock). Font longhands on
-   purpose: var() inside the `font:` shorthand is dropped at computed-value time. */
+/* "ASK HATCH" button — same look as the button Hatch approved on `main`
+   (cream #f8efe9 block, square corners, 40px tall, 13px/600 Circular Std,
+   0.4px tracking, 18px outlined chat icon, underline on hover). Font
+   longhands on purpose: var() inside `font:` is dropped at computed-value time. */
 .header__secondary-nav .header__kinect-link .kinect-hotline-nav {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  margin: 0;
+  padding: 10px 16px;
   border: 0;
-  border-radius: 999px;
-  background: var(--hatch-hotline-cream);
-  color: rgb(var(--text-color, 0 0 0));
+  border-radius: 0;
+  background: #f8efe9;
+  color: #302e2b;
   font-family: var(--hatch-hotline-body-font);
-  font-weight: 500;
-  font-size: 10px;
-  line-height: 1;
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.4px;
   text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
-  transition:
-    background-color 150ms ease,
-    color 150ms ease;
+  cursor: pointer;
+  appearance: none;
 }
 
-.header__secondary-nav .header__kinect-link .kinect-hotline-nav:hover,
 .header__secondary-nav .header__kinect-link .kinect-hotline-nav:focus-visible {
-  background: rgb(var(--text-color, 0 0 0));
-  color: rgb(var(--background, 255 255 255));
+  outline: 2px solid #302e2b;
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .header__secondary-nav .header__kinect-link .kinect-hotline-nav:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }
 
 .header__secondary-nav .header__kinect-link .kinect-hotline-nav span {
@@ -148,10 +160,11 @@
   text-transform: inherit;
 }
 
-.header__secondary-nav .header__kinect-link .kinect-hotline-nav svg {
-  width: 13px;
-  height: 13px;
-  flex-shrink: 0;
+.header__secondary-nav .header__kinect-link .kinect-hotline-nav__icon {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  color: #6e6964;
 }
 
 /* --------------------------------------------------------------------------
