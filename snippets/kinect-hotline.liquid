@@ -1,0 +1,37 @@
+{% doc %}
+  Kinect — "The HATCH Hotline" entry points for the Kinect shopping assistant.
+
+  Everything Kinect-specific lives in this snippet plus assets/kinect-hatch.css and
+  assets/kinect-hatch.js; the theme only calls {% render 'kinect-hotline', placement: ... %}.
+
+  The links render with the `hidden` attribute. The Kinect widget removes it once the
+  shopper is eligible on this page load (Audience / traffic split), so nothing shows
+  for shoppers who would not see the assistant anyway.
+
+  @param {string} placement - 'desktop' (header pill beside search) or 'mobile_nav' (menu row).
+  @param {string} [sidebar_text_font] - header section's sidebar_text_font, so the menu row matches the other rows.
+{% enddoc %}
+
+{%- liquid
+  assign kinect_desktop_label = 'Ask HATCH'
+  assign kinect_menu_label = 'The HATCH Hotline'
+-%}
+
+{%- if placement == 'desktop' -%}
+  <li class="header__kinect-link">
+    <button type="button" class="kinect-hotline-nav" data-kinect-open="top_nav" aria-haspopup="dialog" aria-label="{{ kinect_desktop_label | escape }}: open the shopping assistant" hidden>
+      <svg class="kinect-hotline-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+        <path d="M20 11.5a8 8 0 0 1-8 8 8.4 8.4 0 0 1-3.4-.7L4 20l1.2-4.6A8.4 8.4 0 0 1 4.5 12a8 8 0 1 1 15.5-.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M8.5 9.5h7M8.5 13h4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span>{{ kinect_desktop_label | escape }}</span>
+    </button>
+  </li>
+{%- elsif placement == 'mobile_nav' -%}
+  <li class="header-sidebar__kinect">
+    <a href="#" class="header-sidebar__linklist-button header-sidebar__kinect-row {% if sidebar_text_font == 'heading' %}h6{% endif %}" data-kinect-open="mobile_nav" aria-haspopup="dialog" hidden>
+      <span>{{ kinect_menu_label | escape }}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a3 3 0 0 1-3 3H8l-5 3V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z"/></svg>
+    </a>
+  </li>
+{%- endif -%}
