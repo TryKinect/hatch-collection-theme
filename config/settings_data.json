@@ -903,5 +903,10 @@
       "product_sold_out_badge_background": "#efefef",
       "product_custom_badge_background": "#1c1c1c"
     }
+  },
+  "platform_customizations": {
+    "custom_css": [
+      "@media screen and (min-width: 768px) {[class*=\"kl-teaser-\"] {left: auto !important; right: 0 !important; top: 50% !important; margin-left: 0 !important; margin-right: 0 !important; transform-origin: right top !important; transform: rotate(90deg) translate(50%, 0) !important; } [class*=\"kl-teaser-\"] .klaviyo-close-form {right: auto !important; left: -16px !important; bottom: -16px !important; }}"
+    ]
   }
 }
