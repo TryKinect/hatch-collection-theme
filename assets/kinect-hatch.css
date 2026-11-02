@@ -409,3 +409,21 @@
     bottom: -16px !important;
   }
 }
+
+/* --------------------------------------------------------------------------
+   5. Third-party floating widgets under the Shopping Assistant
+   The Usablenet accessibility toggle (#usntA42Toggle, z 2147483647) and the
+   Gorgias chat button (iframe#chat-button, z 2147483636) painted over the
+   open Kinect panel on phones. Kinect's launcher and panel sit at z 999999
+   in the root stacking context, so 214748 keeps both widgets above the page
+   but below the assistant. The theme's own stricter rules for the toggle
+   (z 1 while a mega menu is open, z 9 while the sticky ATC is visible) are
+   more specific and still win.
+   -------------------------------------------------------------------------- */
+#usntA42Toggle {
+  z-index: 214748 !important;
+}
+
+#gorgias-chat-container iframe#chat-button {
+  z-index: 214748 !important;
+}
