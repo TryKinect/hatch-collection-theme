@@ -377,8 +377,20 @@
    styles (left: 0; top: 50%; rotate(-90deg) translate(-50%, 0); origin
    left top), so these overrides must use !important and mirror the
    transform. The tab keeps its width, colours, copy and click behaviour.
-   Desktop only — the mobile teaser (a separate Klaviyo form) is untouched.
+   Position change is desktop only — the mobile teaser (a separate Klaviyo
+   form) keeps its left-edge placement.
+
+   Stacking (all sizes): Klaviyo sets z-index 90000 inline, so the tab sat on
+   top of the open menu drawer. The menu (#sidebar-menu, z 999) is inside the
+   header section wrapper, which is a stacking context at z-index 6 (position
+   relative + transform), so against the page the drawer is effectively layer
+   6 — the tab must be below that, not merely below 999. 5 keeps it above
+   normal page content and under the header, menu, search and cart drawers.
    -------------------------------------------------------------------------- */
+[class*="kl-teaser-"] {
+  z-index: 5 !important;
+}
+
 @media screen and (min-width: 768px) {
   [class*="kl-teaser-"] {
     left: auto !important;
