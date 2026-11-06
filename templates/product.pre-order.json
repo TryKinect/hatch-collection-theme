@@ -48,6 +48,26 @@
           "type": "buy_buttons",
           "settings": {}
         },
+        "kinect_hatch_hotline": {
+          "type": "shopify://apps/kinect-hatch-collection/blocks/pdp-chat/01a17523-84c8-7dfb-a0ec-5f18d09f6e32",
+          "settings": {
+            "sync_chat": true,
+            "layout": "list",
+            "heading_text": "The HATCH Hotline",
+            "subheading_text": "Your direct line to a little HATCH expertise.",
+            "question_1": "",
+            "question_2": "",
+            "question_3": "",
+            "auto_theme": false,
+            "accent_color": "#1c1c1c",
+            "text_color": "#1c1c1c",
+            "bg_color": "#faefe9",
+            "input_bg_color": "",
+            "font_size": 13,
+            "show_input": false,
+            "placeholder_text": "Ask The HATCH Hotline…"
+          }
+        },
         "pickup_availability": {
           "type": "pickup_availability",
           "settings": {}
@@ -67,6 +87,7 @@
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
+        "kinect_hatch_hotline",
         "complementary_products"
       ],
       "settings": {}
